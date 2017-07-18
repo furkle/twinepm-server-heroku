@@ -29,6 +29,8 @@ $dsn = makeDSN(
 	$dbArgs["dbname"],
 	$charset);
 
+echo $dsn;
+
 $id = (int)$_GET["id"];
 
 $username = $dbArgs["user"];
