@@ -31,6 +31,8 @@ $dsn = makeDSN(
 
 $id = (int)$_GET["id"];
 
+var_dump($dbArgs);
+
 $username = $dbArgs["user"];
 $password = $dbArgs["password"];
 
