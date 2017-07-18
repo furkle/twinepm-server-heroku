@@ -26,10 +26,8 @@ $dsn = makeDSN(
 	$prefix,
 	$dbArgs["host"],
 	$dbArgs["port"],
-	$dbArgs["dbname"],
+	ltrim($dbArgs["path"], "/"),
 	$charset);
-
-echo $dsn;
 
 $id = (int)$_GET["id"];
 
