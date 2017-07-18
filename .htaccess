@@ -1,5 +1,5 @@
 # vim: syntax=apache
 
-<Files "twinepm-credentials/*">
+<Files "*/twinepm-credentials/*">
 	Deny from all
 </Files>
