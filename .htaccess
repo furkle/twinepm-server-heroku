@@ -1,5 +1,1 @@
 # vim: syntax=apache
-
-<Files "*_user.txt">
-	Deny from all
-</Files>

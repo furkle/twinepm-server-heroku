@@ -16,13 +16,23 @@ if (!isset($_GET["id"])) {
 	die(json_encode($response));
 }
 
-$dsn = "mysql:host=localhost;dbname=twinepm;";
+require_once __DIR__ . "/../globals/getDatabaseArgs.php";
+$dbArgs = getDatabaseArgs();
+
+require_once __DIR__ . "/../globals/makeDSN.php";
+$prefix = "pgsql";
+$charset = "utf8";
+$dsn = makeDSN(
+	$prefix,
+	$dbArgs["host"],
+	$dbArgs["port",
+	$dbArgs["dbname"],
+	$charset);
 
 $id = (int)$_GET["id"];
 
-$username = "tpm_packages_get_user";
-$password = trim(file_get_contents(__DIR__ .
-	"/../get/tpm_packages_get_user.txt"));
+$username = $dbArgs["user"];
+$password = $dbArgs["password"]
 
 $db = new PDO($dsn, $username, $password);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
