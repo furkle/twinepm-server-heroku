@@ -25,7 +25,7 @@ $charset = "utf8";
 $dsn = makeDSN(
 	$prefix,
 	$dbArgs["host"],
-	$dbArgs["port",
+	$dbArgs["port"],
 	$dbArgs["dbname"],
 	$charset);
 
