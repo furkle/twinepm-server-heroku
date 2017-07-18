@@ -45,9 +45,11 @@ $stmt = $db->prepare("SELECT id, name, version, js, css, keywords, " .
 try {
 	$stmt->execute(array($id));
 } catch (Exception $e) {
+	var_dump($e);
+	http_response_code(500);
 	$response["status"] = 500;
 	$response["error"] = "Unknown error fetching packages in profile get.";
-	return $response;
+	die(json_encode($response));
 }
 
 $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
