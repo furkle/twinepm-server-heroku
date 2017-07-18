@@ -32,7 +32,7 @@ $dsn = makeDSN(
 $id = (int)$_GET["id"];
 
 $username = $dbArgs["user"];
-$password = $dbArgs["password"]
+$password = $dbArgs["password"];
 
 $db = new PDO($dsn, $username, $password);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
