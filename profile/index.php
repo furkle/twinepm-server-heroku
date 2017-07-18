@@ -1,11 +1,11 @@
 <?php
-require_once "/var/www/twinepm-credentials/globals/headers.php";
+require_once __DIR__ . "/../twinepm-credentials/globals/headers.php";
 
 $reqMethod = $_SERVER["REQUEST_METHOD"];
 if ($reqMethod === "GET") {
-	require_once "/var/www/twinepm-credentials/get/profile.php";
+	require_once __DIR__ . "/../twinepm-credentials/get/profile.php";
 } else if ($reqMethod === "POST") {
-	require_once "/var/www/twinepm-credentials/post/profile.php";
+	require_once __DIR__ . "/../twinepm-credentials/post/profile.php";
 } else if ($reqMethod === "OPTIONS") {
 	header("Access-Control-Allow-Methods: GET, POST");
 	die(json_encode(array("status" => 200)));

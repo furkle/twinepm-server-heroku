@@ -1,9 +1,9 @@
 <?php
-require_once "/var/www/twinepm-credentials/globals/headers.php";
+require_once __DIR__ . "/../twinepm-credentials/globals/headers.php";
 
 $reqMethod = $_SERVER["REQUEST_METHOD"];
 if ($reqMethod === "GET") {
-	require_once "/var/www/twinepm-credentials/get/search.php";
+	require_once __DIR__ . "/../twinepm-credentials/get/search.php";
 } else if ($reqMethod === "OPTIONS") {
 	header("Access-Control-Allow-Methods: GET");
 	die(json_encode(array("status" => 200)));
