@@ -17,7 +17,7 @@ if (!isset($_GET["id"])) {
 }
 
 require_once __DIR__ . "/../globals/getDatabaseArgs.php";
-$dbArgs = getDatabaseArgs();
+$dbArgs = getDatabaseArgs();var_dump($dbArgs);
 
 require_once __DIR__ . "/../globals/makeDSN.php";
 $prefix = "pgsql";
