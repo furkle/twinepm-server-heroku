@@ -16,13 +16,14 @@ if (!isset($_GET["id"])) {
 	die(json_encode($response));
 }
 
-$dsn = "mysql:host=localhost;dbname=twinepm;";
+require_once __DIR__ . "/../globals/getDatabaseArgs.php";
+$dbArgs = getDatabaseArgs();
 
-$id = (int)$_GET["id"];
+require_once __DIR__ . "/../globals/makeTwinepmDSN.php";
+$dsn = makeTwinepmDSN();
 
-$username = "tpm_userdata_get_user";
-$password = trim(file_get_contents(__DIR__ .
-	"/../get/tpm_userdata_get_user.txt"));
+$username = $dbArgs["user"];
+$password = $dbArgs["pass"];
 
 $db = new PDO($dsn, $username, $password);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -30,7 +31,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $db->prepare("SELECT id, name, name_visible, " .
 	"description, date_created, date_created_visible, email, " .
 	"email_visible, date_style, time_style FROM userdata WHERE id=?");
-
+$id = (int)$_GET["id"];
 try {
 	$stmt->execute(array($id));
 } catch (Exception $e) {
@@ -70,13 +71,6 @@ if ($emailVisible) {
 }
 
 $response["userdata"]["id"] = (int)$fetch["id"];
-
-$username = "tpm_packages_get_user";
-$password = trim(file_get_contents(__DIR__ .
-	"/../get/tpm_packages_get_user.txt"));
-
-$db = new PDO($dsn, $username, $password);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $stmt = $db->prepare("SELECT id, name, version, js, css, keywords, " .
 	"date_created, date_modified, description, homepage, version, " .

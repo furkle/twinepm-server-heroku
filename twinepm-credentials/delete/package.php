@@ -1,10 +1,10 @@
 <?php
 $response = array("status" => 200);
 
-// get DELETE vars
+/* get DELETE vars */
 $_DELETE = json_decode(file_get_contents("php://input"), true);
 
-require_once "../globals/token_to_userdata.php";
+require_once __DIR__ . "/token_to_userdata.php";
 $userdata = tokenToUserdata();
 if (!$userdata) {
 	http_response_code(500);
@@ -33,15 +33,21 @@ if (!$userdata) {
 	die(json_encode($response));
 }
 
-$dsn = "mysql:host=localhost;dbname=twinepm;charset=utf8;";
-$username = "tpm_packages_delete_user";
-$password = trim(file_get_contents("../delete/tpm_packages_delete_user.txt"));
+require_once __DIR__ . "/../globals/getDatabaseArgs.php";
+$dbArgs = getDatabaseArgs();
+
+require_once __DIR__ . "/../globals/makeTwinepmDSN.php";
+$dsn = makeTwinepmDSN();
+
+$id = (int)$_GET["id"];
+
+$username = $dbArgs["user"];
+$password = $dbArgs["pass"];
 
 $db = new PDO($dsn, $username, $password);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $stmt = $db->prepare("SELECT author_id FROM packages WHERE id=?");
-
 try {
 	$stmt->execute(array((int)$_DELETE["id"]));
 } catch (Exception $e) {
@@ -67,7 +73,6 @@ if (!$fetch) {
 }
 
 $stmt = $db->prepare("DELETE FROM packages WHERE id=?");
-
 try {
 	$stmt->execute(array($_DELETE["id"]));
 } catch (Exception $e) {

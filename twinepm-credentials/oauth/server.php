@@ -1,7 +1,14 @@
 <?php
-$dsn = 'mysql:dbname=twinepm;host=localhost';
-$username = 'tpm_oauth_user';
-$password = trim(file_get_contents(__DIR__ . "/tpm_oauth_user.txt"));
+require_once __DIR__ . "/../globals/getDatabaseArgs.php";
+$dbArgs = getDatabaseArgs();
+
+require_once __DIR__ . "/../globals/makeTwinepmDSN.php";
+$dsn = makeTwinepmDSN();
+
+$id = (int)$_GET["id"];
+
+$username = $dbArgs["user"];
+$password = $dbArgs["pass"];
 
 require_once __DIR__ . '/oauth2-server-php/src/OAuth2/Autoloader.php';
 

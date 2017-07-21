@@ -19,17 +19,8 @@ if (!isset($_GET["id"])) {
 require_once __DIR__ . "/../globals/getDatabaseArgs.php";
 $dbArgs = getDatabaseArgs();
 
-require_once __DIR__ . "/../globals/makeDSN.php";
-$prefix = "pgsql";
-$charset = "utf8";
-$dsn = makeDSN(
-	$prefix,
-	$dbArgs["host"],
-	$dbArgs["port"],
-	ltrim($dbArgs["path"], "/"),
-	$charset);
-
-$id = (int)$_GET["id"];
+require_once __DIR__ . "/../globals/makeTwinepmDSN.php";
+$dsn = makeTwinepmDSN();
 
 $username = $dbArgs["user"];
 $password = $dbArgs["pass"];
@@ -41,11 +32,10 @@ $stmt = $db->prepare("SELECT id, name, version, js, css, keywords, " .
 	"date_created, date_modified, description, homepage, version, " .
 	"type, tag FROM packages WHERE id=? " .
 	"AND published=1");
-
+$id = (int)$_GET["id"];
 try {
 	$stmt->execute(array($id));
 } catch (Exception $e) {
-	var_dump($e);
 	http_response_code(500);
 	$response["status"] = 500;
 	$response["error"] = "Unknown error fetching packages in profile get.";
@@ -53,7 +43,6 @@ try {
 }
 
 $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if (!$fetch) {
 	http_response_code(404);
 	$response["status"] = 404;
