@@ -1,0 +1,24 @@
+{% set headline = "TwinePM Client Applications" %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "components/tpmServerHead.html.twig" %}
+
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+
+        <div id="clients">
+            {% for client in clients %}
+                <div class="client">
+                    <div>
+                        <strong>{{ client.name }}</strong>
+                    </div>
+
+                    <div>{{ client.description }}</div>
+                    <a href={{ client.domain }}>{{ client.domain }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>

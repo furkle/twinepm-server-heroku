@@ -1,0 +1,7 @@
+<div id="loggedInUser">
+    You are currently logged in as:
+    {% set fallback = 'Error. No user identifiers found.' %}
+    <strong>{{
+        loggedInUser.name|default(loggedInUser.id|default(fallback))
+    }}</strong>.
+</div>

@@ -1,0 +1,14 @@
+{% set headline = "TwinePM Server Login" %}
+<!DOCTYPE html>
+<html>
+    {% include "components/tpmServerHead.html.twig" %}
+
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+
+        {% set includeLoginButton = true %}
+        {% include "components/loginComponent.html.twig" %}
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>

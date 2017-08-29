@@ -1,0 +1,19 @@
+{% if error %}
+    <div id="error">
+        <style>{% include "styles/error.css" %}</style>
+
+        {% if error.status >= 400 and error.status < 500 %}
+            {% set errorType = "Client" %}
+        {% else %}
+            {% set errorType = "Server" %}
+        {% endif %}
+
+        <h1 class="errorTitle">TwinePM {{ errorType }} Error</h1>
+        <h2 class="errorCode">{{ error.phrase }}</h2>
+        <div class="errorMessage">{{ error.message }}</div>
+        <div class="errorStatus">
+            <span class="errorStatusCode">{{ error.status }}</span>
+            <span class="errorStatusReason">{{ error.reason }}</span>
+        </div>
+    </div>
+{% endif %}

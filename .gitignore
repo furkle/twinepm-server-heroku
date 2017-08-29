@@ -1,1 +1,6 @@
-forum/
+vendor/
+src/OAuth2/private.key
+src/OAuth2/privatePassphrase.txt
+src/OAuth2/public.key
+src/OAuth2/clients/*
+scripts/

@@ -1,0 +1,26 @@
+{% set headline = "Create New TwinePM Account" %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "components/tpmServerHead.html.twig" %}
+
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+
+        <div id="accountCreation">
+            <label className="createAccountLabel" for="username">Username</label>
+            <input id="username">
+            
+            <label className="createAccountLabel" for="password">Password</label>
+            <input id="password" type="password" required>
+
+            <label className="createAccountLabel" for="email">E-mail</label>
+            <input id="email">
+
+            <button id="create">Create</button>
+            <div id="statusLine"></div>
+            <script>{% include "scripts/createAccountEvent.js" %}</script>
+        </div>
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>

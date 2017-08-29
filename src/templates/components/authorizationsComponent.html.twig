@@ -1,0 +1,28 @@
+{% if authorizations is not empty %}
+    <div id="authorizations">
+        <style>
+            .authorization {
+                transition: opacity 0.5s;
+            }
+        </style>
+
+        {% for authorization in authorizations %}
+            <div
+                class="authorization"
+                data-gai={{ authorization.globalAuthorizationId }}>
+                <div><strong>Client</strong>: {{ authorization.clientName }}</div>
+                <div><strong>Time</strong>: {{ authorization.time }}</div>
+                <div><strong>Scopes</strong>: {{ authorization.scopes }}</div>
+                <div><strong>IP</strong>: {{ authorization.ip }}</div>
+                <button class="revokeAuthorizationButton">Revoke</button>
+            </div>
+        {% endfor %}
+
+        <div id="statusLine"></div>
+        
+        <script>{% include "scripts/revokeAuthorizationEvent.js" %}</script>
+    </div>
+
+{% else %}
+    No authorizations.
+{% endif %}

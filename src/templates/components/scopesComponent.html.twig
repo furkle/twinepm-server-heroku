@@ -1,0 +1,9 @@
+<div id="scopes">
+    {% for scope in scopes %}
+        <div class="scope">
+            <div><strong>{{ scope.name }}</strong></div>
+
+            <div>{{ scope.description }}</div>
+        </div>
+    {% endfor %}
+</div>

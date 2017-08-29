@@ -1,0 +1,17 @@
+{% set headline = "TwinePM Server" %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "components/tpmServerHead.html.twig" %}
+
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+
+        <p>Welcome to the Twine Package Manager server.</p>
+        <p>This is a microclient that allows the management of client authorizations.</p>
+        <p>
+            The latter, and many other features, are also contained within other client. Check out the <a href="clients">clients</a> page for more information about how to use TwinePM.
+        </p>
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>

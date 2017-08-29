@@ -1,0 +1,15 @@
+{% set headline = "Authorize Client Application " ~ client.name %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "components/tpmServerHead.html.twig" %}
+
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+
+        {% include "components/scopesComponent.html.twig" %}
+
+        {% include "components/authorizeComponent.html.twig" %}
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>

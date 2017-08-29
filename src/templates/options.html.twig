@@ -1,0 +1,21 @@
+{% set headline = "TwinePM Options" %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include "components/tpmServerHead.html.twig" %}
+    
+    <body>
+        {% include "components/tpmServerHeader.html.twig" %}
+        
+        {% if loggedInUser %}
+            <h2>Logout</h2>
+            {% include "components/logoutComponent.html.twig" %}
+            
+            <h2>Authorizations</h2>
+            {% include "components/authorizationsComponent.html.twig" %}
+        {% else %}
+            You are not logged in.
+        {% endif %}
+
+        {% include "components/errorComponent.html.twig" %}
+    </body>
+</html>
