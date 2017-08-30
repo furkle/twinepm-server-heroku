@@ -1,10 +1,14 @@
 FROM nginx:1.13
 
-# Set the locale
+# Set the locale.
+RUN \
+    apt-get update && \
+    apt-get install -y locales
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+# Install the dependencies.
 RUN \
     apt-get update && \
     apt-get install -y \
@@ -24,4 +28,5 @@ RUN \
     cd twinepm-server-heroku && \
     composer install
 
+# Copy the source folder to the container.
 COPY . .
