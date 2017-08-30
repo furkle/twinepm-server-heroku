@@ -7,7 +7,6 @@ ENV TERM xterm-256color
 # Set the locale.
 RUN \
     apt-get update && \
-    apt-get upgrade -y && \
     apt-get install -y \
         apt-utils \
         locales \
@@ -24,7 +23,6 @@ RUN \
 
 # Install the dependencies.
 RUN \
-    /usr/bin/gpg-agent --daemon && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
@@ -35,9 +33,12 @@ RUN \
         php7.1-xml \
         php7.1-zip \
         unzip \
-        zip && \
+        zip
+
+COPY . /etc/twinepm-server-src
+
+RUN \
     cd twinepm-server-heroku && \
     composer install
 
 # Copy the source folder to the container.
-COPY . /etc/twinepm-server-src
