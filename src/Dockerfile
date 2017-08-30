@@ -21,18 +21,18 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
 # Install the dependencies.
 RUN \
     /usr/bin/gpg-agent --daemon && \
-    add-apt-repository -y ppa:ondrej/php && \
-    apt-get update && \
-    apt-get install -y \
-        composer \
-        php7.1 \
-        php7.1-mbstring \
-        php7.1-xml \
-        php7.1-zip \
-        unzip \
-        zip && \
-    cd twinepm-server-heroku && \
-    composer install
+    #add-apt-repository -y ppa:ondrej/php && \
+    #apt-get update && \
+    #apt-get install -y \
+    #    composer \
+    #    php7.1 \
+    #    php7.1-mbstring \
+    #    php7.1-xml \
+    #    php7.1-zip \
+    #    unzip \
+    #    zip && \
+    #cd twinepm-server-heroku && \
+    #composer install
 
 # Copy the source folder to the container.
 COPY . .
