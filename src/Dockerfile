@@ -11,7 +11,6 @@ RUN \
         locales \
         lsb-release \
         software-properties-common \
-        python-software-properties \
         gnupg
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
