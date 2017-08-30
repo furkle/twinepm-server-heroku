@@ -4,6 +4,8 @@ FROM nginx:1.13
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TERM xterm-256color
 
+WORKDIR .
+
 # Set the locale.
 RUN \
     apt-get update && \
@@ -35,10 +37,10 @@ RUN \
         unzip \
         zip
 
-#COPY ~/twinepm-server-heroku /etc/twinepm-server-heroku
+COPY . /etc/twinepm-server-heroku
 
-#RUN \
-#    cd /etc/twinepm-server-heroku && \
-#    composer install
+RUN \
+    cd /etc/twinepm-server-heroku && \
+    composer install
 
 # Copy the source folder to the container.
