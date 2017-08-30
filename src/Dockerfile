@@ -10,7 +10,8 @@ RUN \
   apt-get install -yqq \
     locales \
     lsb-release \
-    software-properties-common && \
+    software-properties-common \
+    gnupg && \
   apt-get clean
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -19,9 +20,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
 
 # Install the dependencies.
 RUN \
-    apt-get update && \
-    apt-get install -y gnupg && \
-    apt-get clean && \
+    /usr/bin/gpg-agent --daemon --use-standard-socket && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
     apt-get install -y \
