@@ -35,7 +35,7 @@ RUN \
         unzip \
         zip
 
-COPY . /etc/twinepm-server-src
+COPY ~/twinepm-server-heroku /etc/twinepm-server-heroku
 
 RUN \
     cd /etc/twinepm-server-heroku && \
