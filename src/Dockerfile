@@ -1,11 +1,11 @@
 FROM nginx:1.13
 
 # Set environment variables.
-ARG DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 ENV TERM xterm-256color
 
 # Set the locale.
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN \
     apt-get update && \
     apt-get install -y \
         locales \
@@ -13,9 +13,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
         lsb-release \
         software-properties-common \
         gnupg
-RUN DEBIAN_FRONTEND=noninteractive \
-    export LC_ALL=en_US.UTF-8 && \
-    export LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
