@@ -4,3 +4,5 @@ src/OAuth2/privatePassphrase.txt
 src/OAuth2/public.key
 src/OAuth2/clients/*
 scripts/
+.vagrant
+ubuntu-xenial-16.04-cloudimg-console.log
