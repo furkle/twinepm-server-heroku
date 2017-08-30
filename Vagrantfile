@@ -80,15 +80,15 @@ Vagrant.configure("2") do |config|
       docker-ce \
       git \
       software-properties-common && \
-    git clone https://github.com/furkle/twinepm-server-heroku && \
+    git clone https://github.com/furkle/twinepm-server-heroku:dev && \
     cd twinepm-server-heroku/src && \
-    docker build -t twinepm_logic && \
+    docker build -t twinepm_logic . && \
     docker run -p 443:443 twinepm_logic && \
     cd ../redis && \
-    docker build -t twinepm_redis && \
+    docker build -t twinepm_redis . && \
     docker run twinepm_redis -d redis redis-server --appendonly yes && \
     cd ../postgresql && \
-    docker build -t postgresql_redis && \
+    docker build -t postgresql_redis . && \
     docker run postgresql_redis
   SHELL
 end

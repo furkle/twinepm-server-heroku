@@ -14,3 +14,5 @@ RUN \
         zip && \
     cd twinepm-server-heroku && \
     composer install
+
+COPY . .
