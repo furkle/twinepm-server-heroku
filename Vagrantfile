@@ -69,13 +69,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     set TERM = xterm-256color &&
     apt-get update && \
-    apt-get upgrade -y && \
     apt-get install -y \
       apt-transport-https \
       ca-certificates \
       curl \
       git \
       gnupg && \
+    apt-get clean && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
@@ -83,6 +83,7 @@ Vagrant.configure("2") do |config|
       stable" && \
     apt-get update && \
     apt-get install -y docker-ce && \
+    apt-get clean && \
     git clone -b dev https://github.com/furkle/twinepm-server-heroku && \
     cd twinepm-server-heroku/src && \
     docker build -t twinepm_logic . && \
