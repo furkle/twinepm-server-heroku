@@ -2,15 +2,11 @@ FROM nginx:1.13
 
 # Set environment variables.
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TERM xterm-256color
-
-WORKDIR .
 
 # Set the locale.
 RUN \
     apt-get update && \
     apt-get install -y \
-        apt-utils \
         locales \
         lsb-release \
         software-properties-common \
@@ -37,7 +33,6 @@ RUN \
         unzip \
         zip && \
     cd /etc && \
-    git clone -b dev https://github.com/furkle/twinepm-server-heroku.git && \
+    git clone -b $BRANCH https://github.com/furkle/twinepm-server-heroku.git && \
     cd /etc/twinepm-server-heroku && \
     composer install
-
