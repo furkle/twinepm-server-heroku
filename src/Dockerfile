@@ -1,7 +1,7 @@
 FROM nginx:1.13
 
 # Set environment variables.
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND noninteractive
 ENV TERM xterm-256color
 
 # Set the locale.
@@ -25,7 +25,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
 # Install the dependencies.
 RUN DEBIAN_FRONTEND=noninteractive LC_ALL=en_US.UTF-8 \
     /usr/bin/gpg-agent --daemon && \
-    add-apt-repository ppa:ondrej/php && \
+    add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
     apt-get install -y \
         composer \
