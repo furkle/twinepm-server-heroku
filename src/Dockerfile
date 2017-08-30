@@ -9,9 +9,9 @@ RUN \
     apt-get update && \
     apt-get install -y \
         locales \
-        language-pack-en-base \
         lsb-release \
         software-properties-common \
+        python-software-properties \
         gnupg
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -20,7 +20,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
     /usr/sbin/update-locale LANG=$LANG
 
 # Install the dependencies.
-RUN DEBIAN_FRONTEND=noninteractive LC_ALL=en_US.UTF-8 \
+RUN \
     /usr/bin/gpg-agent --daemon && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
