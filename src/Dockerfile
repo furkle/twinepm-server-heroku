@@ -7,9 +7,9 @@ ENV TERM xterm-256color
 # Set the locale.
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update && \
-    apt-get install -yqq \
+    apt-get install -y \
         locales \
-        apt-get install -y language-pack-en-base \
+        language-pack-en-base \
         lsb-release \
         software-properties-common \
         gnupg
