@@ -23,19 +23,21 @@ RUN \
 
 # Install the dependencies.
 RUN \
-    /usr/bin/gpg-agent --daemon
-    #add-apt-repository -y ppa:ondrej/php && \
-    #apt-get update && \
-    #apt-get install -y \
-    #    composer \
-    #    php7.1 \
-    #    php7.1-mbstring \
-    #    php7.1-xml \
-    #    php7.1-zip \
-    #    unzip \
-    #    zip && \
-    #cd twinepm-server-heroku && \
-    #composer install
+    /usr/bin/gpg-agent --daemon && \
+    apt-get install -y python-software-properties && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
+    add-apt-repository -y ppa:ondrej/php && \
+    apt-get update && \
+    apt-get install -y \
+        composer \
+        php7.1 \
+        php7.1-mbstring \
+        php7.1-xml \
+        php7.1-zip \
+        unzip \
+        zip && \
+    cd twinepm-server-heroku && \
+    composer install
 
 # Copy the source folder to the container.
 COPY . /etc/twinepm-server-src
