@@ -35,10 +35,10 @@ RUN \
         unzip \
         zip
 
-COPY ~/twinepm-server-heroku /etc/twinepm-server-heroku
+#COPY ~/twinepm-server-heroku /etc/twinepm-server-heroku
 
-RUN \
-    cd /etc/twinepm-server-heroku && \
-    composer install
+#RUN \
+#    cd /etc/twinepm-server-heroku && \
+#    composer install
 
 # Copy the source folder to the container.
