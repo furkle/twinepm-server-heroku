@@ -7,7 +7,7 @@ ENV TERM xterm-256color
 # Set the locale.
 RUN \
     apt-get update && \
-    apt-get upgrade && \
+    apt-get upgrade -y && \
     apt-get install -y \
         apt-utils \
         locales \
