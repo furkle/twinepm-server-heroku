@@ -38,7 +38,7 @@ RUN \
 COPY . /etc/twinepm-server-src
 
 RUN \
-    cd twinepm-server-heroku && \
+    cd /etc/twinepm-server-heroku && \
     composer install
 
 # Copy the source folder to the container.
