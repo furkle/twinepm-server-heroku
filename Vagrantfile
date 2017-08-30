@@ -90,9 +90,9 @@ Vagrant.configure("2") do |config|
     docker run -d -p 443:80 twinepm_logic
     cd ../redis && \
     docker build -t twinepm_redis . && \
-    docker run twinepm_redis -d redis redis-server --appendonly yes && \
+    docker run twinepm_redis -d --appendonly yes && \
     cd ../postgresql && \
     docker build -t postgresql_redis . && \
-    docker run postgresql_redis
+    docker run -d postgresql_redis
   SHELL
 end
