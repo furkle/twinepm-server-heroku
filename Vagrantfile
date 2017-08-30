@@ -67,18 +67,22 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    apt-get update -y &&
+    set TERM = xterm-256color &&
+    apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y \
       apt-transport-https \
       ca-certificates \
       curl \
-      docker-ce \
-      git && \
+      git \
+      gnupg && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) \
       stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce && \
     git clone -b dev https://github.com/furkle/twinepm-server-heroku && \
     cd twinepm-server-heroku/src && \
     docker build -t twinepm_logic . && \
