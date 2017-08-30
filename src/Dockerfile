@@ -12,7 +12,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt-get install -y language-pack-en-base \
         lsb-release \
         software-properties-common \
-        gnupg && \
+        gnupg
 RUN DEBIAN_FRONTEND=noninteractive \
     export LC_ALL=en_US.UTF-8 && \
     export LANG=en_US.UTF-8
@@ -25,7 +25,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
 # Install the dependencies.
 RUN DEBIAN_FRONTEND=noninteractive LC_ALL=en_US.UTF-8 \
     /usr/bin/gpg-agent --daemon && \
-    LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && \
+    add-apt-repository ppa:ondrej/php && \
     apt-get update && \
     apt-get install -y \
         composer \
