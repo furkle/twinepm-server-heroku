@@ -35,12 +35,9 @@ RUN \
         php7.1-xml \
         php7.1-zip \
         unzip \
-        zip
-
-COPY . /etc/twinepm-server-heroku
-
-RUN \
+        zip && \
+    cd /etc && \
+    git clone -b dev https://github.com/furkle/twinepm-server-heroku.git && \
     cd /etc/twinepm-server-heroku && \
     composer install
 
-# Copy the source folder to the container.
