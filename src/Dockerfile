@@ -23,7 +23,7 @@ RUN \
 
 # Install the dependencies.
 RUN \
-    /usr/bin/gpg-agent --daemon && \
+    /usr/bin/gpg-agent --daemon
     #add-apt-repository -y ppa:ondrej/php && \
     #apt-get update && \
     #apt-get install -y \
