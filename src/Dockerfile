@@ -7,6 +7,7 @@ ENV TERM xterm-256color
 # Set the locale.
 RUN \
     apt-get update && \
+    apt-get upgrade && \
     apt-get install -y \
         apt-utils \
         locales \
@@ -24,7 +25,6 @@ RUN \
 # Install the dependencies.
 RUN \
     /usr/bin/gpg-agent --daemon && \
-    apt-get install -y python-software-properties && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
