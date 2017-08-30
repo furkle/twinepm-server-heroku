@@ -13,7 +13,8 @@ ENV LC_ALL en_US.UTF-8
 RUN \
     apt-get update && \
     apt-get install -y \
-        gnupg \
+        software-properties-common \
+        gnupg && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
     apt-get install -y \

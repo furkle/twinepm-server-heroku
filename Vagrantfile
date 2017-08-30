@@ -67,6 +67,7 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+    apt-get install software-properties-common && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
@@ -78,8 +79,7 @@ Vagrant.configure("2") do |config|
       ca-certificates \
       curl \
       docker-ce \
-      git \
-      software-properties-common && \
+      git && \
     git clone -b dev https://github.com/furkle/twinepm-server-heroku && \
     cd twinepm-server-heroku/src && \
     docker build -t twinepm_logic . && \
