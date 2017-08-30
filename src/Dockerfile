@@ -8,6 +8,7 @@ ENV TERM xterm-256color
 RUN \
     apt-get update && \
     apt-get install -y \
+        apt-utils \
         locales \
         lsb-release \
         software-properties-common \
@@ -35,4 +36,4 @@ RUN \
     #composer install
 
 # Copy the source folder to the container.
-COPY . .
+COPY . /etc/twinepm-server-src
