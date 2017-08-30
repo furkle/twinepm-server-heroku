@@ -2,18 +2,21 @@ FROM nginx:1.13
 
 # Set the locale.
 RUN \
-    apt-get update && \
-    apt-get install -y locales && \
-    locale-gen en_US.UTF-8
+  apt-get update && \
+  apt-get install -yqq \
+    locales \
+    lsb-release \
+    software-properties-common && \
+  apt-get clean
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+  /usr/sbin/update-locale LANG=$LANG
 
 # Install the dependencies.
 RUN \
     apt-get update && \
     apt-get install -y \
-        software-properties-common \
         gnupg && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
