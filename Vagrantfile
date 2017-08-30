@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
       docker-ce \
       git \
       software-properties-common && \
-    git clone https://github.com/furkle/twinepm-server-heroku:dev && \
+    git clone -b dev https://github.com/furkle/twinepm-server-heroku && \
     cd twinepm-server-heroku/src && \
     docker build -t twinepm_logic . && \
     docker run -p 443:443 twinepm_logic && \
