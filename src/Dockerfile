@@ -1,6 +1,7 @@
 FROM nginx:1.13
 
 RUN \
+    apt-get update && \
     apt-get install software-properties-common && \
     add-apt-repository ppa:ondrej/php && \
     apt-get update && \
