@@ -63,15 +63,20 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
 
+
+  defaultBranch = ENV['TWINEPM_DEFAULT_BRANCH'] || "master"
+  branch = ENV['TWINEPM_BRANCH'] || defaultBranch
+  repoName = 'twinepm-server-heroku'
+  shellStr =
+    'wget http://www.phing.info/get/phing-2.16.0.phar -O /usr/local/bin/phing && ' +
+    'chmod +x /usr/local/bin/phing && ' +
+    'cd /etc && ' +
+    "git clone -b #{branch} https://github.com/furkle/#{repoName} && " +
+    "cd #{repoName} && " +
+    'phing get-vm-dependencies'
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    cd /etc && \
-    set DEFAULT_BRANCH='master' && \
-    set BRANCH_DECIDER='if [ \$TWINEPM_BRANCH eq "" ]; then echo \$DEFAULT_BRANCH else echo \$TWINEPM_BRANCH' && \
-    git clone -b $(/bin/sh -c $($BRANCH_DECIDER)) https://github.com/furkle/twinepm-server-heroku && \
-    cd twinepm-server-heroku && \
-    vendor/phing/phing/bin/phing get-vm-dependencies
-  SHELL
+  config.vm.provision "shell", inline: shellStr
 end

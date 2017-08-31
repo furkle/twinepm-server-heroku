@@ -1,5 +1,4 @@
-vendor/*
-!vendor/phing
+vendor/
 src/OAuth2/private.key
 src/OAuth2/privatePassphrase.txt
 src/OAuth2/public.key

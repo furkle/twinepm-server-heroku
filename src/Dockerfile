@@ -7,10 +7,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN \
     apt-get update && \
     apt-get install -y \
+        gnupg \
         locales \
         lsb-release \
-        software-properties-common \
-        gnupg
+        php \
+        software-properties-common
 ENV \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -24,4 +25,5 @@ RUN \
     cd /etc && \
     git clone -b ${TWINEPM_BRANCH:-${'master'}} https://github.com/furkle/twinepm-server-heroku.git && \
     cd twinepm-server-heroku && \
-    vendor/phing/phing/bin/phing get-logic-dependencies
+    sh scripts/getPhing.sh && \
+    phing get-logic-dependencies
