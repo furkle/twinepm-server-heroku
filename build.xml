@@ -43,8 +43,7 @@
                 $(lsb_release -cs)
                 stable&quot; &amp;&amp;
             apt-get update &amp;&amp;
-            apt-get install -y docker-ce &amp;&amp;
-            cd /etc/twinepm-server-heroku">
+            apt-get install -y docker-ce">
         </exec>
     </target>
 
