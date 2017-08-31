@@ -13,8 +13,7 @@
             command="
             TWINEPM_BRANCH=master &amp;&amp;
             export TWINEPM_BRANCH &amp;&amp;
-            vagrant up &amp;&amp;
-            vagrant ssh">
+            vagrant up">
         </exec>
     </target>
 
@@ -24,8 +23,7 @@
             command="
             TWINEPM_BRANCH=dev &amp;&amp;
             export TWINEPM_BRANCH &amp;&amp;
-            vagrant up &amp;&amp;
-            vagrant ssh">
+            vagrant up">
         </exec>
     </target>
 
