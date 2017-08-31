@@ -68,6 +68,8 @@ Vagrant.configure("2") do |config|
   branch = ENV['TWINEPM_BRANCH'] || defaultBranch
   repoName = 'twinepm-server-heroku'
   shellStr =
+    "TWINEPM_BRANCH=#{branch} && " +
+    'export TWINEPM_BRANCH && ' +
     'cd /etc && ' +
     "git clone -b #{branch} https://github.com/furkle/#{repoName} && " +
     "cd #{repoName} && " +

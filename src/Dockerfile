@@ -8,6 +8,8 @@ RUN \
     apt-get update && \
     apt-get install -y git && \
     cd /etc && \
+    echo "WAAAAAAAAAAAW" && \
+    echo ${TWINEPM_BRANCH:-master} && \
     git clone -b ${TWINEPM_BRANCH:-master} https://github.com/furkle/twinepm-server-heroku.git && \
     cd twinepm-server-heroku && \
     ls -la && \
