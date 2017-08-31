@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
     'cd /etc && ' +
     "git clone -b #{branch} https://github.com/furkle/#{repoName} && " +
     "cd #{repoName} && " +
-    'sh scripts/getPhing.sh &&' +
+    './scripts/getPhing &&' +
     'phing get-vm-dependencies'
 
   # Enable provisioning with a shell script. Additional provisioners such as
