@@ -14,25 +14,14 @@ RUN \
 ENV \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
-    LC_ALL=en_US.UTF-8
+    LC_ALL=en_US.UTF-8 \
 RUN \
     localedef -i en_US -f UTF-8 en_US.UTF-8 && \
     /usr/sbin/update-locale LANG=$LANG
 
 # Install the dependencies.
 RUN \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
-    add-apt-repository -y ppa:ondrej/php && \
-    apt-get update && \
-    apt-get install -y \
-        composer \
-        php7.1 \
-        php7.1-mbstring \
-        php7.1-xml \
-        php7.1-zip \
-        unzip \
-        zip && \
     cd /etc && \
-    git clone -b $BRANCH https://github.com/furkle/twinepm-server-heroku.git && \
-    cd /etc/twinepm-server-heroku && \
-    composer install
+    git clone -b ${TWINEPM_BRANCH:-${'master'}} https://github.com/furkle/twinepm-server-heroku.git && \
+    cd twinepm-server-heroku && \
+    vendor/phing/phing/bin/phing get-logic-dependencies

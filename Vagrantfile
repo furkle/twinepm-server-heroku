@@ -67,7 +67,6 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    set TERM = xterm-256color &&
     apt-get update && \
     apt-get install -y \
       apt-transport-https \
@@ -75,24 +74,10 @@ Vagrant.configure("2") do |config|
       curl \
       git \
       gnupg && \
-    apt-get clean && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    apt-key fingerprint 0EBFCD88 && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) \
-      stable" && \
-    apt-get update && \
-    apt-get install -y docker-ce && \
-    apt-get clean && \
-    git clone -b dev https://github.com/furkle/twinepm-server-heroku && \
-    cd twinepm-server-heroku/src && \
-    docker build -t twinepm_logic . && \
-    docker run -d -p 443:80 twinepm_logic
-    cd ../redis && \
-    docker build -t twinepm_redis . && \
-    docker run -d twinepm_redis --appendonly yes && \
-    cd ../postgresql && \
-    docker build -t postgresql_redis . && \
-    docker run -d postgresql_redis
+    cd /etc && \
+    set BRANCH_DECIDER='if [ $TWINEPM_BRANCH eq "" ] then echo "master" else echo $TWINEPM_BRANCH' && \
+    git clone -b $(/bin/sh -c $BRANCH_DECIDER) https://github.com/furkle/twinepm-server-heroku && \
+    cd twinepm-server-heroku && \
+    vendor/phing/phing/bin/phing get-vm-dependencies
   SHELL
 end

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="twinepm-server-heroku">
+    <target name="get-vm-dependencies">
+        <exec command="
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &&
+            apt-key fingerprint 0EBFCD88 &&
+            add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu
+              $(lsb_release -cs)
+              stable' &&
+            apt-get update &&
+            apt-get install -y docker-ce &&
+            vendor/phing/phing/bin/phing build-containers">
+        </exec>
+    </target>
+
+    <target name="build-containers">
+        <exec command="
+            cd src &&
+            docker build -t twinepm_logic . &&
+            docker run -d -p 443:80 twinepm_logic
+            cd ../redis &&
+            docker build -t twinepm_redis . &&
+            docker run -d twinepm_redis redis redis-server --appendonly yes &&
+            cd ../postgresql &&
+            docker build -t postgresql_redis . &&
+            docker run -d postgresql_redis">
+        </exec>
+    </target>
+
+    <target name="get-logic-dependencies">
+        <exec command="
+            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &&
+            add-apt-repository -y ppa:ondrej/php &&
+            apt-get update &&
+            apt-get install -y
+                composer
+                php7.1
+                php7.1-mbstring
+                php7.1-xml
+                php7.1-zip
+                unzip
+                zip &&
+            cd /etc &&
+            cd /etc/twinepm-server-heroku &&
+            composer install">
+        </exec>
+    </target>
+</project>
