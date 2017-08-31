@@ -33,17 +33,9 @@
         <exec
             passthru="true"
             command="
-            apt-get update &amp;&amp;
-            apt-get install -y
-              apt-transport-https
-              ca-certificates
-              curl
-              gnupg &amp;&amp;
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &amp;&amp;
             apt-key fingerprint 0EBFCD88 &amp;&amp;
-            add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu
-              $(lsb_release -cs)
-              stable' &amp;&amp;
+            add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable' &amp;&amp;
             apt-get update &amp;&amp;
             apt-get install -y docker-ce &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
