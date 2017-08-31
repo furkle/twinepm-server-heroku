@@ -52,13 +52,14 @@
             phing get-logic-dependencies &amp;&amp;
             cd src &amp;&amp;
             docker build -t twinepm_logic . &amp;&amp;
+            echo $TWINEPM_BRANCH
             docker run -d -p 443:80 -e TWINEPM_BRANCH=$TWINEPM_BRANCH twinepm_logic --name twinepm_logic &amp;&amp;
             cd ../redis &amp;&amp;
             docker build -t twinepm_redis . &amp;&amp;
             docker run -d twinepm_redis redis redis-server --appendonly yes --name twinepm_redis &amp;&amp;
             cd ../postgresql &amp;&amp;
-            docker build -t postgresql_redis . &amp;&amp;
-            docker run -d postgresql_redis --name twinepm_redis">
+            docker build -t twinepm_postgresql . &amp;&amp;
+            docker run -d twinepm_postgresql --name twinepm_redis">
         </exec>
     </target>
 
