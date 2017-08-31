@@ -41,6 +41,7 @@
             apt-get update &amp;&amp;
             apt-get install -y docker-ce &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
+            phing build-containers &amp;&amp;
             phing run-containers">
         </exec>
     </target>
@@ -70,18 +71,28 @@
         </exec>
     </target>
 
-    <target name="run-containers">
+    <target name="build-containers">
         <exec
             passthru="true"
             command="
             cd /etc/twinepm-server-heroku/src &amp;&amp;
             docker build --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH -t twinepm_logic . &amp;&amp;
-            docker run -d -p 443:80 twinepm_logic --name twinepm_logic &amp;&amp;
             cd ../redis &amp;&amp;
             docker build -t twinepm_redis . &amp;&amp;
+            cd ../postgresql &amp;&amp;
+            docker build -t twinepm_postgresql .">
+        </exec>
+    </target>
+
+    <target name="run-containers">
+        <exec
+            passthru="true"
+            command="
+            cd /etc/twinepm-server-heroku/src &amp;&amp;
+            docker run -d -p 443:80 twinepm_logic --name twinepm_logic &amp;&amp;
+            cd ../redis &amp;&amp;
             docker run -d twinepm_redis redis redis-server --appendonly yes --name twinepm_redis &amp;&amp;
             cd ../postgresql &amp;&amp;
-            docker build -t twinepm_postgresql . &amp;&amp;
             docker run -d twinepm_postgresql --name twinepm_redis">
         </exec>
     </target>
