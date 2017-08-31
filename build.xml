@@ -72,6 +72,19 @@
         <exec
             passthru="true"
             command="
+            apt-get update &amp;&amp;
+            apt-get install -y
+                gnupg
+                locales
+                lsb-release
+                php
+                php-xml
+                software-properties-common &amp;&amp;
+            LANG=en_US.UTF-8 &amp;&amp;
+            LANGUAGE=en_US:en &amp;&amp;
+            LC_ALL=en_US.UTF-8 &amp;&amp;
+            localedef -i en_US -f UTF-8 en_US.UTF-8 &amp;&amp;
+            /usr/sbin/update-locale LANG=$LANG &amp;&amp;
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &amp;&amp;
             add-apt-repository -y ppa:ondrej/php &amp;&amp;
             apt-get update &amp;&amp;
