@@ -66,14 +66,6 @@
         <exec
             passthru="true"
             command="
-            apt-get update &amp;&amp;
-            apt-get install -y
-                gnupg
-                locales
-                lsb-release
-                php
-                php-xml
-                software-properties-common &amp;&amp;
             LANG=en_US.UTF-8 &amp;&amp;
             LANGUAGE=en_US:en &amp;&amp;
             LC_ALL=en_US.UTF-8 &amp;&amp;
