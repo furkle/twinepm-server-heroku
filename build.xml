@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="twinepm-server-heroku" default="launch-stable-vm">
+    <!-- Runs from command line. -->
     <target name="destroy-vm">
         <exec
             passthru="true"
@@ -7,6 +8,7 @@
         </exec>
     </target>
 
+    <!-- Runs from command line. -->
     <target name="launch-stable-vm">
         <exec
             passthru="true"
@@ -17,6 +19,7 @@
         </exec>
     </target>
 
+    <!-- Runs from command line. -->
     <target name="launch-dev-vm">
         <exec
             passthru="true"
@@ -27,6 +30,7 @@
         </exec>
     </target>
 
+    <!-- Runs from Vagrantfile. -->
     <target name="get-vm-dependencies">
         <exec
             passthru="true"
@@ -86,6 +90,7 @@
         </exec>
     </target>
 
+    <!-- Runs inside Vagrantfile. -->
     <target name="run-containers">
         <exec
             passthru="true"
