@@ -41,7 +41,6 @@
             apt-get update &amp;&amp;
             apt-get install -y docker-ce &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
-            phing get-logic-dependencies &amp;&amp;
             phing run-containers">
         </exec>
     </target>
