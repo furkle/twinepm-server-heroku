@@ -31,8 +31,6 @@
         <exec
             passthru="true"
             command="
-            echo 'foo' &amp;&amp;
-            echo $TWINEPM_BRANCH &amp;&amp;
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &amp;&amp;
             apt-key fingerprint 0EBFCD88 &amp;&amp;
             add-apt-repository
@@ -43,25 +41,8 @@
             apt-get update &amp;&amp;
             apt-get install -y docker-ce &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
-            phing run-containers">
-        </exec>
-    </target>
-
-    <target name="run-containers">
-        <exec
-            passthru="true"
-            command="
             phing get-logic-dependencies &amp;&amp;
-            cd src &amp;&amp;
-            docker build -t twinepm_logic . &amp;&amp;
-            echo $TWINEPM_BRANCH
-            docker run -d -p 443:80 -e TWINEPM_BRANCH=$TWINEPM_BRANCH twinepm_logic --name twinepm_logic &amp;&amp;
-            cd ../redis &amp;&amp;
-            docker build -t twinepm_redis . &amp;&amp;
-            docker run -d twinepm_redis redis redis-server --appendonly yes --name twinepm_redis &amp;&amp;
-            cd ../postgresql &amp;&amp;
-            docker build -t twinepm_postgresql . &amp;&amp;
-            docker run -d twinepm_postgresql --name twinepm_redis">
+            phing run-containers">
         </exec>
     </target>
 
@@ -87,6 +68,22 @@
                 zip &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
             composer install">
+        </exec>
+    </target>
+
+    <target name="run-containers">
+        <exec
+            passthru="true"
+            command="
+            cd src &amp;&amp;
+            docker build --build-arg TWINEPM_BRACNH=$TWINEPM_BRANCH -t twinepm_logic . &amp;&amp;
+            docker run -d -p 443:80 twinepm_logic --name twinepm_logic &amp;&amp;
+            cd ../redis &amp;&amp;
+            docker build -t twinepm_redis . &amp;&amp;
+            docker run -d twinepm_redis redis redis-server --appendonly yes --name twinepm_redis &amp;&amp;
+            cd ../postgresql &amp;&amp;
+            docker build -t twinepm_postgresql . &amp;&amp;
+            docker run -d twinepm_postgresql --name twinepm_redis">
         </exec>
     </target>
 </project>

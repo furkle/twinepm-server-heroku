@@ -1,17 +1,20 @@
 FROM nginx:1.13
 
+# Default to master but allowe override through --build-arg argument in docker
+# build command.
+ARG TWINEPM_BRANCH=master
+
 # Set environment variables.
-ARG DEBIAN_FRONTEND=noninteractive
+ENV \
+    DEBIAN_FRONTEND=noninteractive \
+    TWINEPM_BRANCH=$TWINEPM_BRANCH
 
 # Install the dependencies.
 RUN \
     apt-get update && \
     apt-get install -y git && \
     cd /etc && \
-    echo "WAAAAAAAAAAAW" && \
-    echo $TWINEPM_BRANCH && \
-    git clone -b ${TWINEPM_BRANCH:-master} https://github.com/furkle/twinepm-server-heroku.git && \
+    git clone -b $TWINEPM_BRANCH https://github.com/furkle/twinepm-server-heroku.git && \
     cd twinepm-server-heroku && \
-    ls -la && \
     ./scripts/getPhing && \
     phing get-logic-dependencies
