@@ -75,8 +75,8 @@
         <exec
             passthru="true"
             command="
-            cd src &amp;&amp;
-            docker build --build-arg TWINEPM_BRACNH=$TWINEPM_BRANCH -t twinepm_logic . &amp;&amp;
+            cd /etc/twinepm-server-heroku/src &amp;&amp;
+            docker build --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH -t twinepm_logic . &amp;&amp;
             docker run -d -p 443:80 twinepm_logic --name twinepm_logic &amp;&amp;
             cd ../redis &amp;&amp;
             docker build -t twinepm_redis . &amp;&amp;
