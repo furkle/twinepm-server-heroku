@@ -2,6 +2,12 @@
 <project name="twinepm-server-heroku">
     <target name="get-vm-dependencies">
         <exec command="
+            apt-get update &&
+            apt-get install -y
+              apt-transport-https
+              ca-certificates
+              curl
+              gnupg &&
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &&
             apt-key fingerprint 0EBFCD88 &&
             add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu
@@ -40,7 +46,6 @@
                 php7.1-zip
                 unzip
                 zip &&
-            cd /etc &&
             cd /etc/twinepm-server-heroku &&
             composer install">
         </exec>
