@@ -31,6 +31,8 @@
         <exec
             passthru="true"
             command="
+            echo 'foo' &amp;&amp;
+            echo $TWINEPM_BRANCH &amp;&amp;
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &amp;&amp;
             apt-key fingerprint 0EBFCD88 &amp;&amp;
             add-apt-repository
