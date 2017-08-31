@@ -68,11 +68,10 @@ Vagrant.configure("2") do |config|
   branch = ENV['TWINEPM_BRANCH'] || defaultBranch
   repoName = 'twinepm-server-heroku'
   shellStr =
-    'wget http://www.phing.info/get/phing-2.16.0.phar -O /usr/local/bin/phing && ' +
-    'chmod +x /usr/local/bin/phing && ' +
     'cd /etc && ' +
     "git clone -b #{branch} https://github.com/furkle/#{repoName} && " +
     "cd #{repoName} && " +
+    'sh scripts/getPhing.sh &&' +
     'phing get-vm-dependencies'
 
   # Enable provisioning with a shell script. Additional provisioners such as

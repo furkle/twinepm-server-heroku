@@ -11,6 +11,7 @@ RUN \
         locales \
         lsb-release \
         php \
+        php-xml \
         software-properties-common
 ENV \
     LANG=en_US.UTF-8 \
