@@ -1,7 +1,8 @@
-vendor/
+logs/*
 src/OAuth2/private.key
 src/OAuth2/privatePassphrase.txt
 src/OAuth2/public.key
 src/OAuth2/clients/*
+vendor/
 .vagrant
 ubuntu-xenial-16.04-cloudimg-console.log
