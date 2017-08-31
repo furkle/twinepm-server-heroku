@@ -40,8 +40,7 @@
                 stable&quot; &amp;&amp;
             apt-get update &amp;&amp;
             apt-get install -y docker-ce &amp;&amp;
-            cd /etc/twinepm-server-heroku &amp;&amp;
-            phing build-containers">
+            cd /etc/twinepm-server-heroku">
         </exec>
     </target>
 
@@ -73,7 +72,7 @@
         </exec>
     </target>
 
-    <!-- Runs inside get-vm-dependencies
+    <!-- Runs inside get-vm-dependencies -->
     <target name="build-containers">
         <exec
             passthru="true"
