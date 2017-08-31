@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Install the dependencies.
 RUN \
     cd /etc && \
-    git clone -b ${TWINEPM_BRANCH:-${'master'}} https://github.com/furkle/twinepm-server-heroku.git && \
+    git clone -b ${TWINEPM_BRANCH:-master} https://github.com/furkle/twinepm-server-heroku.git && \
     cd twinepm-server-heroku && \
-    bash scripts/getPhing.sh && \
+    sh scripts/getPhing.sh && \
     phing get-logic-dependencies
