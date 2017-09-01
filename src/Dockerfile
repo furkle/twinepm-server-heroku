@@ -18,4 +18,5 @@ RUN \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \
+    rm /var/www/html/index.html && \
     echo "<?php require_once '/etc/twinepm-server-heroku/index.php'>" > /var/www/html/index.php
