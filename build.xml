@@ -74,6 +74,7 @@
                 unzip
                 zip &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
+            echo FOOB &amp;&amp;
             composer install">
         </exec>
     </target>
