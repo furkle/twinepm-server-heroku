@@ -63,6 +63,12 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
 
+  config.vm.provider 'virtualbox' do |vb|
+    vb.name = 'twinepm-server-heroku'
+  end
+
+  config.vm.define 'twinepm-server-heroku'
+
   defaultBranch = ENV['TWINEPM_DEFAULT_BRANCH'] || "master"
   branch = ENV['TWINEPM_BRANCH'] || defaultBranch
   repoName = 'twinepm-server-heroku'
