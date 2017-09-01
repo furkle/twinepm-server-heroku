@@ -52,12 +52,13 @@
         <exec
             passthru="true"
             command="
+            apt-get update &amp;&amp;
+            apt-get install -y localedef &amp;&amp;
             LANG=en_US.UTF-8 &amp;&amp;
             LANGUAGE=en_US:en &amp;&amp;
             LC_ALL=en_US.UTF-8 &amp;&amp;
             echo 'before localedef' &amp;&amp;
             localedef -i en_US -f UTF-8 en_US.UTF-8 &amp;&amp;
-            echo 'baz' &amp;&amp;
             /usr/sbin/update-locale LANG=$LANG &amp;&amp;
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &amp;&amp;
             add-apt-repository -y ppa:ondrej/php &amp;&amp;
@@ -99,7 +100,7 @@
             cd ../redis &amp;&amp;
             docker run --name twinepm_redis twinepm_redis  -d redis-server --appendonly yes &amp;&amp;
             cd ../postgresql &amp;&amp;
-            docker run --name twinepm_postgresql twinepm_postgresql -d">
+            docker run --name twinepm_postgresql -d twinepm_postgresql">
         </exec>
     </target>
 </project>
