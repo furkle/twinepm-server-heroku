@@ -41,7 +41,6 @@ Vagrant.configure("2") do |config|
   repoOwner = ENV['TWINEPM_REPO_OWNER'] || defaultRepoOwner
 
   shellStr =
-    './scripts/getPhing && ' +
     'cd /etc && ' +
     "TWINEPM_BRANCH=#{branch} && " +
     'export TWINEPM_BRANCH && ' +
@@ -55,7 +54,8 @@ Vagrant.configure("2") do |config|
     "TWINEPM_REPO_NAME=#{repoName} && " +
     'export TWINEPM_REPO_NAME && ' +
     "echo \"TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME\nexport TWINEPM_REPO_NAME\n\" >> /root/.bashrc && " +
-    'phing get-repo && ' +
+    './scripts/getPhing && ' +
+    'git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && ' +
     'cd $TWINEPM_REPO_NAME && ' +
     'phing get-vm-dependencies && ' +
     'phing build-containers && ' +
