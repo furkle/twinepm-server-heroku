@@ -124,7 +124,7 @@
                 &quot; > /etc/nginx/nginx.conf
 
                 rm /usr/share/nginx/html/index.html &amp;&amp;
-                echo &quot;<?php require_once '/etc/twinepm-server-heroku/index.php'>&quot; >
+                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'&gt;&quot; &gt;
                     /usr/share/nginx/html/index.php">
         </exec>
     </target>
