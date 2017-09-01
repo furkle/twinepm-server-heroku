@@ -96,11 +96,11 @@
             passthru="true"
             command="
             cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker run --name twinepm_logic -d twinepm_logic -p 443:80 &amp;&amp;
+            docker run --name twinepm_logic -d  -p 443:80 twinepm_logic:latest &amp;&amp;
             cd ../redis &amp;&amp;
-            docker run --name twinepm_redis -d twinepm_redis redis-server --appendonly yes &amp;&amp;
+            docker run --name twinepm_redis -d twinepm_redis:latest redis-server --appendonly yes &amp;&amp;
             cd ../postgresql &amp;&amp;
-            docker run --name twinepm_postgresql -d twinepm_postgresql">
+            docker run --name twinepm_postgresql -d twinepm_postgresql:latest">
         </exec>
     </target>
 </project>
