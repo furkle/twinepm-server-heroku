@@ -49,6 +49,7 @@
 
     <!-- Runs inside webserver/logic Dockerfile. -->
     <target name="get-logic-dependencies">
+        <!-- sed calls and below from https://github.com/1and1internet/ubuntu-16-nginx-php-7.1/ -->
         <exec
             passthru="true"
             command="
@@ -68,11 +69,32 @@
             apt-get install -y
                 composer
                 php7.1
+                php7.1-fpm
                 php7.1-mbstring
                 php7.1-xml
                 php7.1-zip
                 unzip
-                zip">
+                zip &amp;&amp;
+            rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/* &amp;&amp;
+            sed -i -e 's/^user = www-data$/;user = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
+            sed -i -e 's/^group = www-data$/;group = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
+            sed -i -e 's/^listen.owner = www-data$/;listen.owner = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
+            sed -i -e 's/^listen.group = www-data$/;listen.group = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
+            sed -i -e 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
+            sed -i -e 's/upload_max_filesize = 2M/upload_max_filesize = 256M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
+            sed -i -e 's/post_max_size = 8M/post_max_size = 512M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
+            sed -i -e 's/memory_limit = 128M/memory_limit = 512M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
+            sed -i -e 's/fastcgi_param  SERVER_PORT        $server_port;/fastcgi_param  SERVER_PORT        $http_x_forwarded_port;/g' /etc/nginx/fastcgi.conf &amp;&amp;
+            sed -i -e 's/fastcgi_param  SERVER_PORT        $server_port;/fastcgi_param  SERVER_PORT        $http_x_forwarded_port;/g' /etc/nginx/fastcgi_params &amp;&amp;
+            sed -i -e '/sendfile on;/a\        fastcgi_read_timeout 300\;' /etc/nginx/nginx.conf &amp;&amp;
+            mkdir --mode 777 /var/run/php &amp;&amp;
+            chmod 755 /hooks /var/www &amp;&amp;
+            chmod -R 777 /var/www/html /var/log &amp;&amp;
+            sed -i -e 's/index index.html/index index.php index.html/g' /etc/nginx/sites-enabled/site.conf &amp;&amp;
+            chmod 666 /etc/nginx/sites-enabled/site.conf &amp;&amp;
+            nginx -t &amp;&amp;
+            mkdir -p /run /var/lib/nginx /var/lib/php &amp;&amp;
+            chmod -R 777 /run /var/lib/nginx /var/lib/php /etc/php/7.1/fpm/php.ini">
         </exec>
     </target>
 

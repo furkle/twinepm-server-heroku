@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     'phing get-vm-dependencies && ' +
     'phing build-containers && ' +
     'phing run-containers && ' +
-    'docker exec -i twinepm_logic phing -f /etc/twinepm-server-heroku/build.xml install-php-packages'
+    'docker exec twinepm_logic phing -f /etc/twinepm-server-heroku/build.xml install-php-packages'
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
