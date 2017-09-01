@@ -54,7 +54,7 @@
             command="
             apt-get update &amp;&amp;
             apt-get install -y
-                add-apt-repository
+                software-properties-common
                 gnupg
                 locales &amp;&amp;
             LANG=en_US.UTF-8 &amp;&amp;

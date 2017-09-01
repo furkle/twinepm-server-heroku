@@ -17,4 +17,5 @@ RUN \
     git clone -b $TWINEPM_BRANCH https://github.com/furkle/twinepm-server-heroku.git && \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
-    phing get-logic-dependencies
+    phing get-logic-dependencies && \
+    echo "<?php require_once '/etc/twinepm-server-heroku/index.php'>" > /var/www/html/index.php
