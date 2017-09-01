@@ -35,7 +35,6 @@ Vagrant.configure("2") do |config|
     "cd #{repoName} && " +
     './scripts/getPhing &&' +
     'phing get-vm-dependencies && ' +
-    'phing install-php-dependencies && ' +
     'phing build-containers && ' +
     'phing run-containers && ' +
     'docker exec -it twinepm_logic phing install-php-packages'
