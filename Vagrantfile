@@ -35,8 +35,10 @@ Vagrant.configure("2") do |config|
     "cd #{repoName} && " +
     './scripts/getPhing &&' +
     'phing get-vm-dependencies && ' +
+    'phing install-php-dependencies && ' +
     'phing build-containers && ' +
-    'phing run-containers'
+    'phing run-containers && ' +
+    'docker exec -it twinepm_logic phing install-php-dependencies'
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the

@@ -72,9 +72,15 @@
                 php7.1-xml
                 php7.1-zip
                 unzip
-                zip &amp;&amp;
+                zip">
+        </exec>
+    </target>
+
+    <target name="install-php-packages">
+        <exec
+            passthru="true"
+            command="
             cd /etc/twinepm-server-heroku &amp;&amp;
-            echo FOOB &amp;&amp;
             composer install">
         </exec>
     </target>
