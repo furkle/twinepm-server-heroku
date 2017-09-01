@@ -16,24 +16,47 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
 
+  repoNameFallback = 'twinepm-server-heroku'
+  defaultRepoName = ENV['DEFAULT_REPO_NAME'] || repoNameFallback
+  repoName = ENV['TWINEPM_REPO_NAME'] || defaultRepoName
+
   config.vm.provider 'virtualbox' do |vb|
-    vb.name = 'twinepm-server-heroku'
+    vb.name = repoName
   end
 
-  config.vm.define 'twinepm-server-heroku'
+  config.vm.define repoName
 
   config.vm.network 'forwarded_port', guest: 443, host: 8000
 
-  defaultBranch = ENV['TWINEPM_DEFAULT_BRANCH'] || "master"
+  branchFallback = 'master'
+  defaultBranch = ENV['TWINEPM_DEFAULT_BRANCH'] || branchFallback
   branch = ENV['TWINEPM_BRANCH'] || defaultBranch
-  repoName = 'twinepm-server-heroku'
+
+  repoSiteFallback = 'github.com'
+  defaultRepoSite = ENV['TWINEPM_DEFAULT_REPO_SITE'] || repoSiteFallback
+  repoSite = ENV['TWINEPM_REPO_SITE'] || defaultRepoSite
+
+  repoOwnerFallback = 'furkle'
+  defaultRepoOwner = ENV['TWINEPM_DEFAULT_REPO_OWNER'] || repoOwnerFallback
+  repoOwner = ENV['TWINEPM_REPO_OWNER'] || defaultRepoOwner
+
   shellStr =
+    './scripts/getPhing && ' +
+    'cd /etc && ' +
     "TWINEPM_BRANCH=#{branch} && " +
     'export TWINEPM_BRANCH && ' +
-    'cd /etc && ' +
-    "git clone -b #{branch} https://github.com/furkle/#{repoName} && " +
-    "cd #{repoName} && " +
-    './scripts/getPhing &&' +
+    "echo \"\nTWINEPM_BRANCH=$TWINEPM_BRANCH\nexport TWINEPM_BRANCH\n\" >> /root/.bashrc && " +
+    "TWINEPM_REPO_SITE=#{repoSite} && " +
+    'export TWINEPM_REPO_SITE && ' +
+    "echo \"TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE\nexport TWINEPM_REPO_SITE\n\" >> /root/.bashrc && " +
+    "TWINEPM_REPO_OWNER=#{repoOwner} && " +
+    'export TWINEPM_REPO_OWNER && ' +
+    "echo \"TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER\nexport TWINEPM_REPO_OWNER\n\" >> /root/.bashrc && " +
+    "TWINEPM_REPO_NAME=#{repoName} && " +
+    'export TWINEPM_REPO_NAME && ' +
+    "echo \"TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME\nexport TWINEPM_REPO_NAME\n\" >> /root/.bashrc && " +
+    'phing get-repo && ' +
+    'cd $TWINEPM_REPO_NAME && ' +
     'phing get-vm-dependencies && ' +
     'phing build-containers && ' +
     'phing run-containers && ' +

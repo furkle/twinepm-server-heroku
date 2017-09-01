@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="twinepm-server-heroku" default="launch-stable-vm">
+<project name="twinepm-server-heroku" default="run-stable-vm">
     <!-- Runs from command line. -->
     <target name="destroy-vm">
         <exec
@@ -9,7 +9,7 @@
     </target>
 
     <!-- Runs from command line. -->
-    <target name="launch-stable-vm">
+    <target name="run-stable-vm">
         <exec
             passthru="true"
             command="
@@ -20,13 +20,23 @@
     </target>
 
     <!-- Runs from command line. -->
-    <target name="launch-dev-vm">
+    <target name="run-dev-vm">
         <exec
             passthru="true"
             command="
             TWINEPM_BRANCH=dev &amp;&amp;
             export TWINEPM_BRANCH &amp;&amp;
             vagrant up">
+        </exec>
+    </target>
+
+    <target name="get-repo">
+        <exec
+            passthru="true"
+            command="
+                git clone
+                    -b $TWINEPM_BRANCH
+                    https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git">
         </exec>
     </target>
 
@@ -49,7 +59,6 @@
 
     <!-- Runs inside webserver/logic Dockerfile. -->
     <target name="get-logic-dependencies">
-        <!-- sed calls and below from https://github.com/1and1internet/ubuntu-16-nginx-php-7.1/ -->
         <exec
             passthru="true"
             command="
@@ -74,27 +83,49 @@
                 php7.1-xml
                 php7.1-zip
                 unzip
-                zip &amp;&amp;
-            rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-available/* &amp;&amp;
-            sed -i -e 's/^user = www-data$/;user = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
-            sed -i -e 's/^group = www-data$/;group = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
-            sed -i -e 's/^listen.owner = www-data$/;listen.owner = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
-            sed -i -e 's/^listen.group = www-data$/;listen.group = www-data/g' /etc/php/7.1/fpm/pool.d/www.conf &amp;&amp;
-            sed -i -e 's/max_execution_time = 30/max_execution_time = 300/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
-            sed -i -e 's/upload_max_filesize = 2M/upload_max_filesize = 256M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
-            sed -i -e 's/post_max_size = 8M/post_max_size = 512M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
-            sed -i -e 's/memory_limit = 128M/memory_limit = 512M/g' /etc/php/7.1/fpm/php.ini &amp;&amp;
-            sed -i -e 's/fastcgi_param  SERVER_PORT        $server_port;/fastcgi_param  SERVER_PORT        $http_x_forwarded_port;/g' /etc/nginx/fastcgi.conf &amp;&amp;
-            sed -i -e 's/fastcgi_param  SERVER_PORT        $server_port;/fastcgi_param  SERVER_PORT        $http_x_forwarded_port;/g' /etc/nginx/fastcgi_params &amp;&amp;
-            sed -i -e '/sendfile on;/a\        fastcgi_read_timeout 300\;' /etc/nginx/nginx.conf &amp;&amp;
-            mkdir --mode 777 /var/run/php &amp;&amp;
-            chmod 755 /hooks /var/www &amp;&amp;
-            chmod -R 777 /var/www/html /var/log &amp;&amp;
-            sed -i -e 's/index index.html/index index.php index.html/g' /etc/nginx/sites-enabled/site.conf &amp;&amp;
-            chmod 666 /etc/nginx/sites-enabled/site.conf &amp;&amp;
-            nginx -t &amp;&amp;
-            mkdir -p /run /var/lib/nginx /var/lib/php &amp;&amp;
-            chmod -R 777 /run /var/lib/nginx /var/lib/php /etc/php/7.1/fpm/php.ini">
+                zip">
+        </exec>
+    </target>
+
+    <target name="setup-nginx">
+        <exec
+            passthru="true"
+            command="
+                echo &quot;
+                    user nginx;
+                    worker_processes 1;
+
+                    error_log /var/log/nginx/error.log warn;
+                    pid /var/run/nginx.pid;
+
+                    events {
+                        worker_connections  1024;
+                    }
+
+                    http {
+                        include /etc/nginx/mime.types;
+                        default_type application/octet-stream;
+
+                        log_format main '\$remote_addr - \$remote_user [\$time_local] \&quot;\$request\&quot;'
+                                        '\$status \$body_bytes_sent \&quot;\$http_referer\&quot;'
+                                        '\&quot;\$http_user_agent\&quot; \&quot;\$http_x_forwarded_for\&quot;';
+
+                        access_log /var/log/nginx/access.log  main;
+
+                        sendfile on;
+                        #tcp_nopush on;
+
+                        keepalive_timeout 65;
+
+                        gzip on;
+
+                        include /etc/nginx/conf.d/*.conf;
+                    }
+                &quot; > /etc/nginx/nginx.conf
+
+                rm /usr/share/nginx/html/index.html &amp;&amp;
+                echo &quot;<?php require_once '/etc/twinepm-server-heroku/index.php'>&quot; >
+                    /usr/share/nginx/html/index.php">
         </exec>
     </target>
 

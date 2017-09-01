@@ -1,6 +1,6 @@
 FROM nginx:1.13
 
-# Default to master but allowe override through --build-arg argument in docker
+# Default to master but allow override through --build-arg argument in docker
 # build command.
 ARG TWINEPM_BRANCH=master
 
@@ -14,9 +14,8 @@ RUN \
     apt-get update && \
     apt-get install -y git && \
     cd /etc && \
-    git clone -b $TWINEPM_BRANCH https://github.com/furkle/twinepm-server-heroku.git && \
+    phing get-repo && \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \
-    rm /usr/share/nginx/html/index.html && \
-    echo "<?php require_once '/etc/twinepm-server-heroku/index.php'>" > /usr/share/nginx/html/index.php
+    phing setup-nginx
