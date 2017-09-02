@@ -18,7 +18,9 @@ ENV \
 # Install the dependencies.
 RUN \
     apt-get update && \
-    apt-get install -y git && \
+    apt-get install -y \
+        apt-utils \
+        git && \
     cd /etc && \
     git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && \
     cd twinepm-server-heroku && \
