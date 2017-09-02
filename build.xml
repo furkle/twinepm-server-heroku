@@ -72,7 +72,6 @@
         <exec
             passthru="true"
             command="
-            apt-get update &amp;&amp;
             apt-get install -y
                 software-properties-common
                 gnupg
