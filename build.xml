@@ -129,20 +129,22 @@
                         gzip on;
 
                         include /etc/nginx/conf.d/*.conf;
-                    }
 
-                    location ~ [^/]\.php(/|$) {
-                        fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-                        if (!-f $document_root$fastcgi_script_name) {
-                            return 404;
+                        server {
+                            location ~ [^/]\.php(/|$) {
+                                fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+                                if (!-f $document_root$fastcgi_script_name) {
+                                    return 404;
+                                }
+
+                                # Mitigate https://httpoxy.org/ vulnerabilities
+                                fastcgi_param HTTP_PROXY &quot;&quot;;
+
+                                fastcgi_pass unix:/var/run/php7.1-fpm.sock;
+                                fastcgi_index index.php;
+                                include fastcgi_params;
+                            }
                         }
-
-                        # Mitigate https://httpoxy.org/ vulnerabilities
-                        fastcgi_param HTTP_PROXY &quot;&quot;;
-
-                        fastcgi_pass unix:/var/run/php7.1-fpm.sock;
-                        fastcgi_index index.php;
-                        include fastcgi_params;
                     }
                 &quot; &gt; /etc/nginx/nginx.conf
 
