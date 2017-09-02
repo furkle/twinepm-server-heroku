@@ -101,50 +101,50 @@
         <exec
             passthru="true"
             command="
-                echo &quot;
-                    user nginx;
-                    worker_processes 1;
-
-                    error_log /var/log/nginx/error.log warn;
-                    pid /var/run/nginx.pid;
-
-                    events {
-                        worker_connections 1024;
-                    }
-
-                    http {
-                        include /etc/nginx/mime.types;
-                        default_type application/octet-stream;
-
-                        log_format main '\$remote_addr - \$remote_user [\$time_local] \&quot;\$request\&quot;'
-                                        '\$status \$body_bytes_sent \&quot;\$http_referer\&quot;'
-                                        '\&quot;\$http_user_agent\&quot; \&quot;\$http_x_forwarded_for\&quot;';
-
-                        access_log /var/log/nginx/access.log main;
-
-                        sendfile on;
-
-                        keepalive_timeout 65;
-
-                        gzip on;
-
-                        include /etc/nginx/conf.d/*.conf;
-
-                        server {
-                            location ~ [^/]\.php(/|\$) {
-                                fastcgi_split_path_info ^(.+?\.php)(/.*)\$;
-                                if (!-f \$document_root\$fastcgi_script_name) {
-                                    return 404;
-                                }
-
-                                # Mitigate https://httpoxy.org/ vulnerabilities
-                                fastcgi_param HTTP_PROXY \&quot;\&quot;;
-
-                                fastcgi_pass unix:/var/run/php7.1-fpm.sock;
-                                fastcgi_index index.php;
-                                include fastcgi_params;
-                            }
-                        }
+                printf &quot;
+                    user nginx;\n
+                    worker_processes 1;\n
+                    \n
+                    error_log /var/log/nginx/error.log warn;\n
+                    pid /var/run/nginx.pid;\n
+                    \n
+                    events {\n
+                        worker_connections 1024;\n
+                    }\n
+                    \n
+                    http {\n
+                        include /etc/nginx/mime.types;\n
+                        default_type application/octet-stream;\n
+                        \n
+                        log_format main '\$remote_addr - \$remote_user [\$time_local] \&quot;\$request\&quot;'\n
+                                        '\$status \$body_bytes_sent \&quot;\$http_referer\&quot;'\n
+                                        '\&quot;\$http_user_agent\&quot; \&quot;\$http_x_forwarded_for\&quot;';\n
+                        \n
+                        access_log /var/log/nginx/access.log main;\n
+                        \n
+                        sendfile on;\n
+                        \n
+                        keepalive_timeout 65;\n
+                        \n
+                        gzip on;\n
+                        \n
+                        include /etc/nginx/conf.d/*.conf;\n
+                        \n
+                        server {\n
+                            location ~ [^/]\.php(/|\$) {\n
+                                fastcgi_split_path_info ^(.+?\.php)(/.*)\$;\n
+                                if (!-f \$document_root\$fastcgi_script_name) {\n
+                                    return 404;\n
+                                }\n
+                                \n
+                                # Mitigate https://httpoxy.org/ vulnerabilities\n
+                                fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
+                                \n
+                                fastcgi_pass unix:/var/run/php7.1-fpm.sock;\n
+                                fastcgi_index index.php;\n
+                                include fastcgi_params;\n
+                            }\n
+                        }\n
                     }
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
