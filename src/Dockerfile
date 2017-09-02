@@ -2,11 +2,10 @@ FROM nginx:1.13
 
 # Default to master but allow override through --build-arg argument in docker
 # build command.
-ARG \
-    TWINEPM_BRANCH=master \
-    TWINEPM_REPO_SITE=github.com \
-    TWINEPM_REPO_OWNER=furkle \
-    TWINEPM_REPO_NAME=twinepm-server-heroku
+ARG TWINEPM_BRANCH=master
+ARG TWINEPM_REPO_SITE=github.com
+ARG TWINEPM_REPO_OWNER=furkle
+ARG TWINEPM_REPO_NAME=twinepm-server-heroku
 
 # Set environment variables.
 ENV \
