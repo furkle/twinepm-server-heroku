@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="twinepm-server-heroku" default="run-stable-vm">
-    <!-- Runs from command line. -->
+    <!-- Runs from host machine. -->
     <target name="destroy-vm">
         <exec
             passthru="true"
@@ -8,7 +8,7 @@
         </exec>
     </target>
 
-    <!-- Runs from command line. -->
+    <!-- Runs from host machine. -->
     <target name="run-stable-vm">
         <exec
             passthru="true"
@@ -19,7 +19,7 @@
         </exec>
     </target>
 
-    <!-- Runs from command line. -->
+    <!-- Runs from host machine. -->
     <target name="run-dev-vm">
         <exec
             passthru="true"
@@ -30,7 +30,7 @@
         </exec>
     </target>
 
-    <!-- Runs from Vagrantfile. -->
+    <!-- Runs from host machine/VM. -->
     <target name="get-vm-dependencies">
         <exec
             passthru="true"
@@ -47,7 +47,7 @@
         </exec>
     </target>
 
-    <!-- Runs inside webserver/logic Dockerfile. -->
+    <!-- Runs inside webserver/logic container. -->
     <target name="get-logic-dependencies">
         <exec
             passthru="true"
@@ -103,7 +103,6 @@
                         access_log /var/log/nginx/access.log  main;
 
                         sendfile on;
-                        #tcp_nopush on;
 
                         keepalive_timeout 65;
 
@@ -119,6 +118,7 @@
         </exec>
     </target>
 
+    <!-- Runs inside webserver/logic container. -->
     <target name="install-php-packages">
         <exec
             passthru="true"
@@ -128,13 +128,19 @@
         </exec>
     </target>
 
-    <!-- Runs inside get-vm-dependencies -->
+    <!-- Runs inside host machine or VM. -->
     <target name="build-containers">
         <exec
             passthru="true"
             command="
             cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker build --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH -t twinepm_logic . &amp;&amp;
+            docker build
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
+                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
+                -t twinepm_logic . &amp;&amp;
             cd ../redis &amp;&amp;
             docker build -t twinepm_redis . &amp;&amp;
             cd ../postgresql &amp;&amp;
@@ -142,7 +148,7 @@
         </exec>
     </target>
 
-    <!-- Runs inside Vagrantfile. -->
+    <!-- Runs inside host machine or VM. -->
     <target name="run-containers">
         <exec
             passthru="true"
