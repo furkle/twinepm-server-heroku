@@ -26,4 +26,5 @@ RUN \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \
-    phing setup-nginx
+    phing setup-nginx && \
+    phing install-php-packages
