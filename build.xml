@@ -124,7 +124,7 @@
             passthru="true"
             command="
             cd /etc/twinepm-server-heroku &amp;&amp;
-            composer install">
+            composer install --no-plugins --no-scripts">
         </exec>
     </target>
 

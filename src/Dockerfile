@@ -18,6 +18,7 @@ ENV \
 # Install the dependencies.
 RUN \
     apt-get update && \
+    apt-get upgrade && \
     apt-get install -y \
         apt-utils \
         git && \
