@@ -146,9 +146,9 @@
                             }
                         }
                     }
-                &quot; &gt; /etc/nginx/nginx.conf
+                &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                cat /etc/nginx/nginx.conf
+                cat /etc/nginx/nginx.conf &amp;&amp;
 
                 rm /usr/share/nginx/html/index.html &amp;&amp;
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'&gt;&quot; &gt;
