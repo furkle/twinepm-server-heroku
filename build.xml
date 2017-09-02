@@ -109,7 +109,7 @@
                     pid /var/run/nginx.pid;
 
                     events {
-                        worker_connections  1024;
+                        worker_connections 1024;
                     }
 
                     http {
@@ -138,7 +138,7 @@
                                 }
 
                                 # Mitigate https://httpoxy.org/ vulnerabilities
-                                fastcgi_param HTTP_PROXY &quot;&quot;;
+                                fastcgi_param HTTP_PROXY&quot;&quot;;
 
                                 fastcgi_pass unix:/var/run/php7.1-fpm.sock;
                                 fastcgi_index index.php;
