@@ -132,7 +132,7 @@
                         \n
                         server {\n
                             location / {\n
-                                root /usr/share/nginx/www;
+                                root /var/www/html;
                                 index index.php index.html index.htm;
                             }\n
                             \n
@@ -145,19 +145,24 @@
                                 # Mitigate https://httpoxy.org/ vulnerabilities\n
                                 fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
                                 \n
-                                fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;\n
+                                fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;\n
                                 fastcgi_index index.php;\n
                                 include fastcgi_params;\n
                             }\n
+                            \n
+                            location ~ /\.ht {\n
+                                deny all;\n
+                            }\n
                         }\n
-                    }
+                    }\n
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                cat /etc/nginx/nginx.conf &amp;&amp;
-
-                rm /usr/share/nginx/html/index.html &amp;&amp;
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'&gt;&quot; &gt;
-                    /usr/share/nginx/html/index.php">
+                    /var/www/html/index.php &amp;&amp;
+
+                service php7.1-fpm start &amp;&amp;
+
+                service php7.1-fpm status">
         </exec>
     </target>
 
