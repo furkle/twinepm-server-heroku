@@ -47,6 +47,26 @@
         </exec>
     </target>
 
+    <!-- Runs inside host machine or VM. -->
+    <target name="build-containers">
+        <exec
+            passthru="true"
+            command="
+            cd /etc/twinepm-server-heroku/src &amp;&amp;
+            docker build
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
+                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
+                -t twinepm_logic . &amp;&amp;
+            cd ../redis &amp;&amp;
+            docker build -t twinepm_redis . &amp;&amp;
+            cd ../postgresql &amp;&amp;
+            docker build -t twinepm_postgresql .">
+        </exec>
+    </target>
+
     <!-- Runs inside webserver/logic container. -->
     <target name="get-logic-dependencies">
         <exec
@@ -77,6 +97,7 @@
         </exec>
     </target>
 
+    <!-- Runs inside webserver/logic container. -->
     <target name="setup-nginx">
         <exec
             passthru="true"
@@ -125,26 +146,6 @@
             command="
             cd /etc/twinepm-server-heroku &amp;&amp;
             composer install --no-plugins --no-scripts">
-        </exec>
-    </target>
-
-    <!-- Runs inside host machine or VM. -->
-    <target name="build-containers">
-        <exec
-            passthru="true"
-            command="
-            cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker build
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
-                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
-                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
-                -t twinepm_logic . &amp;&amp;
-            cd ../redis &amp;&amp;
-            docker build -t twinepm_redis . &amp;&amp;
-            cd ../postgresql &amp;&amp;
-            docker build -t twinepm_postgresql .">
         </exec>
     </target>
 
