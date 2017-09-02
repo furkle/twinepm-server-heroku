@@ -120,7 +120,7 @@
                                         '\$status \$body_bytes_sent \&quot;\$http_referer\&quot;'
                                         '\&quot;\$http_user_agent\&quot; \&quot;\$http_x_forwarded_for\&quot;';
 
-                        access_log /var/log/nginx/access.log  main;
+                        access_log /var/log/nginx/access.log main;
 
                         sendfile on;
 
@@ -130,7 +130,7 @@
 
                         include /etc/nginx/conf.d/*.conf;
                     }
-                &quot; &gt; /etc/nginx/nginx.conf
+                &quot; &gt;
 
                 rm /usr/share/nginx/html/index.html &amp;&amp;
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'&gt;&quot; &gt;
