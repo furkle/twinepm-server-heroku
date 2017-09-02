@@ -14,7 +14,6 @@ RUN \
     apt-get update && \
     apt-get install -y git && \
     cd /etc && \
-    phing get-repo && \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \

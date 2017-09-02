@@ -30,16 +30,6 @@
         </exec>
     </target>
 
-    <target name="get-repo">
-        <exec
-            passthru="true"
-            command="
-                git clone
-                    -b $TWINEPM_BRANCH
-                    https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git">
-        </exec>
-    </target>
-
     <!-- Runs from Vagrantfile. -->
     <target name="get-vm-dependencies">
         <exec
