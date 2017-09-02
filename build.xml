@@ -157,7 +157,7 @@
                     }\n
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'&gt;&quot; &gt;
+                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; &gt;
                     /var/www/html/index.php &amp;&amp;
 
                 service php7.1-fpm start &amp;&amp;
