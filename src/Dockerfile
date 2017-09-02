@@ -2,7 +2,7 @@ FROM nginx:1.13
 
 # Default to master but allow override through --build-arg argument in docker
 # build command.
-ARG 
+ARG \
     TWINEPM_BRANCH=master \
     TWINEPM_REPO_SITE=github.com \
     TWINEPM_REPO_OWNER=furkle \
