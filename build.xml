@@ -137,8 +137,8 @@
                                 index index.php index.html index.htm;\n
                             }\n
                             \n
-                            location ~ [^/]\.php(/|\$) {\n
-                                fastcgi_split_path_info ^(.+?\.php)(/.*)?\$;\n
+                            location ~ [^/]\.php(\\/|\$) {\n
+                                fastcgi_split_path_info ^(.+?\.php)(\\/.*)?\$;\n
                                 #if (!-f \$document_root\$fastcgi_script_name) {\n
                                 #    return 404;\n
                                 #}\n
