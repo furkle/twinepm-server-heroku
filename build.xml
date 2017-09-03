@@ -131,13 +131,14 @@
                         include /etc/nginx/conf.d/*.conf;\n
                         \n
                         server {\n
+                            root /usr/share/nginx/html/;\n
+                            \n
                             location / {\n
-                                root /usr/share/nginx/html/;\n
                                 index index.php index.html index.htm;\n
                             }\n
                             \n
                             location ~ [^/]\.php(/|\$) {\n
-                                fastcgi_split_path_info ^(.+?\.php)(/.*)\$;\n
+                                fastcgi_split_path_info ^(.+?\.php)(/.*)?\$;\n
                                 #if (!-f \$document_root\$fastcgi_script_name) {\n
                                 #    return 404;\n
                                 #}\n
