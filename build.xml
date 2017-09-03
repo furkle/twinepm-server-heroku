@@ -162,11 +162,7 @@
 
                 service nginx restart &amp;&amp;
 
-                service nginx status &amp;&amp;
-
-                service php7.1-fpm start &amp;&amp;
-
-                service php7.1-fpm status">
+                service php7.1-fpm start">
         </exec>
     </target>
 
