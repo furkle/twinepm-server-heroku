@@ -132,8 +132,8 @@
                         \n
                         server {\n
                             location / {\n
-                                root /usr/share/nginx/html;
-                                index index.php index.html index.htm;
+                                root /usr/share/nginx/html/;\n
+                                index index.php index.html index.htm;\n
                             }\n
                             \n
                             location ~ [^/]\.php(/|\$) {\n
