@@ -162,7 +162,9 @@
 
                 service nginx restart &amp;&amp;
 
-                service php7.1-fpm start">
+                service php7.1-fpm start &amp;&amp;
+
+                echo 'Finished nginx setup.'">
         </exec>
     </target>
 
