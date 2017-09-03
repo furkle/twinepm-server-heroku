@@ -132,7 +132,7 @@
                         \n
                         server {\n
                             location / {\n
-                                root /usr/share/nginx/www;
+                                root /usr/share/nginx/html;
                                 index index.php index.html index.htm;
                             }\n
                             \n
@@ -158,7 +158,7 @@
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; &gt;
-                    /usr/share/nginx/www/index.php &amp;&amp;
+                    /usr/share/nginx/html/index.php &amp;&amp;
 
                 service nginx restart &amp;&amp;
 
