@@ -140,7 +140,7 @@
                             location ~ [^/]\.php(\\/|\$) {\n
                                 return 500;\n
                                 fastcgi_split_path_info ^(.+?\.php)(\\/.*)?$;\n
-                                try_files $fastcgi_script_name =404;\n
+                                try_files $fastcgi_script_name /dev/null =404;\n
                                 \n
                                 # Mitigate https://httpoxy.org/ vulnerabilities\n
                                 fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
