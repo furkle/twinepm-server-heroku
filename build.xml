@@ -156,8 +156,10 @@
                     }\n
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) >
+                (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) &gt;
                     /etc/nginx/mime.types &amp;&amp;
+
+                cat /etc/nginx/mime.types &amp;&amp;
 
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; &gt;
                     /usr/share/nginx/html/index.php &amp;&amp;
