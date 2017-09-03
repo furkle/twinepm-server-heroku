@@ -164,7 +164,7 @@
 
                 service nginx status &amp;&amp;
 
-                service php7.1-fpm restart &amp;&amp;
+                service php7.1-fpm start &amp;&amp;
 
                 service php7.1-fpm status">
         </exec>
@@ -186,7 +186,7 @@
             passthru="true"
             command="
             cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker run --name twinepm_logic -d  -p 443:80 twinepm_logic:latest &amp;&amp;
+            docker run --name twinepm_logic -d -p 443:80 twinepm_logic:latest &amp;&amp;
             cd ../redis &amp;&amp;
             docker run --name twinepm_redis -d twinepm_redis:latest redis-server --appendonly yes &amp;&amp;
             cd ../postgresql &amp;&amp;
