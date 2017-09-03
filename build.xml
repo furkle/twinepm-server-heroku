@@ -156,8 +156,7 @@
                     }\n
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) &gt;
-                    /etc/nginx/mime.types &amp;&amp;
+                echo (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) &amp;&amp;
 
                 cat /etc/nginx/mime.types &amp;&amp;
 
