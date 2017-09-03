@@ -160,7 +160,11 @@
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; &gt;
                     /usr/share/nginx/www/index.php &amp;&amp;
 
-                service php7.1-fpm start &amp;&amp;
+                service nginx restart &amp;&amp;
+
+                service nginx status &amp;&amp;
+
+                service php7.1-fpm restart &amp;&amp;
 
                 service php7.1-fpm status">
         </exec>
