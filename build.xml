@@ -93,7 +93,7 @@
             passthru="true"
             command="
             phing remove-container-images &amp;&amp;
-            phing build-containers">
+            phing build-container-images">
         </exec>
     </target>
 

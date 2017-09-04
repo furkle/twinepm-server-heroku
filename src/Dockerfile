@@ -10,10 +10,10 @@ ARG TWINEPM_REPO_NAME=twinepm-server-heroku
 # Set environment variables.
 ENV \
     DEBIAN_FRONTEND=noninteractive \
-    TWINEPM_BRANCH=$TWINEPM_BRANCH \
-    TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE \
-    TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER \
-    TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
+    TWINEPM_BRANCH=${TWINEPM_BRANCH} \
+    TWINEPM_REPO_SITE=${TWINEPM_REPO_SITE} \
+    TWINEPM_REPO_OWNER=${TWINEPM_REPO_OWNER} \
+    TWINEPM_REPO_NAME=${TWINEPM_REPO_NAME}
 
 # Install the dependencies.
 RUN \
@@ -22,7 +22,6 @@ RUN \
         apt-utils \
         git && \
     cd /etc && \
-    echo "Doing git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git" && \
     git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
