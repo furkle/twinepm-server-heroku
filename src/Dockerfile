@@ -25,6 +25,7 @@ RUN \
     git clone \
          -b $TWINEPM_BRANCH \
          https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && \
+    ls -la && \
     cd $TWINEPM_REPO_NAME && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \
