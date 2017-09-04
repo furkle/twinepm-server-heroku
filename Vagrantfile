@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
     'cd $TWINEPM_REPO_NAME && ' +
     './scripts/getPhing && ' +
     'phing get-vm-dependencies && ' +
-    'phing build-containers && ' +
+    'phing build-container-images && ' +
     'phing run-containers && ' +
     'echo "Done provisioning VM."'
 

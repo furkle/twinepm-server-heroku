@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="twinepm-server-heroku" default="run-stable-vm">
+    <!-- START VIRTUAL MACHINE TASKS -->
+
     <!-- Runs from host machine. -->
     <target name="destroy-vm">
         <exec
@@ -47,23 +49,113 @@
         </exec>
     </target>
 
+    <!-- Runs from host machine. -->
+    <target name="ssh">
+        <exec
+            passthru="true"
+            command="vagrant ssh">
+        </exec>
+    </target>
+
+    <!-- END VIRTUAL MACHINE TASKS -->
+
+    <!-- START CONTAINER TASKS -->
+
     <!-- Runs inside host machine or VM. -->
-    <target name="build-containers">
+    <target name="build-container-images">
         <exec
             passthru="true"
             command="
-            cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker build
+            BUILD_ARGS='
                 --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
                 --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
                 --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
                 --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
-                -t twinepm_logic . &amp;&amp;
-            cd ../redis &amp;&amp;
-            docker build -t twinepm_redis . &amp;&amp;
-            cd ../postgresql &amp;&amp;
-            docker build -t twinepm_postgresql .">
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME' &amp;&amp;
+            docker build $BUILD_ARGS -t twinepm_logic /etc/twinepm-server-heroku/src &amp;&amp;
+            docker build $BUILD_ARGS -t twinepm_postgresql /etc/twinepm-server-heroku/postgresql &amp;&amp;
+            docker build $BUILD_ARGS -t twinepm_redis /etc/twinepm-server-heroku/redis">
+        </exec>
+    </target>
+
+    <target name="remove-container-images">
+        <exec
+            passthru="true"
+            command="
+            docker rmi twinepm_logic &amp;&amp;
+            docker rmi twinepm_postgresql &amp;&amp;
+            docker rmi twinepm_redis">
+        </exec>
+    </target>
+
+    <target name="rebuild-container-images">
+        <exec
+            passthru="true"
+            command="
+            phing remove-container-images &amp;&amp;
+            phing build-containers">
+        </exec>
+    </target>
+
+    <!-- Runs inside host machine or VM. -->
+    <target name="run-containers">
+        <exec
+            passthru="true"
+            command="
+            docker run --name twinepm_logic -d -p 443:80 twinepm_logic &amp;&amp;
+            docker run --name twinepm_postgresql -d twinepm_postgresql &amp;&amp;
+            docker run --name twinepm_redis -d twinepm_redis redis-server --appendonly yes">
+        </exec>
+    </target>
+
+    <target name="start-containers">
+        <exec
+            passthru="true"
+            command="
+            docker start twinepm_logic &amp;&amp;
+            docker start twinepm_postgresql &amp;&amp;
+            docker start twinepm_redis">
+        </exec>
+    </target>
+
+    <target name="stop-containers">
+        <exec
+            passthru="true"
+            command="
+            docker stop twinepm_logic &amp;&amp;
+            docker stop twinepm_postgresql &amp;&amp;
+            docker stop twinepm_redis">
+        </exec>
+    </target>
+
+    <target name="stop-containers">
+        <exec
+            passthru="true"
+            command="
+            docker stop twinepm_logic &amp;&amp;
+            docker stop twinepm_postgresql &amp;&amp;
+            docker stop twinepm_redis">
+        </exec>
+    </target>
+
+    <target name="remove-containers">
+        <exec
+            passthru="true"
+            command="
+            docker rm twinepm_logic &amp;&amp;
+            docker rm twinepm_postgresql &amp;&amp;
+            docker rm twinepm_redis">
+        </exec>
+    </target>
+
+    <target name="restart-containers">
+        <exec
+            passthru="true"
+            command="
+            phing stop-containers &amp;&amp;
+            phing remove-containers &amp;&amp;
+            phing rebuild-container-images &amp;&amp;
+            phing run-containers">
         </exec>
     </target>
 
@@ -177,17 +269,5 @@
         </exec>
     </target>
 
-    <!-- Runs inside host machine or VM. -->
-    <target name="run-containers">
-        <exec
-            passthru="true"
-            command="
-            cd /etc/twinepm-server-heroku/src &amp;&amp;
-            docker run --name twinepm_logic -d -p 443:80 twinepm_logic:latest &amp;&amp;
-            cd ../redis &amp;&amp;
-            docker run --name twinepm_redis -d twinepm_redis:latest redis-server --appendonly yes &amp;&amp;
-            cd ../postgresql &amp;&amp;
-            docker run --name twinepm_postgresql -d twinepm_postgresql:latest">
-        </exec>
-    </target>
+    <!-- END CONTAINER TASKS -->
 </project>
