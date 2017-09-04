@@ -32,7 +32,7 @@
         </exec>
     </target>
 
-    <!-- Runs from host machine/VM. -->
+    <!-- Runs from container host. -->
     <target name="get-host-dependencies">
         <exec
             passthru="true"
@@ -46,14 +46,6 @@
                 stable&quot; &amp;&amp;
             apt-get update &amp;&amp;
             apt-get install -y docker-ce">
-        </exec>
-    </target>
-
-    <!-- Runs from host machine. -->
-    <target name="ssh">
-        <exec
-            passthru="true"
-            command="vagrant ssh">
         </exec>
     </target>
 
@@ -318,7 +310,8 @@
                     }\n
                 &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
 
-                echo (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) &amp;&amp;
+                (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) |
+                    tee /etc/nginx/mime.types &amp;&amp;
 
                 cat /etc/nginx/mime.types &amp;&amp;
 
