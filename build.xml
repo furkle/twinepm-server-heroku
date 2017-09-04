@@ -33,7 +33,7 @@
     </target>
 
     <!-- Runs from host machine/VM. -->
-    <target name="get-vm-dependencies">
+    <target name="get-host-dependencies">
         <exec
             passthru="true"
             command="
@@ -80,10 +80,6 @@
             command="
             docker build
                 -t twinepm_postgresql
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
-                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
-                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/postgresql">
         </exec>
 
@@ -92,10 +88,6 @@
             command="
             docker build
                 -t twinepm_redis
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
-                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
-                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/redis">
         </exec>
     </target>
