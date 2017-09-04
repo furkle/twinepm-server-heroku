@@ -66,25 +66,57 @@
         <exec
             passthru="true"
             command="
-            BUILD_ARGS='
+            DOCKER_BUILD_ARGS='
                 --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
                 --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
                 --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
                 --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME' &amp;&amp;
-            docker build $BUILD_ARGS -t twinepm_logic /etc/twinepm-server-heroku/src &amp;&amp;
-            docker build $BUILD_ARGS -t twinepm_postgresql /etc/twinepm-server-heroku/postgresql &amp;&amp;
-            docker build $BUILD_ARGS -t twinepm_redis /etc/twinepm-server-heroku/redis">
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME'
+            export DOCKER_BUILD_ARGS">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="
+            docker build
+                $DOCKER_BUILD_ARGS
+                -t twinepm_logic
+                /etc/twinepm-server-heroku/src">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="
+            docker build
+                $DOCKER_BUILD_ARGS
+                -t twinepm_postgresql
+                /etc/twinepm-server-heroku/postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="
+            docker build
+                $DOCKER_BUILD_ARGS
+                -t twinepm_redis
+                /etc/twinepm-server-heroku/redis">
         </exec>
     </target>
 
     <target name="remove-container-images">
         <exec
             passthru="true"
-            command="
-            docker rmi twinepm_logic &amp;&amp;
-            docker rmi twinepm_postgresql &amp;&amp;
-            docker rmi twinepm_redis">
+            command="docker rmi twinepm_logic">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker rmi twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker rmi twinepm_redis">
         </exec>
     </target>
 
@@ -102,49 +134,98 @@
         <exec
             passthru="true"
             command="
-            docker run --name twinepm_logic -d -p 443:80 twinepm_logic &amp;&amp;
-            docker run --name twinepm_postgresql -d twinepm_postgresql &amp;&amp;
-            docker run --name twinepm_redis -d twinepm_redis redis-server --appendonly yes">
+            docker run
+                --name twinepm_logic
+                -d
+                -p 443:80
+                twinepm_logic">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="
+            docker run
+                --name twinepm_postgresql
+                -d
+                twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="
+            docker run
+                --name twinepm_redis
+                -d
+                twinepm_redis
+                redis-server --appendonly yes">
         </exec>
     </target>
 
     <target name="start-containers">
         <exec
             passthru="true"
-            command="
-            docker start twinepm_logic &amp;&amp;
-            docker start twinepm_postgresql &amp;&amp;
-            docker start twinepm_redis">
+            command="docker start twinepm_logic">
+        </exec>
+            
+        <exec
+            passthru="true"
+            command="docker start twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker start twinepm_redis">
         </exec>
     </target>
 
     <target name="stop-containers">
         <exec
             passthru="true"
-            command="
-            docker stop twinepm_logic &amp;&amp;
-            docker stop twinepm_postgresql &amp;&amp;
-            docker stop twinepm_redis">
+            command="docker stop twinepm_logic">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker stop twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker stop twinepm_redis">
         </exec>
     </target>
 
     <target name="stop-containers">
         <exec
             passthru="true"
-            command="
-            docker stop twinepm_logic &amp;&amp;
-            docker stop twinepm_postgresql &amp;&amp;
-            docker stop twinepm_redis">
+            command="docker stop twinepm_logic">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker stop twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker stop twinepm_redis">
         </exec>
     </target>
 
     <target name="remove-containers">
         <exec
             passthru="true"
-            command="
-            docker rm twinepm_logic &amp;&amp;
-            docker rm twinepm_postgresql &amp;&amp;
-            docker rm twinepm_redis">
+            command="docker rm twinepm_logic">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker rm twinepm_postgresql">
+        </exec>
+
+        <exec
+            passthru="true"
+            command="docker rm twinepm_redis">
         </exec>
     </target>
 
