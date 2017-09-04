@@ -66,21 +66,12 @@
         <exec
             passthru="true"
             command="
-            DOCKER_BUILD_ARGS='
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+            docker build
+                -t twinepm_logic
                 --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
                 --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
                 --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME'
-            export DOCKER_BUILD_ARGS">
-        </exec>
-
-        <exec
-            passthru="true"
-            command="
-            docker build
-                $DOCKER_BUILD_ARGS
-                -t twinepm_logic
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/src">
         </exec>
 
@@ -88,8 +79,11 @@
             passthru="true"
             command="
             docker build
-                $DOCKER_BUILD_ARGS
                 -t twinepm_postgresql
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
+                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/postgresql">
         </exec>
 
@@ -97,8 +91,11 @@
             passthru="true"
             command="
             docker build
-                $DOCKER_BUILD_ARGS
                 -t twinepm_redis
+                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
+                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
+                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
+                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/redis">
         </exec>
     </target>
