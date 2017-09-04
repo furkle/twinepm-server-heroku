@@ -22,7 +22,7 @@ RUN \
         apt-utils \
         git && \
     cd /etc && \
-    git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && \
+    git clone -b ${TWINEPM_BRANCH} https://${TWINEPM_REPO_SITE}/${TWINEPM_REPO_OWNER}/${TWINEPM_REPO_NAME}.git && \
     cd twinepm-server-heroku && \
     ./scripts/getPhing && \
     phing get-logic-dependencies && \
