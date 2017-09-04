@@ -292,15 +292,18 @@
                             }\n
                             \n
                             location ~ [^/]\.php(\\/|\$) {\n
+                                root /usr/share/nginx/html/;\n
                                 fastcgi_split_path_info ^(.+?\.php)(\\/.*)?$;\n
                                 try_files \$fastcgi_script_name =404;\n
-                                \n
-                                # Mitigate https://httpoxy.org/ vulnerabilities\n
-                                fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
                                 \n
                                 fastcgi_pass unix:/run/php/php7.1-fpm.sock;\n
                                 fastcgi_index index.php;\n
                                 include fastcgi_params;\n
+                                \n
+                                # Mitigate https://httpoxy.org/ vulnerabilities\n
+                                fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
+                                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                                fastcgi_param PATH_INFO $fastcgi_path_info;
                             }\n
                             \n
                             location ~ /\.ht {\n
@@ -313,9 +316,7 @@
                 (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) |
                     tee /etc/nginx/mime.types &amp;&amp;
 
-                cat /etc/nginx/mime.types &amp;&amp;
-
-                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; &gt;
+                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; ?&gt;
                     /usr/share/nginx/html/index.php &amp;&amp;
 
                 echo 'Finished nginx setup.'">
