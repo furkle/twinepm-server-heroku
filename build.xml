@@ -46,7 +46,7 @@
                 stable&quot; &amp;&amp;
             apt-get update &amp;&amp;
             apt-get install -y
-                docker-ce
+                docker-ce 
                 docker-compose">
         </exec>
     </target>
