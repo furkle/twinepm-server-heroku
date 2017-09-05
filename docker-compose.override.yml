@@ -1,8 +1,5 @@
 version: '3'
 
-&mode
-  MODE: development
-
 services:
   web:
     build: web/
@@ -14,7 +11,8 @@ services:
       - logic
       - db
       - cache
-    environment: *mode
+    environment: &mode
+      MODE: development
 
   logic:
     build: src/
