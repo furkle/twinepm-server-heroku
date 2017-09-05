@@ -1,8 +1,10 @@
-version: 3
+version: '3'
 
 services:
   web:
     image: furkle/twinepm_web:latest
+    cache_from:
+      - nginx
     ports:
       - '443:80'
     depends_on:
