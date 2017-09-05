@@ -1,5 +1,8 @@
 version: '3'
 
+&mode      
+  MODE: production
+
 services:
   web:
     image: furkle/twinepm_web:latest
@@ -9,8 +12,7 @@ services:
       - logic
     links:
       - logic
-    environment: &mode 
-      MODE: production
+    environment: *mode
 
   logic:
     image: furkle/twinepm_logic:latest

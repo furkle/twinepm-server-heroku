@@ -1,8 +1,11 @@
 version: '3'
 
+&mode
+  MODE: development
+
 services:
   web:
-    build: web
+    build: web/
     volumes:
       - '${PWD}/web:/etc/twinepm-server-heroku/web'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
@@ -11,11 +14,10 @@ services:
       - logic
       - db
       - cache
-    environment: &mode
-      MODE: development
+    environment: *mode
 
   logic:
-    build: src
+    build: src/
     volumes:
       - '${PWD}/src:/etc/twinepm-server-heroku/src'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
@@ -26,7 +28,7 @@ services:
     environment: *mode
 
   db:
-    build: db
+    build: db/
     volumes:
       - '${PWD}/db:/etc/twinepm-server-heroku/db'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
@@ -35,7 +37,7 @@ services:
     environment: *mode 
 
   cache:
-    build: cache
+    build: cache/
     volumes:
       - '${PWD}/cache:/etc/twinepm-server-heroku/cache'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
