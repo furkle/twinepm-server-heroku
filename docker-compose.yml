@@ -1,0 +1,18 @@
+version: 3
+
+services:
+  web:
+    image: furkle/twinepm_web:latest
+    ports:
+      - '443:80'
+    depends_on:
+      - logic
+    links:
+      - logic
+    environment:
+      MODE: production
+
+  logic:
+    image: furkle/twinepm_logic:latest
+    environment:
+      MODE: production

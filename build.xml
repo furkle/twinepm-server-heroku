@@ -60,10 +60,6 @@
             command="
             docker build
                 -t twinepm_logic
-                --build-arg TWINEPM_BRANCH=$TWINEPM_BRANCH
-                --build-arg TWINEPM_REPO_SITE=$TWINEPM_REPO_SITE
-                --build-arg TWINEPM_REPO_OWNER=$TWINEPM_REPO_OWNER
-                --build-arg TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME
                 /etc/twinepm-server-heroku/src">
         </exec>
 
@@ -226,27 +222,8 @@
         <exec
             passthru="true"
             command="
-            apt-get install -y
-                software-properties-common
-                gnupg
-                locales &amp;&amp;
-            LANG=en_US.UTF-8 &amp;&amp;
-            LANGUAGE=en_US:en &amp;&amp;
-            LC_ALL=en_US.UTF-8 &amp;&amp;
-            localedef -i en_US -f UTF-8 en_US.UTF-8 &amp;&amp;
-            /usr/sbin/update-locale LANG=$LANG &amp;&amp;
-            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C &amp;&amp;
-            add-apt-repository -y ppa:ondrej/php &amp;&amp;
             apt-get update &amp;&amp;
-            apt-get install -y
-                composer
-                php7.1
-                php7.1-fpm
-                php7.1-mbstring
-                php7.1-xml
-                php7.1-zip
-                unzip
-                zip">
+            apt-get install -y composer">
         </exec>
     </target>
 
@@ -318,6 +295,8 @@
 
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; ?&gt;
                     /usr/share/nginx/html/index.php &amp;&amp;
+
+                service php7.1-fpm start &amp;&amp;
 
                 echo 'Finished nginx setup.'">
         </exec>
