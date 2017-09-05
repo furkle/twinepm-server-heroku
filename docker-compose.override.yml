@@ -5,7 +5,6 @@ services:
     volumes:
       - '${PWD}/web:/etc/twinepm-server-heroku/web'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
-      - '${PWD}/web/site.conf:/etc/nginx/conf.d/default.conf'
     build: web/
     depends_on:
       - logic

@@ -240,64 +240,6 @@
         <exec
             passthru="true"
             command="
-                printf &quot;
-                    user nginx;\n
-                    worker_processes 1;\n
-                    \n
-                    error_log /var/log/nginx/error.log warn;\n
-                    pid /var/run/nginx.pid;\n
-                    \n
-                    events {\n
-                        worker_connections 1024;\n
-                    }\n
-                    \n
-                    http {\n
-                        include /etc/nginx/mime.types;\n
-                        default_type application/octet-stream;\n
-                        \n
-                        log_format main '\$remote_addr - \$remote_user [\$time_local] \&quot;\$request\&quot;'\n
-                                        '\$status \$body_bytes_sent \&quot;\$http_referer\&quot;'\n
-                                        '\&quot;\$http_user_agent\&quot; \&quot;\$http_x_forwarded_for\&quot;';\n
-                        \n
-                        access_log /var/log/nginx/access.log main;\n
-                        \n
-                        sendfile on;\n
-                        \n
-                        keepalive_timeout 65;\n
-                        \n
-                        gzip on;\n
-                        \n
-                        include /etc/nginx/conf.d/*.conf;\n
-                        \n
-                        server {\n
-                            root /usr/share/nginx/html/;\n
-                            \n
-                            location / {\n
-                                index index.php index.html index.htm;\n
-                            }\n
-                            \n
-                            location ~ [^/]\.php(\\/|\$) {\n
-                                root /usr/share/nginx/html/;\n
-                                fastcgi_split_path_info ^(.+?\.php)(\\/.*)?$;\n
-                                try_files \$fastcgi_script_name =404;\n
-                                \n
-                                fastcgi_pass unix:/run/php/php7.1-fpm.sock;\n
-                                fastcgi_index index.php;\n
-                                include fastcgi_params;\n
-                                \n
-                                # Mitigate https://httpoxy.org/ vulnerabilities\n
-                                fastcgi_param HTTP_PROXY \&quot;\&quot;;\n
-                                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                                fastcgi_param PATH_INFO $fastcgi_path_info;
-                            }\n
-                            \n
-                            location ~ /\.ht {\n
-                                deny all;\n
-                            }\n
-                        }\n
-                    }\n
-                &quot; &gt; /etc/nginx/nginx.conf &amp;&amp;
-
                 (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) |
                     tee /etc/nginx/mime.types &amp;&amp;
 
