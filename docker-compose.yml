@@ -9,10 +9,9 @@ services:
       - logic
     links:
       - logic
-    environment:
+    environment: &mode 
       MODE: production
 
   logic:
     image: furkle/twinepm_logic:latest
-    environment:
-      MODE: production
+    environment: *mode
