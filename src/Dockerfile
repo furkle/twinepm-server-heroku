@@ -1,4 +1,4 @@
-FROM 7.1-fpm
+FROM php:7.1-fpm
 
 # Install the dependencies.
 RUN \
