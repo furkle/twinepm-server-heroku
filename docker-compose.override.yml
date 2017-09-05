@@ -31,7 +31,8 @@ services:
     volumes:
       - '${PWD}/db:/etc/twinepm-server-heroku/db'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
-    expose: 5432
+    expose:
+      - 5432
     environment:
       MODE: development
 
@@ -40,6 +41,7 @@ services:
     volumes:
       - '${PWD}/cache:/etc/twinepm-server-heroku/cache'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
-    expose: 6379
+    expose:
+      - 6379
     environment:
       MODE: development
