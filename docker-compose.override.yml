@@ -2,11 +2,11 @@ version: '3'
 
 services:
   web:
-    build: web/
     volumes:
       - '${PWD}/web:/etc/twinepm-server-heroku/web'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
       - '${PWD}/web/site.conf:/etc/nginx/conf.d/default.conf'
+    build: web/
     depends_on:
       - logic
       - db
@@ -15,11 +15,11 @@ services:
       MODE: development
 
   logic:
-    build: src/
     volumes:
       - '${PWD}/src:/etc/twinepm-server-heroku/src'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
       - '${PWD}/src/log.conf:/usr/local/etc/php-fpm.d/zz-log.conf'
+    build: src/
     links:
       - db
       - cache
@@ -35,10 +35,10 @@ services:
     environment: *mode 
 
   cache:
-    build: cache/
     volumes:
       - '${PWD}/cache:/etc/twinepm-server-heroku/cache'
       - '${PWD}/build.xml:/etc/twinepm-server-heroku/build.xml'
+    build: cache/
     expose:
       - 6379
     environment: *mode
