@@ -9,6 +9,7 @@ COPY scripts/getPhing scripts/getPhing
 COPY build.xml .
 
 RUN \
+    apt-get install -y apt-transport-https && \
     echo 'deb https://packages.dotdeb.org jessie all' >> /etc/apt/sources.list && \
     echo 'deb-src https://packages.dotdeb.org jessie all' >> /etc/apt/sources.list && \
     cd /etc/twinepm-server-heroku && \
