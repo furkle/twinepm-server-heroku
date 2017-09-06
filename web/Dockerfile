@@ -11,4 +11,6 @@ COPY \
 
 COPY scripts/getPhing scripts/getPhing
 
-RUN phing -f /etc/twinepm-server-heroku/build.xml setup-nginx
+RUN \
+    /etc/twinepm-server-heroku/scripts/getPhing && \
+    phing -f /etc/twinepm-server-heroku/build.xml setup-nginx
