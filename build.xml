@@ -226,17 +226,6 @@
     </target>
 
     <!-- Runs inside webserver/logic container. -->
-    <target name="setup-server">
-        <exec
-            passthru="true"
-            command="
-                cp /etc/twinepm-server-heroku/web/mime.types /etc/nginx/ &amp;&amp;
-                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'; ?&gt;&quot; &gt;
-                    /usr/share/nginx/html/index.php">
-        </exec>
-    </target>
-
-    <!-- Runs inside webserver/logic container. -->
     <target name="install-php-packages">
         <exec
             passthru="true"
