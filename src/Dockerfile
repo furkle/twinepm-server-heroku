@@ -1,11 +1,11 @@
-FROM php:7.1-fpm
+FROM nginx:1.13
 
-RUN mkdir /etc/twinepm-server-heroku
+RUN mkdir /etc/twinepm-server-heroku/
 
-WORKDIR /etc/twinepm-server-heroku
+WORKDIR /etc/twinepm-server-heroku/
 
 COPY \
-    src \
+    src/ \
     composer.json \
     build.xml \
     ./
@@ -13,7 +13,5 @@ COPY \
 COPY scripts/getPhing scripts/getPhing
 
 RUN \
-    cd /etc/twinepm-server-heroku && \
-    ./scripts/getPhing && \
-    phing get-logic-dependencies && \
-    phing install-php-packages
+    /etc/twinepm-server-heroku/scripts/getPhing && \
+    phing -f /etc/twinepm-server-heroku/build.xml setup-nginx
