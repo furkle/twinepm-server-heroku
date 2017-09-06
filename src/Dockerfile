@@ -4,7 +4,7 @@ RUN mkdir /etc/twinepm-server-heroku
 
 WORKDIR /etc/twinepm-server-heroku
 
-COPY
+COPY \
     src \
     composer.json \
     build.xml \
