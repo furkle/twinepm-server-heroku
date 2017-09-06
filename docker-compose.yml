@@ -20,5 +20,7 @@ services:
     environment: *mode
 
 networks:
-  - frontend
-  - backend
+  frontend:
+    driver: overlay
+  backend:
+    driver: overlay
