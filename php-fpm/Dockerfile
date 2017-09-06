@@ -5,7 +5,7 @@ RUN mkdir /etc/twinepm-server-heroku
 WORKDIR /etc/twinepm-server-heroku
 
 COPY \
-    php-fpm/ \
+    php-fpm/* \
     build.xml \
     ./
 
