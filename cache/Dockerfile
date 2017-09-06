@@ -1,5 +1,9 @@
 FROM redis:3.2
 
-COPY cache /etc/twinepm-server-heroku/cache
-COPY scripts/getPhing /etc/twinepm-server-heroku/scripts/getPhing
-COPY build.xml /etc/twinepm-server-heroku/build.xml
+RUN mkdir /etc/twinepm-server-heroku
+
+WORKDIR /etc/twinepm-server-heroku
+
+COPY cache .
+COPY scripts/getPhing scripts/getPhing
+COPY build.xml .

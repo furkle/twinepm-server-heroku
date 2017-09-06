@@ -1,10 +1,12 @@
 FROM php:7.1-fpm
 
-WORKDIR ${PWD}
+RUN mkdir /etc/twinepm-server-heroku
 
-COPY src /etc/twinepm-server-heroku/src
-COPY scripts/getPhing /etc/twinepm-server-heroku/scripts/getPhing
-COPY build.xml /etc/twinepm-server-heroku/build.xml
+WORKDIR /etc/twinepm-server-heroku
+
+COPY src .
+COPY scripts/getPhing scripts/getPhing
+COPY build.xml .
 
 RUN \
     cd /etc/twinepm-server-heroku && \
