@@ -1,13 +1,13 @@
 #!/bin/sh
 
 apt-get update
-if !hash php 2>/dev/null; then
+if ! type php 2>/dev/null; then
   apt-get install -y \
     php \
     php-xml
 fi
 
-if !hash wget 2>/dev/null; then
+if ! type wget 2>/dev/null; then
   apt-get install -y wget
 fi
 
