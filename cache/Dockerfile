@@ -7,6 +7,6 @@ WORKDIR /etc/twinepm-server-heroku/
 COPY \
     cache/ \
     build.xml \
-    .
+    ./
 
 COPY scripts/getPhing scripts/getPhing
