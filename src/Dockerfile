@@ -1,5 +1,7 @@
 FROM nginx:1.13
 
+ARG TERM=xterm-256color
+
 RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
