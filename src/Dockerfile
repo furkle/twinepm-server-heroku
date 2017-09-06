@@ -8,7 +8,8 @@ COPY \
     src \
     composer.json \
     build.xml \
-    .
+    ./
+
 COPY scripts/getPhing scripts/getPhing
 
 RUN \
