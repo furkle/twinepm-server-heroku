@@ -3,7 +3,8 @@ version: '3'
 services:
   web:
     build:
-      context: web/
+      context: .
+      dockerfile: web/Dockerfile
     depends_on:
       - logic
       - db
@@ -13,7 +14,8 @@ services:
 
   logic:
     build:
-      context: src/
+      context: .
+      dockerfile: src/Dockerfile
     links:
       - db
       - cache
@@ -21,7 +23,8 @@ services:
 
   db:
     build:
-      context: db/
+      context: .
+      dockerfile: db/Dockerfile
     expose:
       - 5432
     context: .
@@ -29,7 +32,8 @@ services:
 
   cache:
     build: 
-      context: cache/
+      context: .
+      dockerfile: cache/Dockerfile
     expose:
       - 6379
     context: .
