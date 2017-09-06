@@ -230,6 +230,8 @@
         <exec
             passthru="true"
             command="
+            apt-get update &amp;&amp;
+            apt-get install -y git &amp;&amp;
             php -r &quot;copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');&quot; &amp;&amp;
             php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &amp;&amp;
             rm /tmp/composer-setup.php">
