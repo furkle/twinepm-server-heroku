@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: web/Dockerfile
+      dockerfile: 
     depends_on:
       - logic
       - db
@@ -27,7 +27,6 @@ services:
       dockerfile: db/Dockerfile
     expose:
       - 5432
-    context: .
     environment: *mode
 
   cache:
@@ -36,5 +35,4 @@ services:
       dockerfile: cache/Dockerfile
     expose:
       - 6379
-    context: .
     environment: *mode
