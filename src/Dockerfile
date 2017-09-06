@@ -4,9 +4,12 @@ RUN mkdir /etc/twinepm-server-heroku
 
 WORKDIR /etc/twinepm-server-heroku
 
-COPY src .
+COPY
+    src \
+    composer.json \
+    build.xml \
+    .
 COPY scripts/getPhing scripts/getPhing
-COPY build.xml .
 
 RUN \
     cd /etc/twinepm-server-heroku && \
