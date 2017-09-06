@@ -11,4 +11,4 @@ COPY \
 
 COPY scripts/getPhing scripts/getPhing
 
-RUN cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
+RUN ls -al /etc/twinepm-server-heroku && cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
