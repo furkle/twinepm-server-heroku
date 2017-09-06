@@ -21,10 +21,12 @@ services:
     build: db/
     expose:
       - 5432
-    environment: *mode 
+    context: .
+    environment: *mode
 
   cache:
     build: cache/
     expose:
       - 6379
+    context: .
     environment: *mode

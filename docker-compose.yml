@@ -11,7 +11,9 @@ services:
       - logic
     environment: &mode
       MODE: production
+    context: .
 
   logic:
     image: furkle/twinepm_logic:latest
     environment: *mode
+    context: .
