@@ -246,15 +246,10 @@
         <exec
             passthru="true"
             command="
-                (head -n -1 /etc/nginx/mime.types; printf &quot;    text/php php php7;\n}&quot;) |
-                    tee /etc/nginx/mime.types &amp;&amp;
+                cp /etc/twinepm-server-heroku/web/mime.types /etc/nginx/ &amp;&amp;
 
-                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php';&quot; ?&gt;
-                    /usr/share/nginx/html/index.php &amp;&amp;
-
-                service php7.1-fpm start &amp;&amp;
-
-                echo 'Finished nginx setup.'">
+                echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'; ?&gt;&quot; &gt;
+                    /usr/share/nginx/html/index.php">
         </exec>
     </target>
 

@@ -1,9 +1,14 @@
 FROM nginx:1.13
 
-RUN mkdir /etc/twinepm-server-heroku
+RUN mkdir /etc/twinepm-server-heroku/
 
-WORKDIR /etc/twinepm-server-heroku
+WORKDIR /etc/twinepm-server-heroku/
 
-COPY web .
+COPY \
+    web/ \
+    build.xml \
+    .
+
 COPY scripts/getPhing scripts/getPhing
-COPY build.xml .
+
+RUN phing -f /etc/twinepm-server-heroku/build.xml setup-nginx
