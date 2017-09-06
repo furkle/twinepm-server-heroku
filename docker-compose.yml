@@ -6,12 +6,12 @@ services:
     ports:
       - '443:80'
     depends_on:
-      - logic
+      - php_fpm
     links:
-      - logic
+      - php_fpm
     environment: &mode
       MODE: production
 
-  logic:
-    image: furkle/twinepm_logic:latest
+  php_fpm:
+    image: furkle/php-fpm:latest
     environment: *mode
