@@ -6,3 +6,4 @@ src/OAuth2/clients/*
 ubuntu-xenial-16.04-cloudimg-console.log
 vendor/
 .vagrant
+.DS_Store
