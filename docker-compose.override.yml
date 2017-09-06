@@ -2,7 +2,8 @@ version: '3'
 
 services:
   web:
-    build: web/
+    build:
+      context: web/
     depends_on:
       - logic
       - db
@@ -11,21 +12,24 @@ services:
       MODE: development
 
   logic:
-    build: src/
+    build:
+      context: src/
     links:
       - db
       - cache
     environment: *mode
 
   db:
-    build: db/
+    build:
+      context: db/
     expose:
       - 5432
     context: .
     environment: *mode
 
   cache:
-    build: cache/
+    build: 
+      context: cache/
     expose:
       - 6379
     context: .
