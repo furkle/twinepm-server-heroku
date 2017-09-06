@@ -17,19 +17,20 @@ services:
     depends_on:
       - db
       - cache
-    links:
-      - db
-      - cache
     environment: *mode
 
   db:
     build:
       context: .
       dockerfile: db/Dockerfile
+    networks:
+      - backend
     environment: *mode
 
   cache:
     build: 
       context: .
       dockerfile: cache/Dockerfile
+    networks:
+      - backend
     environment: *mode
