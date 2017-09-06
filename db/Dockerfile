@@ -4,9 +4,6 @@ RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
 
-COPY \
-    db/ \
-    build.xml \
-    ./
-
+COPY db/ ./db/
+COPY build.xml ./
 COPY scripts/getPhing /etc/twinepm-server-heroku/scripts/getPhing

@@ -4,11 +4,8 @@ RUN mkdir /etc/twinepm-server-heroku
 
 WORKDIR /etc/twinepm-server-heroku
 
-COPY \
-    php-fpm/* \
-    build.xml \
-    ./
-
+COPY php-fpm/ ./php-fpm
+COPY build.xml ./
 COPY scripts/getPhing scripts/getPhing
 
-RUN ls -al /etc/twinepm-server-heroku && cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
+RUN cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf

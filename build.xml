@@ -226,28 +226,11 @@
     </target>
 
     <!-- Runs inside webserver/logic container. -->
-    <target name="get-logic-dependencies">
-        <exec
-            passthru="true"
-            command="
-            apt-get update &amp;&amp;
-            apt-get install -y 
-                git
-                unzip
-                zip &amp;&amp;
-            php -r &quot;copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');&quot; &amp;&amp;
-            php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &amp;&amp;
-            rm /tmp/composer-setup.php">
-        </exec>
-    </target>
-
-    <!-- Runs inside webserver/logic container. -->
-    <target name="setup-nginx">
+    <target name="setup-server">
         <exec
             passthru="true"
             command="
                 cp /etc/twinepm-server-heroku/web/mime.types /etc/nginx/ &amp;&amp;
-
                 echo &quot;&lt;?php require_once '/etc/twinepm-server-heroku/index.php'; ?&gt;&quot; &gt;
                     /usr/share/nginx/html/index.php">
         </exec>
@@ -258,6 +241,18 @@
         <exec
             passthru="true"
             command="
+            { composer -v; } || {
+                apt-get update &amp;&amp;
+                apt-get install -y 
+                    git
+                    unzip
+                    zip &amp;&amp;
+                    php -r
+                        &quot;copy('https://getcomposer.org/installer',
+                            '/tmp/composer-setup.php');&quot; &amp;&amp;
+                    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &amp;&amp;
+                    rm /tmp/composer-setup.php;
+            } &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
             composer install --no-plugins --no-scripts">
         </exec>
