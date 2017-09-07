@@ -212,6 +212,10 @@
         <exec
             passthru="true"
             command="
+            { type git; } || {
+                apt-get update &amp;&amp;
+                apt-get install -y git;
+            } &amp;&amp;
             docker-php-ext-install -j$(nproc) mbstring &amp;&amp;
             mkdir /tmp/svr-setup/ &amp;&amp;
             cd /tmp/svr-setup/ &amp;&amp;
@@ -239,7 +243,7 @@
         <exec
             passthru="true"
             command="
-            { composer -v; } || {
+            { type composer; } || {
                 apt-get update &amp;&amp;
                 apt-get install -y 
                     git
