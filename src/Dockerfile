@@ -14,8 +14,9 @@ COPY src/site.conf /etc/nginx/conf.d/default.conf
 COPY src/ ./src/
 
 COPY \
-    composer.json \
     build.xml \
+    composer.json \
+    index.php \
     ./
 
 COPY scripts/getPhing scripts/getPhing
