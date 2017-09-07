@@ -243,7 +243,12 @@
         <exec
             passthru="true"
             command="
-            docker-php-ext-install -j$(nproc) mbstring &amp;&amp;
+            if [ type docker-php-ext-install ];
+                then docker-php-ext-install -j$(nproc) mbstring pdo;
+                else {
+                    apt-get update &amp;&amp;
+                    apt-get install -y php7.1-mbstring php7.1-pdo;
+                }; &amp;&amp;
             { type composer; } || {
                 apt-get update &amp;&amp;
                 apt-get install -y 
