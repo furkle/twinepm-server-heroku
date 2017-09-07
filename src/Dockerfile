@@ -1,6 +1,7 @@
 FROM nginx:1.13
 
 ARG TERM=xterm-256color
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /etc/twinepm-server-heroku/
 
