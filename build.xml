@@ -226,6 +226,42 @@
     </target>
 
     <!-- Runs inside webserver/logic container. -->
+    <target name="install-php-dependencies">
+        <exec
+            passthru="true"
+            command="
+            phing install-php-extensions &amp;&amp;
+            phing install-php-packages">
+        </exec>
+    </target>
+
+    <target name="install-php-extensions">
+        <exec
+            passthru="true"
+            command="
+            docker-php-ext-install -j$(nproc) mb-string &amp;&amp;
+            mkdir /tmp/svr-setup/ &amp;&amp;
+            cd /tmp/svr-setup/ &amp;&amp;
+            git clone https://github.com/redis/hiredis &amp;&amp;
+            cd hiredis &amp;&amp;
+            make -j2 &amp;&amp;
+            make install &amp;&amp;
+            cd .. &amp;&amp;
+            git clone -b php7 https://github.com/nrk/phpiredis &amp;&amp;
+            cd phpiredis &amp;&amp;
+            phpize &amp;&amp;
+            ./configure
+                --enable-phpiredis
+                --with-hiredis-dir=/usr/local
+                --with-php-config=/usr/local/bin/php-config &amp;&amp;
+            make -j2 &amp;&amp;
+            make install &amp;&amp;
+            echo 'extension=phpiredis.so' > /etc/centminmod/php.d/phpiredis.ini &amp;&amp;
+            fpmrestart &amp;&amp;
+            php --ri phpiredis">
+        </exec>
+    </target>
+
     <target name="install-php-packages">
         <exec
             passthru="true"
