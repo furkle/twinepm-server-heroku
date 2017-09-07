@@ -234,7 +234,7 @@
             make -j2 &amp;&amp;
             make install &amp;&amp;
             echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &amp;&amp;
-            fpmrestart &amp;&amp;
+            kill -USR2 1 &amp;&amp;
             php --ri phpiredis">
         </exec>
     </target>
@@ -253,7 +253,9 @@
                     php -r
                         &quot;copy('https://getcomposer.org/installer',
                             '/tmp/composer-setup.php');&quot; &amp;&amp;
-                    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &amp;&amp;
+                    php /tmp/composer-setup.php
+                        --install-dir=/usr/local/bin
+                        --filename=composer &amp;&amp;
                     rm /tmp/composer-setup.php;
             } &amp;&amp;
             cd /etc/twinepm-server-heroku &amp;&amp;
