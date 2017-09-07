@@ -180,23 +180,6 @@
         </exec>
     </target>
 
-    <target name="stop-containers">
-        <exec
-            passthru="true"
-            command="docker stop twinepm_logic">
-        </exec>
-
-        <exec
-            passthru="true"
-            command="docker stop twinepm_postgresql">
-        </exec>
-
-        <exec
-            passthru="true"
-            command="docker stop twinepm_redis">
-        </exec>
-    </target>
-
     <target name="remove-containers">
         <exec
             passthru="true"
@@ -225,21 +208,11 @@
         </exec>
     </target>
 
-    <!-- Runs inside webserver/logic container. -->
-    <target name="install-php-dependencies">
-        <exec
-            passthru="true"
-            command="
-            phing install-php-extensions &amp;&amp;
-            phing install-php-packages">
-        </exec>
-    </target>
-
     <target name="install-php-extensions">
         <exec
             passthru="true"
             command="
-            docker-php-ext-install -j$(nproc) mb-string &amp;&amp;
+            docker-php-ext-install -j$(nproc) mbstring &amp;&amp;
             mkdir /tmp/svr-setup/ &amp;&amp;
             cd /tmp/svr-setup/ &amp;&amp;
             git clone https://github.com/redis/hiredis &amp;&amp;

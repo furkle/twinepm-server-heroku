@@ -24,5 +24,5 @@ COPY scripts/getPhing scripts/getPhing
 RUN \
     cd /etc/twinepm-server-heroku/ && \
     scripts/getPhing && \
-    phing install-php-dependencies && \
+    phing install-php-packages && \
     echo "<?php require_once '/etc/twinepm-server-heroku/index.php'; ?>" > /usr/share/nginx/html/index.php

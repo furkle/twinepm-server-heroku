@@ -8,4 +8,7 @@ COPY php-fpm/ ./php-fpm
 COPY build.xml ./
 COPY scripts/getPhing scripts/getPhing
 
-RUN cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
+RUN \
+    scripts/getPhing && \
+    phing php install-php-extensions && \
+    cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
