@@ -224,7 +224,7 @@
             make -j2 &amp;&amp;
             make install &amp;&amp;
             cd .. &amp;&amp;
-            git clone -b php7 https://github.com/nrk/phpiredis &amp;&amp;
+            git clone https://github.com/nrk/phpiredis &amp;&amp;
             cd phpiredis &amp;&amp;
             phpize &amp;&amp;
             ./configure
