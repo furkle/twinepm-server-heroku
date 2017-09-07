@@ -233,7 +233,7 @@
                 --with-php-config=/usr/local/bin/php-config &amp;&amp;
             make -j2 &amp;&amp;
             make install &amp;&amp;
-            echo 'extension=phpiredis.so' > /etc/centminmod/php.d/phpiredis.ini &amp;&amp;
+            echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &amp;&amp;
             fpmrestart &amp;&amp;
             php --ri phpiredis">
         </exec>
