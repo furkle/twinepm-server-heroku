@@ -10,5 +10,5 @@ COPY scripts/getPhing scripts/getPhing
 
 RUN \
     scripts/getPhing && \
-    phing php install-php-extensions && \
+    phing install-php-extensions && \
     cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
