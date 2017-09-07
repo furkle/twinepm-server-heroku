@@ -243,6 +243,7 @@
         <exec
             passthru="true"
             command="
+            docker-php-ext-install -j$(nproc) mbstring &amp;&amp;
             { type composer; } || {
                 apt-get update &amp;&amp;
                 apt-get install -y 
