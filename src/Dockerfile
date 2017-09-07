@@ -8,6 +8,8 @@ WORKDIR /etc/twinepm-server-heroku/
 
 COPY src/mime.types /etc/nginx/
 
+COPY src/site.conf /etc/nginx/conf.d/default.conf
+
 COPY src/ ./src/
 
 COPY \
