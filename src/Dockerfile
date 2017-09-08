@@ -7,10 +7,6 @@ RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
 
-COPY src/mime.types /etc/nginx/
-
-COPY src/site.conf /etc/nginx/conf.d/default.conf
-
 COPY src/ ./src/
 
 COPY \
@@ -18,4 +14,4 @@ COPY \
     index.php \
     ./
 
-RUN /etc/twinepm-server-heroku/src/scripts/getWebDependencies
+#RUN /etc/twinepm-server-heroku/src/scripts/installWebDependencies
