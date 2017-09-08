@@ -1,18 +1,14 @@
 #! /bin/sh
 
-TYPE1=$(type git 2> /dev/null)
-if [ "$TYPE1" == '' ]; then
-    apt-get update &&
-    apt-get install -y git
-fi
+apt-get update
+apt-get install -y git
 
-TYPE2=$(type docker-php-ext-install 2> /dev/null)
-if [ "$TYPE2" != '' ]; then
+TYPE=$(type docker-php-ext-install 2> /dev/null)
+if [ "$TYPE" != '' ]; then
     docker-php-ext-install -j$(nproc) \
         mbstring \
         pdo
 else
-    apt-get update &&
     apt-get install -y \
         mbstring \
         pdo
