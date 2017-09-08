@@ -2,7 +2,7 @@
 
 docker-compose down &&
 
-if [ "$1" == "fromcache" || "$1" == "--from-cache" || "$1" == "-c" ];
+if [ "$1" == "fromcache" || "$1" == "--from-cache" || "$1" == "-c" ]; then
     docker-compose build
 else
     docker-compose build --no-cache
@@ -10,6 +10,6 @@ fi &&
 
 shift &&
 
-if [ "$1" == "up" || "$1" == "--up" || "$1" == "-u" ];
+if [ "$1" == "up" || "$1" == "--up" || "$1" == "-u" ]; then
     docker-compose up
 fi
