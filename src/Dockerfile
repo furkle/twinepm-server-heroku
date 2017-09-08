@@ -14,11 +14,8 @@ COPY src/site.conf /etc/nginx/conf.d/default.conf
 COPY src/ ./src/
 
 COPY \
-    build.xml \
     composer.json \
     index.php \
     ./
-
-COPY scripts/getPhing scripts/getPhing
 
 RUN /etc/twinepm-server-heroku/src/scripts/getWebDependencies
