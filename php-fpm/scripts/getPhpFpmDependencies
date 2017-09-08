@@ -6,12 +6,10 @@ apt-get install -y git
 TYPE=$(type docker-php-ext-install 2> /dev/null)
 if [ "$TYPE" == '' ]; then
     apt-get install -y \
-        hiredis \
         mbstring \
         pdo
 else
     docker-php-ext-install -j$(nproc) \
-        hiredis \
         mbstring \
         pdo
 fi &&
