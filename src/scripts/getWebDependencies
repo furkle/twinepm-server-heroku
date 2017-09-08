@@ -4,6 +4,7 @@ apt-get update
 TYPE1=$(type docker-php-ext-install 2> /dev/null)
 TYPE2=$(type composer 2> /dev/null)
 
+echo "$TYPE1"
 if [ "$TYPE1" == '' ]; then
     apt-get install -y php-mbstring
 else
