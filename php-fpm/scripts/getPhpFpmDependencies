@@ -1,28 +1,28 @@
 #! /bin/sh
 
 apt-get update
-apt-get install -y \
-    git \
-    hiredis
+apt-get install -y git
 
 TYPE=$(type docker-php-ext-install 2> /dev/null)
 if [ "$TYPE" == '' ]; then
     apt-get install -y \
+        hiredis \
         mbstring \
         pdo
 else
     docker-php-ext-install -j$(nproc) \
+        hiredis \
         mbstring \
         pdo
 fi &&
 
-git clone https://github.com/nrk/phpiredis &&
-cd phpiredis &&
-phpize &&
-./configure --enable-phpiredis &&
-make -j2 &&
-make install &&
-echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &&
-kill -USR2 1 &&
-php --ri phpiredis &&
+#git clone https://github.com/nrk/phpiredis &&
+#cd phpiredis &&
+#phpize &&
+#./configure --enable-phpiredis &&
+#make -j2 &&
+#make install &&
+#echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &&
+#kill -USR2 1 &&
+#php --ri phpiredis &&
 cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
