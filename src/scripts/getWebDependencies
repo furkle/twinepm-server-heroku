@@ -1,23 +1,27 @@
 #!/bin/sh
 apt-get update
 
-TYPE=$(type composer 2> /dev/null)
+TYPE1=$(type docker-php-ext-install 2> /dev/null)
+TYPE2=$(type composer 2> /dev/null)
 
-apt-get install -y php-mbstring &&
+if [ "$TYPE1" == '' ]; then
+    apt-get install -y php-mbstring
+else
+    docker-php-ext-install -j$(nproc) mbstring
+fi &&
 
-if [ "$TYPE" == '' ]; then
+if [ "$TYPE2" == '' ]; then
     apt-get install -y \
         git \
         unzip \
         zip &&
-    php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" &&
+    curl -fsSL 'https://getcomposer.org/installer' > /tmp/composer-setup.php &&
     php /tmp/composer-setup.php \
         --install-dir=/usr/local/bin \
         --filename=composer &&
     rm /tmp/composer-setup.php
 fi &&
 
-su www-data &&
 cd /etc/twinepm-server-heroku &&
 composer install \
     --no-plugins \
