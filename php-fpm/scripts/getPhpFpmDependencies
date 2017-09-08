@@ -20,6 +20,7 @@ git clone https://github.com/redis/hiredis &&
 cd hiredis &&
 make -j2 &&
 make install &&
+make test &&
 cd .. &&
 git clone https://github.com/nrk/phpiredis &&
 cd phpiredis &&
@@ -30,6 +31,7 @@ phpize &&
     --with-php-config=/usr/local/bin/php-config &&
 make -j2 &&
 make install &&
+make test &&
 echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &&
 kill -USR2 1 &&
 php --ri phpiredis &&
