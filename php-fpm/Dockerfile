@@ -1,14 +1,9 @@
 FROM php:7.1-fpm
 
-RUN mkdir /etc/twinepm-server-heroku
+RUN mkdir /etc/twinepm-server-heroku/
 
-WORKDIR /etc/twinepm-server-heroku
+WORKDIR /etc/twinepm-server-heroku/
 
-COPY php-fpm/ ./php-fpm
-COPY build.xml ./
-COPY scripts/getPhing scripts/getPhing
+COPY php-fpm/ ./php-fpm/
 
-RUN \
-    scripts/getPhing && \
-    phing install-php-extensions && \
-    cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
+RUN php-fpm/scripts/getPhpFpmDependencies

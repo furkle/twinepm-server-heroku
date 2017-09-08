@@ -1,0 +1,40 @@
+#! /bin/sh
+
+TYPE1=$(type git 2> /dev/null)
+if [ "$TYPE1" == '' ]; then
+    apt-get update &&
+    apt-get install -y git
+fi
+
+TYPE2=$(type docker-php-ext-install 2> /dev/null)
+if [ "$TYPE2" != '' ]; then
+    docker-php-ext-install -j$(nproc) \
+        mbstring \
+        pdo
+else
+    apt-get update &&
+    apt-get install -y \
+        mbstring \
+        pdo
+fi &&
+
+mkdir /tmp/svr-setup/ &&
+cd /tmp/svr-setup/ &&
+git clone https://github.com/redis/hiredis &&
+cd hiredis &&
+make -j2 &&
+make install &&
+cd .. &&
+git clone https://github.com/nrk/phpiredis &&
+cd phpiredis &&
+phpize &&
+./configure \
+    --enable-phpiredis \
+    --with-hiredis-dir=/usr/local \
+    --with-php-config=/usr/local/bin/php-config &&
+make -j2 &&
+make install &&
+echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &&
+kill -USR2 1 &&
+php --ri phpiredis &&
+cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
