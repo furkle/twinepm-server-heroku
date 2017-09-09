@@ -1,4 +1,0 @@
-# vim: syntax=apache
-<Files "*">
-    Deny from all
-</Files>
