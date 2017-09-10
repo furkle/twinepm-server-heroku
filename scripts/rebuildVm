@@ -23,12 +23,12 @@ cmd = [os.path.join(dirname, 'destroyVm')]
 if args.force:
     cmd.append('--force')
 
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 cmd = [os.path.join(dirname, 'runVm')]
 if args.dev:
     cmd.append('--dev')
 
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()

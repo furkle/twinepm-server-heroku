@@ -20,7 +20,7 @@ if args.force:
 
 env = os.environ.copy()
 env['VAGRANT_CWD'] = dirname
-proc = subprocess.Popen(cmd, env=env, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, env=env)
 proc.communicate()
 
 print('Destroyed virtual machine.')

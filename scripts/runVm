@@ -23,7 +23,7 @@ cmd = ['vagrant', 'up']
 env = os.environ.copy()
 env['VAGRANT_CWD'] = dirname
 env['TWINEPM_BRANCH'] = build_arg
-proc = subprocess.Popen(cmd, env=env, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, env=env)
 proc.communicate()
 
 print('Started virtual machine.')

@@ -16,13 +16,13 @@ parser.add_argument('--removeall', '-r', action='store_true',
 
 args = parser.parse_args()
 
-cmds = ['docker-compose', '-f', compose_path]
+cmd = ['docker-compose', '-f', compose_path]
 if args.removeall:
-    cmds.append(cmds, 'down')
+    cmds.append(cmd, 'down')
 else:
-    cmds.append(cmds, 'rm')
+    cmds.append(cmd, 'rm')
 
-proc = subprocess.Popen(cmds, strerr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 print('Containers removed.')

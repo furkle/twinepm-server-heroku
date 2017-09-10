@@ -8,11 +8,11 @@ parser = argparse.ArgumentParser(description='Install dependencies ' +
 
 parser.parse_args()
 
-proc = subprocess.Popen(['apt-get', 'update'], stderr=subprocess.STDOUT)
+proc = subprocess.Popen(['apt-get', 'update'],)
 proc.communicate()
 
 cmd = ['apt-get', 'install', '-y', 'vagrant', 'virtualbox']
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 print('VM dependencies installed.')

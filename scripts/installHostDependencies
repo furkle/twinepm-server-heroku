@@ -12,11 +12,10 @@ parser.parse_args()
 cmd = "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | " + \
     "sudo apt-key add -"
 
-out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+out = subprocess.check_output(cmd, shell=True)
 print(out.decode('utf-8'))
 
-proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'],
-                        stderr=subprocess.STDOUT)
+proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'])
 proc.communicate()
 
 arch = '[arch=amd64]'
@@ -26,19 +25,19 @@ print(dist)
 branch = 'stable'
 repo = 'deb {} {} {} {}'.format(arch, url, dist, branch)
 cmd = ['add-apt-repository', repo]
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
-proc = subprocess.Popen(['apt-get', 'update'], stderr=subprocess.STDOUT)
+proc = subprocess.Popen(['apt-get', 'update'])
 proc.communicate()
 
 cmd = ['apt-get', 'install', '-y', 'docker-ce']
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 version = '1.16.1'
-uname_s = subprocess.check_output(['uname', '-s'], stderr=subprocess.STDOUT)
-uname_m = subprocess.check_output(['uname', '-m'], stderr=subprocess.STDOUT)
+uname_s = subprocess.check_output(['uname', '-s']).decode('utf-8')
+uname_m = subprocess.check_output(['uname', '-m']).decode('utf-8')
 url = ('https://github.com/docker/compose/releases/download/{}/' +
     'docker-compose-{}-{}').format(version, uname_s, uname_m)
 file_name = '/usr/local/bin/docker-compose'

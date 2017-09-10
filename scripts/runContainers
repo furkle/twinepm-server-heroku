@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 cmd = ['docker-compose', '-f', compose_path, 'up']
 
-proc = subprocess.Popen(cmd, strerr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 print('Containers brought online.')

@@ -18,15 +18,15 @@ parser.add_argument('--run', '-r', '--up', '-u', action='store_true',
 
 args = parser.parse_args()
 
-cmds = ['docker-compose', '-f', compose_path, 'build']
+cmd = ['docker-compose', '-f', compose_path, 'build']
 if not args.fromcache:
-    cmds.append('--no-cache')
+    cmd.append('--no-cache')
 
-proc = subprocess.Popen(cmds, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 if args.run:
-    proc = subprocess.Popen(['runContainers'], stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(['runContainers'])
     proc.communicate()
 
 print('Built container images.')

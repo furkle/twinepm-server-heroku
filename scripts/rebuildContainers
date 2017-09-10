@@ -23,18 +23,18 @@ cmd = ['removeContainers']
 if args.removeall:
     cmd.append('--removeall')
 
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 cmd = ['buildContainers']
 if args.fromcache:
     cmd.append('--fromcache')
 
-proc = subprocess.Popen(cmd, strerr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 if args.start:
-    proc = subprocess.Popen(['startContainers'], stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(['startContainers'])
     proc.communicate()
 
 print('Container images rebuilt.')
