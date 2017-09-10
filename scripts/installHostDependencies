@@ -9,11 +9,10 @@ parser = argparse.ArgumentParser(description='Install dependencies ' +
 
 parser.parse_args()
 
-cmd = ['$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | ' +
-      'sudo apt-key add -']
+cmd = 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | ' +
+      'sudo apt-key add -'
 
-proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
-proc.communicate()
+print(subprocess.check_output(cmd, stderr=subprocess.STDOUT))
 
 proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'],
                         stderr=subprocess.STDOUT)
