@@ -2,6 +2,9 @@
 
 import argparse
 import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser(description='Rebuild containerized ' +
                                  'versions of TwinePM services.')
@@ -19,14 +22,14 @@ parser.add_argument('--start', '-s', '--up', '-u', action='store_true',
 
 args = parser.parse_args()
 
-cmd = ['removeContainers']
+cmd = [os.path.join(dirname, 'removeContainers')]
 if args.removeall:
     cmd.append('--removeall')
 
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['buildContainers']
+cmd = [os.path.join(dirname, 'buildContainers')]
 if args.fromcache:
     cmd.append('--fromcache')
 
@@ -34,7 +37,7 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 if args.start:
-    proc = subprocess.Popen(['startContainers'])
+    proc = subprocess.Popen([os.path.join(dirname, 'startContainers']))
     proc.communicate()
 
 print('Container images rebuilt.')

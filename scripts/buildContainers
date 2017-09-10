@@ -30,9 +30,9 @@ proc.communicate()
 
 cmd = []
 if args.run:
-    cmd.append('runContainers')
+    cmd.append(os.path.join(dirname, 'runContainers'))
 elif args.start:
-    cmd.append('startContainers')
+    cmd.append(os.path.join(dirname, 'startContainers'))
 
 proc = subprocess.Popen(cmd)
 proc.communicate()
