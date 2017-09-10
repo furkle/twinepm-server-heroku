@@ -26,7 +26,7 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 if args.run:
-    proc = subprocess.Popen(['runContainers'])
+    proc = subprocess.Popen(['startContainers'])
     proc.communicate()
 
 print('Built container images.')
