@@ -6,6 +6,7 @@ import os
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 compose_path = os.path.join(dirname, '../docker-compose.yml')
+print(compose_path)
 
 parser = argparse.ArgumentParser(description='Build containerized ' +
                                  'versions of TwinePM services.')
