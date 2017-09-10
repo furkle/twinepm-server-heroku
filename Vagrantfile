@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     'git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && ' +
     'cd $TWINEPM_REPO_NAME && ' +
     'scripts/installHostDependencies && ' +
-    #'scripts/buildContainers --start && ' +
+    'scripts/buildContainers --start && ' +
     'echo "Done provisioning VM."'
 
   # Enable provisioning with a shell script. Additional provisioners such as
