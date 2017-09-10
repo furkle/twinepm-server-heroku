@@ -20,8 +20,9 @@ proc.communicate()
 
 arch = '[arch=amd64]'
 url = 'https://download.docker.com/linux/ubuntu'
-dist = '$(lsb_release -cs)';
-cmd = ['add-apt-repository', 'deb', arch, url, dist, 'stable']
+dist = '$(lsb_release -cs)'
+repo = 'deb {} {} {} {}'.format(arch, url, dist, 'stable')
+cmd = ['add-apt-repository', repo]
 proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
 proc.communicate()
 
