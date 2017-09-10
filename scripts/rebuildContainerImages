@@ -1,15 +1,37 @@
-#! /bin/sh
+#! /usr/bin/env python3
 
-docker-compose down &&
+import argparse
+import subprocess
 
-if [ "$1" == "fromcache" ] || [ "$1" == "--from-cache" ] || [ "$1" == "-c" ]; then
-    docker-compose build
-else
-    docker-compose build --no-cache
-fi &&
+parser = argparse.ArgumentParser(description='Rebuild containerized ' +
+                                 'versions of TwinePM services.')
 
-shift &&
+parser.add_argument('--removeall', '-r', action='store_true',
+                    default=None, help='remove ')
 
-if [ "$1" == "up" ] || [ "$1" == "--up" ] || [ "$1" == "-u" ]; then
-    docker-compose up
-fi
+parser.add_argument('--fromcache', '-f', '-c', action='store_true',
+                    default=None,
+                    help='do not replace the images; rather, build ' +
+                        'from the cache if possible')
+
+parser.add_argument('--start', '-s', '--up', '-u', action='store_true',
+                    default=None, help='bring the containers online')
+
+args = parser.parse_args()
+
+cmds = ['removeContainers']
+if args.removeall:
+    cmds.append('--removeall')
+
+subprocess.call(cmds, stderr=subprocess.STDOUT)
+
+cmds = ['buildContainers']
+if args.fromcache:
+    cmds.append('--fromcache')
+
+subprocess.call(cmds, strerr=subprocess.STDOUT)
+
+if args.start:
+    subprocess.call(['startContainers'], stderr=subprocess.STDOUT)
+
+print('Container images rebuilt.')

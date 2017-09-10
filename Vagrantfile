@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
     "echo \"TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME\nexport TWINEPM_REPO_NAME\n\" >> /home/ubuntu/.bashrc && " +
     'git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && ' +
     'cd $TWINEPM_REPO_NAME && ' +
-    'scripts/getHostDependencies && ' +
+    'scripts/installHostDependencies && ' +
     'scripts/buildContainerImages --up && ' +
     'echo "Done provisioning VM."'
 

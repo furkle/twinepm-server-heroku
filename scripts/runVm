@@ -1,0 +1,16 @@
+#! /bin/sh
+
+while [ "$1" != '' ]; do
+    if [ "$1" == 'dev' ] || [ "$1" == '--dev' ] || [ "$1" == '-d' ]; then
+        buildArg='dev'
+    fi
+    
+    shift
+done &&
+
+# Default to master to prevent newbie issues on in-progress code.
+if [ "$buildArg" == '' ]; do
+    buildArg='master'
+fi
+
+TWINEPM_BRANCH=$buildArg vagrant up

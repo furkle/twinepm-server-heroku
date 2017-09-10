@@ -1,3 +1,23 @@
-#! /bin/bash
+#! /usr/bin/env python3
 
-vagrant destroy
+import argparse
+import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+parser = argparse.ArgumentParser(description='Destroy the current TwinePM ' +
+                                 'virtual machine.')
+
+parser.add_argument('--force', '-f', action='store_true', default=None,
+                    help='don\'t ask for confirmation')
+
+args = parser.parse_args()
+
+cmds = ['VAGRANT_CWD={}'.format(dirname), 'vagrant', 'destroy']
+if args.force:
+    cmds.append('--force')
+
+subprocess.call(cmds, stderr=subprocess.STDOUT)
+
+print('Destroyed virtual machine.')

@@ -1,3 +1,0 @@
-#! /bin/bash
-
-TWINEPM_BRANCH=master vagrant up

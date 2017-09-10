@@ -6,4 +6,4 @@ WORKDIR /etc/twinepm-server-heroku/
 
 COPY php-fpm/ ./php-fpm/
 
-RUN php-fpm/scripts/getPhpFpmDependencies
+RUN php-fpm/scripts/installPhpFpmDependencies

@@ -1,0 +1,22 @@
+#! /usr/bin/env python3
+
+import argparse
+import subprocess
+
+parser = argparse.ArgumentParser(description='Rebuild containerized ' +
+                                 'versions of TwinePM services.')
+
+cache = parser.add_argument('--dev', '-d', action='store_true',
+                            default=None,
+                            help='get the dev branch from the repository')
+
+args = parser.parse_args()
+
+# Default to master to prevent newbie issues on in-progress code.
+buildArg = 'master'
+if args.dev:
+    buildArg = 'dev'
+
+subprocess.call(['destroyVm', '--force'], stderr=subprocess.STDOUT)
+subprocess.call(['TWINEPM_BRANCH={}'.format(buildArg), 'vagrant', 'up'],
+                stderr=subprocess.STDOUT)

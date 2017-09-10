@@ -1,0 +1,30 @@
+#! /usr/bin/env python3
+
+import argparse
+import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
+compose_path = os.path.join(dirname, '../docker-compose.yml')
+
+parser = argparse.ArgumentParser(description='Build containerized ' +
+                                 'versions of TwinePM services.')
+
+parser.add_argument('--fromcache', '-f', '-c', action='store_true',
+    default=None, help='build the images from the cache')
+
+parser.add_argument('--run', '-r', '--up', '-u', action='store_true',
+    default=None, help='bring the containers online')
+
+args = parser.parse_args()
+
+cmds = ['docker-compose', '-f', compose_path, 'build']
+if not args.fromcache:
+    cmds.append('--no-cache')
+
+subprocess.call(cmds, stderr=subprocess.STDOUT)
+
+if args.run:
+    subprocess.call(['runContainers'], stderr=subprocess.STDOUT)
+
+print('Built container images.')
