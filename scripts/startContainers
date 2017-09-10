@@ -5,6 +5,9 @@ import subprocess
 import os
 
 path = os.path.dirname(os.path.realpath(__file__))
+compose_path = os.path.join(dirname, '../docker-compose.yml')
+compose_override_path = os.path.join(dirname,
+                                     '../docker-compose.override.yml')
 
 parser = argparse.ArgumentParser(description='Start the ' +
                                  'containerized versions of TwinePM ' +
@@ -12,7 +15,8 @@ parser = argparse.ArgumentParser(description='Start the ' +
 
 args = parser.parse_args()
 
-cmd = ['docker-compose', '-f', '../docker-compose.yml', 'start']
+cmd = ['docker-compose', '-f', compose_path, '-f', compose_override_path,
+       'start']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 

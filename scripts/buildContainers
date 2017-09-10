@@ -6,6 +6,8 @@ import os
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 compose_path = os.path.join(dirname, '../docker-compose.yml')
+compose_override_path = os.path.join(dirname,
+                                     '../docker-compose.override.yml')
 
 parser = argparse.ArgumentParser(description='Build containerized ' +
                                  'versions of TwinePM services.')
@@ -21,7 +23,8 @@ parser.add_argument('--start', '-s', action='store_true', default=None,
 
 args = parser.parse_args()
 
-cmd = ['docker-compose', '-f', compose_path, 'build']
+cmd = ['docker-compose', '-f', compose_path, '-f', compose_override_path,
+       'build']
 if not args.fromcache:
     cmd.append('--no-cache')
 
