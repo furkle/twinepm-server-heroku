@@ -4,13 +4,13 @@ apt-get update
 TYPE1=$(type docker-php-ext-install 2> /dev/null)
 TYPE2=$(type composer 2> /dev/null)
 
-if [ "$TYPE1" == '' ]; then
+if [ "$TYPE1" = '' ]; then
     apt-get install -y php-mbstring
 else
     docker-php-ext-install -j$(nproc) mbstring
 fi &&
 
-if [ "$TYPE2" == '' ]; then
+if [ "$TYPE2" = '' ]; then
     apt-get install -y \
         git \
         unzip \
