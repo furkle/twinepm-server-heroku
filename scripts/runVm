@@ -1,16 +1,26 @@
-#! /bin/sh
+#! /usr/bin/env python3
 
-while [ "$1" != '' ]; do
-    if [ "$1" == 'dev' ] || [ "$1" == '--dev' ] || [ "$1" == '-d' ]; then
-        buildArg='dev'
-    fi
-    
-    shift
-done &&
+import argparse
+import subprocess
+import os
 
-# Default to master to prevent newbie issues on in-progress code.
-if [ "$buildArg" == '' ]; do
-    buildArg='master'
-fi
+dirname = os.path.dirname(os.path.realpath(__file__))
 
-TWINEPM_BRANCH=$buildArg vagrant up
+parser = argparse.ArgumentParser(description='Destroy the current TwinePM ' +
+                                 'virtual machine.')
+
+parser.add_argument('--dev', '-d', action='store_true', default=None,
+                    help='use a current development build')
+
+args = parser.parse_args()
+
+# Default to master to prevent newbie issues with in-progress code.
+build_arg = 'master'
+if args.dev:
+    build_arg = 'dev'
+
+cmds = ['TWINEPM_BRANCH={}'.format(build_arg),
+        'VAGRANT_CWD={}'.format(dirname), 'vagrant', 'up']
+subprocess.call(cmds, stderr=subprocess.STDOUT)
+
+print('Destroyed virtual machine.')
