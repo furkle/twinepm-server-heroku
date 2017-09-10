@@ -9,15 +9,15 @@ parser = argparse.ArgumentParser(description='Install dependencies ' +
 
 parser.parse_args()
 
-url = 'https://download.docker.com/linux/ubuntu/gpg'
-with request.urlopen(url) as f:
-    contents = f.read()
-    proc = subprocess.Popen(['apt-key', 'add', contents], stderr=subprocess.STDOUT)
-    proc.communicate()
+cmd = ['$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | ' +
+      'sudo apt-key add -']
 
-    proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'],
-                            stderr=subprocess.STDOUT)
-    proc.communicate()
+proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc.communicate()
+
+proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'],
+                        stderr=subprocess.STDOUT)
+proc.communicate()
 
 arch = '[arch=amd64]'
 url = 'https://download.docker.com/linux/ubuntu'
