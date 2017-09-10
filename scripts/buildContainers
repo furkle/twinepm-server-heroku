@@ -36,6 +36,9 @@ elif args.start:
 else:
     cmd.append(os.path.join(dirname, 'runContainers'))
 
+if args.fromcache:
+    cmd.append('--fromcache')
+
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
