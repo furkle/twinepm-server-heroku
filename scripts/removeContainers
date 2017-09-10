@@ -22,6 +22,7 @@ if args.removeall:
 else:
     cmds.append(cmds, 'rm')
 
-subprocess.call(cmds, strerr=subprocess.STDOUT)
+proc = subprocess.Popen(cmds, strerr=subprocess.STDOUT)
+proc.communicate()
 
 print('Containers removed.')

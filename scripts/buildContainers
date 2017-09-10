@@ -22,9 +22,11 @@ cmds = ['docker-compose', '-f', compose_path, 'build']
 if not args.fromcache:
     cmds.append('--no-cache')
 
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmds, stderr=subprocess.STDOUT)
+proc.communicate()
 
 if args.run:
-    subprocess.call(['runContainers'], stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(['runContainers'], stderr=subprocess.STDOUT)
+    proc.communicate()
 
 print('Built container images.')

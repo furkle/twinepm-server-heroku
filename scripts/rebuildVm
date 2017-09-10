@@ -2,6 +2,10 @@
 
 import argparse
 import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
+compose_path = os.path.join(dirname, '../docker-compose.yml')
 
 parser = argparse.ArgumentParser(description='Rebuild containerized ' +
                                  'versions of TwinePM services.')
@@ -15,14 +19,16 @@ parser.add_argument('--dev', '-d', action='store_true',
 
 args = parser.parse_args()
 
-cmds = ['destroyVm']
+cmd = [os.path.join(dirname, 'destroyVm')]
 if args.force:
-    cmds.append('--force')
+    cmd.append('--force')
 
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc.communicate()
 
-cmds = ['runVm']
+cmd = [os.path.join(dirname, 'runVm')]
 if args.dev:
-    cmds.append('--dev')
+    cmd.append('--dev')
 
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc.communicate()

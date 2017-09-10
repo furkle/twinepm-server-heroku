@@ -19,8 +19,11 @@ build_arg = 'master'
 if args.dev:
     build_arg = 'dev'
 
-cmds = ['TWINEPM_BRANCH={}'.format(build_arg),
-        'VAGRANT_CWD={}'.format(dirname), 'vagrant', 'up']
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+cmd = ['vagrant', 'up']
+env = os.environ.copy()
+env['VAGRANT_CWD'] = dirname
+env['TWINEPM_BRANCH'] = build_arg
+proc = subprocess.Popen(cmd, env=env, stderr=subprocess.STDOUT)
+proc.communicate()
 
-print('Destroyed virtual machine.')
+print('Started virtual machine.')

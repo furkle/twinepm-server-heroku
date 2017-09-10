@@ -12,7 +12,8 @@ parser = argparse.ArgumentParser(description='Start the ' +
 
 args = parser.parse_args()
 
-subprocess.call(['docker-compose', '-f', '../docker-compose.yml', 'up'],
-    stderr=subprocess.STDOUT)
+cmd = ['docker-compose', '-f', '../docker-compose.yml', 'up']
+proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc.communicate()
 
 print('Container images started.')

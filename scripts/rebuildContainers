@@ -19,19 +19,22 @@ parser.add_argument('--start', '-s', '--up', '-u', action='store_true',
 
 args = parser.parse_args()
 
-cmds = ['removeContainers']
+cmd = ['removeContainers']
 if args.removeall:
-    cmds.append('--removeall')
+    cmd.append('--removeall')
 
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, stderr=subprocess.STDOUT)
+proc.communicate()
 
-cmds = ['buildContainers']
+cmd = ['buildContainers']
 if args.fromcache:
-    cmds.append('--fromcache')
+    cmd.append('--fromcache')
 
-subprocess.call(cmds, strerr=subprocess.STDOUT)
+proc = subprocess.Popen(cmd, strerr=subprocess.STDOUT)
+proc.communicate()
 
 if args.start:
-    subprocess.call(['startContainers'], stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(['startContainers'], stderr=subprocess.STDOUT)
+    proc.communicate()
 
 print('Container images rebuilt.')

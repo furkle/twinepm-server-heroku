@@ -14,10 +14,13 @@ parser.add_argument('--force', '-f', action='store_true', default=None,
 
 args = parser.parse_args()
 
-cmds = ['VAGRANT_CWD={}'.format(dirname), 'vagrant', 'destroy']
+cmd = ['vagrant', 'destroy']
 if args.force:
-    cmds.append('--force')
+    cmd.append('--force')
 
-subprocess.call(cmds, stderr=subprocess.STDOUT)
+env = os.environ.copy()
+env['VAGRANT_CWD'] = dirname
+proc = subprocess.Popen(cmd, env=env, stderr=subprocess.STDOUT)
+proc.communicate()
 
 print('Destroyed virtual machine.')
