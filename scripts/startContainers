@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description='Start the ' +
 
 args = parser.parse_args()
 
-cmd = ['docker-compose', '-f', '../docker-compose.yml', 'up']
+cmd = ['docker-compose', '-f', '../docker-compose.yml', 'start']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
