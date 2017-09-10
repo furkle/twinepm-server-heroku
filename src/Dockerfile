@@ -14,4 +14,4 @@ COPY \
     index.php \
     ./
 
-#RUN /etc/twinepm-server-heroku/src/scripts/installWebDependencies
+RUN /etc/twinepm-server-heroku/src/scripts/installWebDependencies
