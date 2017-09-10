@@ -36,8 +36,8 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 version = '1.16.1'
-uname_s = subprocess.check_output(['uname', '-s']).decode('utf-8')
-uname_m = subprocess.check_output(['uname', '-m']).decode('utf-8')
+uname_s = subprocess.check_output(['uname', '-s']).decode('utf-8').strip('\n')
+uname_m = subprocess.check_output(['uname', '-m']).decode('utf-8').strip('\n')
 url = ('https://github.com/docker/compose/releases/download/{}/' +
     'docker-compose-{}-{}').format(version, uname_s, uname_m)
 print(url)
