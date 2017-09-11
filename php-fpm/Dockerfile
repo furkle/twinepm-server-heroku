@@ -6,4 +6,7 @@ WORKDIR /etc/twinepm-server-heroku/
 
 COPY php-fpm/ ./php-fpm/
 
-RUN php-fpm/scripts/installPhpFpmDependencies
+RUN \
+    apt-get update && \
+    apt-get install python3 && \
+    php-fpm/scripts/installPhpFpmDependencies
