@@ -19,9 +19,14 @@ cmd = ['apt-get', 'install', '-y', 'git']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['type', 'docker-php-ext-install', 'mbstring', 'pdo']
-proc = subprocess.Popen(cmd)
-proc.communicate()
+try:
+    cmd = ['docker-php-ext-install', 'mbstring', 'pdo']
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+except:
+    cmd = ['apt-get', 'install', '-y', 'php-mbstring', 'php-pdo']
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
 
 tmp_redis_path = '/tmp/redis/'
 phpiredis_path = '{}phpiredis/'.format(tmp_redis_path)
