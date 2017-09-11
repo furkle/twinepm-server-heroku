@@ -1,26 +1,76 @@
-#! /bin/sh
+#! /usr/bin/env python3
 
-apt-get update
-apt-get install -y git
+import argparse
+import shutil
+import subprocess
+import os
 
-TYPE=$(type docker-php-ext-install 2> /dev/null)
-if [ "$TYPE" = '' ]; then
-    apt-get install -y \
-        mbstring \
-        pdo
-else
-    docker-php-ext-install -j$(nproc) \
-        mbstring \
-        pdo
-fi &&
+dirname = os.path.dirname(os.path.realpath(__file__))
+compose_path = os.path.join(dirname, '../docker-compose.yml')
+compose_override_path = os.path.join(dirname,
+                                     '../docker-compose.override.yml')
 
-#git clone https://github.com/nrk/phpiredis &&
-#cd phpiredis &&
-#phpize &&
-#./configure --enable-phpiredis &&
-#make -j2 &&
-#make install &&
-#echo 'extension=phpiredis.so' > $PHP_INI_DIRECTORY/phpiredis.ini &&
-#kill -USR2 1 &&
-#php --ri phpiredis &&
-cp /etc/twinepm-server-heroku/php-fpm/log.conf /usr/local/etc/php-fpm.d/zz-log.conf
+parser = argparse.ArgumentParser(description='Install dependencies for ' +
+                                 'TwinePM\'s PHP-FPM container.')
+
+args = parser.parse_args()
+
+cmd = ['apt-get', 'update']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['apt-get', 'install', '-y', 'git']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['type', 'docker-php-ext-install', 'mbstring', 'pdo']
+proc = subprocess.Popen(cmd)
+try:
+    proc.communicate()
+except:
+    cmd = ['apt-get', 'install', '-y', 'php7.1-mbstring', 'php7.1-pdo']
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+
+tmp_redis_path = '/tmp/redis/'
+phpiredis_path = '{}phpiredis/'.format(tmp_redis_path)
+
+try:
+    os.makedirs(phpiredis_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise e
+
+cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+cmd = ['phpize']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+cmd = ['./configure', '--enable-phpiredis']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+cmd = ['make', '-j2']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+cmd = ['make', 'install']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIRECTORY'])) as f:
+    os.write(f, 'extension=phpiredis.so')
+
+cmd = ['kill', '-USR2', '1']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['php', '--ri', 'phpiredis']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+shutil.copyfile('/etc/twinepm-server-heroku/php-fpm/log.conf',
+                '/usr/local/etc/php-fpm.d/zz-log.conf')
