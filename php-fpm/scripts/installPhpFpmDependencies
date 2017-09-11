@@ -15,10 +15,6 @@ parser = argparse.ArgumentParser(description='Install dependencies for ' +
 
 args = parser.parse_args()
 
-cmd = ['apt-get', 'update']
-proc = subprocess.Popen(cmd)
-proc.communicate()
-
 cmd = ['apt-get', 'install', '-y', 'git']
 proc = subprocess.Popen(cmd)
 proc.communicate()

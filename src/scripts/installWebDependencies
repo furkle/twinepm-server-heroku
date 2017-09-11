@@ -33,7 +33,7 @@ try:
     proc = subprocess.Popen(cmd, cwd='/etc/twinepm-server-heroku')
     proc.communicate()
 except:
-    cmd = ['apt-get', 'install', '-y', 'git', 'unzip', 'zip']
+    cmd = ['apt-get', 'install', '-y', 'git', 'php', 'unzip', 'zip']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
