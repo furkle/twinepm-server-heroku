@@ -14,7 +14,6 @@ cmd = "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | " + \
     "sudo apt-key add -"
 
 out = subprocess.check_output(cmd, shell=True)
-print(out.decode('utf-8'))
 
 proc = subprocess.Popen(['apt-key', 'fingerprint', '0EBFCD88'])
 proc.communicate()
@@ -22,14 +21,15 @@ proc.communicate()
 arch = '[arch=amd64]'
 url = 'https://download.docker.com/linux/ubuntu'
 dist = subprocess.check_output(['lsb_release', '-cs']).decode('utf-8')
-print(dist)
+
 branch = 'stable'
 repo = 'deb {} {} {} {}'.format(arch, url, dist, branch)
 cmd = ['add-apt-repository', repo]
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-proc = subprocess.Popen(['apt-get', 'update'])
+cmd = ['apt-get', 'update']
+proc = subprocess.Popen()
 proc.communicate()
 
 cmd = ['apt-get', 'install', '-y', 'docker-ce']
