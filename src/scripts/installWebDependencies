@@ -54,7 +54,8 @@ with open('/usr/share/nginx/html/index.php', 'w') as f:
     f.write('<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
 
 app_path = '/etc/twinepm-server-heroku/'
-shutil.copyfile('{}src/site.conf'.format(app_path),
-                '/etc/nginx/conf.d/default.conf')
-shutil.copyfile('{}src/mime.types'.format(app_path), '/etc/nginx/')
+shutil.copy2('{}src/site.conf'.format(app_path),
+             '/etc/nginx/conf.d/default.conf')
+shutil.copy2('{}src/mime.types'.format(app_path), '/etc/nginx/')
+
 print('Completed installing web dependencies.')
