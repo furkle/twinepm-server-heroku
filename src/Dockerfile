@@ -15,6 +15,6 @@ COPY \
     ./
 
 RUN \
-    apt-get update &&
+    apt-get update && \
     apt-get install -y python3 && \
     /etc/twinepm-server-heroku/src/scripts/installWebDependencies
