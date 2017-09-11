@@ -29,7 +29,7 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 cmd = ['apt-get', 'update']
-proc = subprocess.Popen()
+proc = subprocess.Popen(cmd)
 proc.communicate()
 
 cmd = ['apt-get', 'install', '-y', 'docker-ce']
