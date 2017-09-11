@@ -51,7 +51,7 @@ proc.communicate()
 os.remove('/tmp/composer-setup.php')
 
 with open('/usr/share/nginx/html/index.php', 'w') as f:
-    os.write(f, '<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
+    f.write('<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
 
 app_path = '/etc/twinepm-server-heroku/'
 shutil.copyfile('{}src/site.conf'.format(app_path),
