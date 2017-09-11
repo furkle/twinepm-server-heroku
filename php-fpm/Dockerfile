@@ -8,5 +8,5 @@ COPY php-fpm/ ./php-fpm/
 
 RUN \
     apt-get update && \
-    apt-get install python3 && \
+    apt-get install -y python3 && \
     php-fpm/scripts/installPhpFpmDependencies
