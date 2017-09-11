@@ -37,7 +37,8 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 if args.start:
-    proc = subprocess.Popen([os.path.join(dirname, 'startContainers']))
+    cmd = [os.path.join(dirname, 'startContainers')]
+    proc = subprocess.Popen(cmd)
     proc.communicate()
 
 print('Container images rebuilt.')
