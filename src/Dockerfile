@@ -14,4 +14,7 @@ COPY \
     index.php \
     ./
 
-RUN /etc/twinepm-server-heroku/src/scripts/installWebDependencies
+RUN \
+    apt-get update &&
+    apt-get install -y python3 && \
+    /etc/twinepm-server-heroku/src/scripts/installWebDependencies

@@ -17,19 +17,12 @@ parser = argparse.ArgumentParser(description='Install dependencies for ' +
 args = parser.parse_args()
 
 
-updated = False
 nproc = subprocess.check_output('nproc')
 cmd = ['docker-php-ext-install', '-j{}'.format(nproc), 'mbstring']
 try:
     proc = subprocess.Popen(cmd)
     proc.communicate()
 except:
-    cmd = ['apt-get', 'update']
-    proc = subprocess.Popen(cmd)
-    proc.communicate()
-
-    updated = True
-
     cmd = ['apt-get', 'install', '-y', 'php-mbstring']
     proc = subprocess.Popen(cmd)
     proc.communicate()
@@ -40,11 +33,6 @@ try:
     proc = subprocess.Popen(cmd, cwd='/etc/twinepm-server-heroku')
     proc.communicate()
 except:
-    if not updated:
-        cmd = ['apt-get', 'update']
-        proc = subprocess.Popen(cmd)
-        proc.communicate()
-
     cmd = ['apt-get', 'install', '-y', 'git', 'unzip', 'zip']
     proc = subprocess.Popen(cmd)
     proc.communicate()
