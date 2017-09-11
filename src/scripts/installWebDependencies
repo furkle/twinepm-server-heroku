@@ -29,8 +29,9 @@ except:
 
 
 cmd = ['composer', '-v']
+cwd = '/etc/twinepm-server-heroku'
 try:
-    proc = subprocess.Popen(cmd, cwd='/etc/twinepm-server-heroku')
+    proc = subprocess.Popen(cmd, cwd=cwd)
     proc.communicate()
 except:
     cmd = ['apt-get', 'install', '-y', 'git', 'php', 'unzip', 'zip']
@@ -49,6 +50,10 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 os.remove('/tmp/composer-setup.php')
+
+cmd = ['composer', 'install', '--no-scripts', '--no-plugins']
+proc = subprocess.Popen(cmd, cwd=cwd)
+proc.communicate()
 
 with open('/usr/share/nginx/html/index.php', 'w') as f:
     f.write('<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
