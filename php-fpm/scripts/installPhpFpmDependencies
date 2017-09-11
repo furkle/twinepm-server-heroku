@@ -24,8 +24,8 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 cmd = ['type', 'docker-php-ext-install', 'mbstring', 'pdo']
-proc = subprocess.Popen(cmd)
 try:
+    proc = subprocess.Popen(cmd)
     proc.communicate()
 except:
     cmd = ['apt-get', 'install', '-y', 'php7.1-mbstring', 'php7.1-pdo']
@@ -39,7 +39,7 @@ try:
     os.makedirs(phpiredis_path)
 except OSError as e:
     if e.errno != errno.EEXIST:
-        raise e
+        raise
 
 cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
