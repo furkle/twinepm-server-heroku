@@ -17,7 +17,7 @@ parser.add_argument('--fromcache', '-f', '-c', action='store_true',
                     help='do not replace the images; rather, build ' +
                         'from the cache if possible')
 
-parser.add_argument('--start', '-s', '--up', '-u', '--run', '-r' action='store_true',
+parser.add_argument('--start', '-s', '--up', '-u', '--run', '-r', action='store_true',
                     default=None, help='bring the containers online')
 
 args = parser.parse_args()
