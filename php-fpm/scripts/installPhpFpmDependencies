@@ -57,7 +57,7 @@ cmd = ['make', 'install']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
-with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIR'])) as f:
+with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIR']), 'w') as f:
     os.write(f, 'extension=phpiredis.so')
 
 cmd = ['kill', '-USR2', '1']
