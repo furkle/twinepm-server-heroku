@@ -58,7 +58,7 @@ proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
 with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIR']), 'w') as f:
-    os.write(f, 'extension=phpiredis.so')
+    f.write('extension=phpiredis.so')
 
 cmd = ['kill', '-USR2', '1']
 proc = subprocess.Popen(cmd)
