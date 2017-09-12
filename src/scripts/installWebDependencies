@@ -30,7 +30,7 @@ except:
 
 
 cmd = ['composer', '-v']
-cwd = '/etc/twinepm-server-heroku'
+cwd = '/etc/twinepm-server-heroku/'
 try:
     proc = subprocess.Popen(cmd, cwd=cwd)
     proc.communicate()
@@ -59,9 +59,7 @@ proc.communicate()
 with open('/usr/share/nginx/html/index.php', 'w') as f:
     f.write('<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
 
-app_path = '/etc/twinepm-server-heroku/'
-shutil.copy2('{}src/site.conf'.format(app_path),
-             '/etc/nginx/conf.d/default.conf')
-shutil.copy2('{}src/mime.types'.format(app_path), '/etc/nginx/')
+shutil.copy2('{}src/site.conf'.format(cwd), '/etc/nginx/conf.d/default.conf')
+shutil.copy2('{}src/mime.types'.format(cwd), '/etc/nginx/')
 
 print('Completed installing web dependencies.')
