@@ -40,7 +40,6 @@ except:
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
-
 url = 'https://getcomposer.org/installer'
 file_name = '/tmp/composer-setup.php'
 with request.urlopen(url) as response, open(file_name, 'wb') as out_file:
