@@ -47,8 +47,7 @@ cmd = ['phpize']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
-cmd = ['./configure', '--enable-phpiredis',
-       '--with-hiredis-dir={}'.format(hiredis_path)]
+cmd = ['./configure', '--enable-phpiredis']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
