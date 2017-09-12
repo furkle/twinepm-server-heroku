@@ -18,12 +18,13 @@ args = parser.parse_args()
 
 
 nproc = subprocess.check_output('nproc')
-cmd = ['docker-php-ext-install', '-j{}'.format(nproc), 'mbstring']
+cmd = ['docker-php-ext-install', 'mbstring']
 try:
     proc = subprocess.Popen(cmd)
     proc.communicate()
 except:
-    cmd = ['apt-get', 'install', '-y', 'php-mbstring']
+    cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
+           'php-mbstring']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
@@ -34,7 +35,8 @@ try:
     proc = subprocess.Popen(cmd, cwd=cwd)
     proc.communicate()
 except:
-    cmd = ['apt-get', 'install', '-y', 'git', 'php', 'unzip', 'zip']
+    cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
+           'php', 'unzip', 'zip']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 

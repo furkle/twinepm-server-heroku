@@ -32,13 +32,15 @@ cmd = ['apt-get', 'update']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['apt-get', 'install', '-y', 'docker-ce']
+cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'docker-ce']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
 version = '1.16.1'
-uname_s = subprocess.check_output(['uname', '-s']).decode('utf-8').strip('\n')
-uname_m = subprocess.check_output(['uname', '-m']).decode('utf-8').strip('\n')
+cmd1 = ['uname', '-s']
+cmd2 = ['uname', '-m']
+uname_s = subprocess.check_output(cmd1).decode('utf-8').strip('\n')
+uname_m = subprocess.check_output(cmd2).decode('utf-8').strip('\n')
 url = ('https://github.com/docker/compose/releases/download/{}/' +
     'docker-compose-{}-{}').format(version, uname_s, uname_m)
 file_name = '/usr/local/bin/docker-compose'
@@ -49,8 +51,8 @@ with request.urlopen(url) as response:
 proc = subprocess.Popen(['chmod', '+x', '/usr/local/bin/docker-compose'])
 proc.communicate()
 
-url = ('https://raw.githubusercontent.com/docker/compose/{}/contrib/' +
-    'completion/bash/docker-compose').format(version)
+url = 'https://raw.githubusercontent.com/docker/compose/{}/contrib/' + \
+    'completion/bash/docker-compose'.format(version)
 file_name = '/etc/bash_completion.d/docker-compose'
 with request.urlopen(url) as response, open(file_name, 'wb') as out_file:
     shutil.copyfileobj(response, out_file)

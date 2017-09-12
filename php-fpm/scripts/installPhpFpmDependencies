@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description='Install dependencies for ' +
 
 args = parser.parse_args()
 
-cmd = ['apt-get', 'install', '-y', 'git']
+cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
@@ -24,7 +24,8 @@ try:
     proc = subprocess.Popen(cmd)
     proc.communicate()
 except:
-    cmd = ['apt-get', 'install', '-y', 'php-mbstring', 'php-pdo', 'php-dom']
+    cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
+           'php-mbstring', 'php-pdo', 'php-dom']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
@@ -42,7 +43,7 @@ cmd = ['git', 'clone', 'https://github.com/redis/hiredis']
 proc = subprocess.Popen(cmd, cwd=tmp_redis_path)
 proc.communicate()
 
-cmd = ['make', '-j2']
+cmd = ['make']
 proc = subprocess.Popen(cmd, cwd=hiredis_path)
 proc.communicate()
 
@@ -59,7 +60,7 @@ cmd = ['./configure', '--enable-phpiredis',
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
-cmd = ['make', '-j2']
+cmd = ['make']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
