@@ -29,6 +29,7 @@ except:
     proc.communicate()
 
 tmp_redis_path = '/tmp/redis/'
+hiredis_path = '{}hiredis/'.format(tmp_redis_path)
 phpiredis_path = '{}phpiredis/'.format(tmp_redis_path)
 
 try:
@@ -36,6 +37,18 @@ try:
 except OSError as e:
     if e.errno != errno.EEXIST:
         raise
+
+cmd = ['git', 'clone', 'https://github.com/redis/hiredis']
+proc = subprocess.Popen(cmd, cwd=tmp_redis_path)
+proc.communicate()
+
+cmd = ['./configure']
+proc = subprocess.Popen(cmd, cwd=hiredis_path)
+proc.communicate()
+
+cmd = ['make', '-j2']
+proc = subprocess.Popen(cmd, cwd=hiredis_path)
+proc.communicate()
 
 cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
 proc = subprocess.Popen(cmd, cwd=tmp_redis_path)
@@ -45,7 +58,8 @@ cmd = ['phpize']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
-cmd = ['./configure', '--enable-phpiredis']
+cmd = ['./configure', '--enable-phpiredis',
+       '--with-hiredis-dir={}'.format(hiredis_path)]
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
