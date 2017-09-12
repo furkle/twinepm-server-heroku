@@ -42,10 +42,6 @@ cmd = ['git', 'clone', 'https://github.com/redis/hiredis']
 proc = subprocess.Popen(cmd, cwd=tmp_redis_path)
 proc.communicate()
 
-cmd = ['./configure']
-proc = subprocess.Popen(cmd, cwd=hiredis_path)
-proc.communicate()
-
 cmd = ['make', '-j2']
 proc = subprocess.Popen(cmd, cwd=hiredis_path)
 proc.communicate()
