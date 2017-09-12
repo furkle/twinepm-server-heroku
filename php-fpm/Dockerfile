@@ -6,6 +6,8 @@ RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
 
+COPY src/ ./src
+
 COPY php-fpm/ ./php-fpm/
 
 RUN \
