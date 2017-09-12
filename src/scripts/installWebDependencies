@@ -24,7 +24,7 @@ try:
     proc.communicate()
 except:
     cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
-           'php-mbstring']
+           'php-mbstring', 'php-dom']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
