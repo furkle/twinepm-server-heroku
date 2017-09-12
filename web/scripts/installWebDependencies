@@ -4,7 +4,6 @@ import argparse
 import shutil
 import subprocess
 import os
-import urllib.request as request
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 compose_path = os.path.join(dirname, '../docker-compose.yml')
@@ -12,12 +11,12 @@ compose_override_path = os.path.join(dirname,
                                      '../docker-compose.override.yml')
 
 parser = argparse.ArgumentParser(description='Install dependencies for ' +
-                                 'TwinePM\'s PHP-FPM container.')
+                                 'TwinePM\'s web server container.')
 
 args = parser.parse_args()
 
 with open('/usr/share/nginx/html/index.php', 'w') as f:
-    f.write('<?php require_once "/etc/twinepm-server-heroku/index.php"; ?>')
+    f.write('<?php require_once "/etc/twinepm-server-heroku/logic/index.php"; ?>')
 
 shutil.copy2('{}src/site.conf'.format(cwd), '/etc/nginx/conf.d/default.conf')
 shutil.copy2('{}src/mime.types'.format(cwd), '/etc/nginx/')

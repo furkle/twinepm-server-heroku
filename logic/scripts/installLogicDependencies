@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 
 import argparse
+import os
 import shutil
 import subprocess
-import os
+import urllib.request
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 compose_path = os.path.join(dirname, '../docker-compose.yml')
