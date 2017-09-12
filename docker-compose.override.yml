@@ -4,16 +4,16 @@ services:
   web:
     build:
       context: .
-      dockerfile: src/Dockerfile
+      dockerfile: web/Dockerfile
     depends_on:
-      - php_fpm
+      - logic
     environment: &mode
       MODE: development
 
-  php_fpm:
+  logic:
     build:
       context: .
-      dockerfile: php-fpm/Dockerfile
+      dockerfile: logic/Dockerfile
     depends_on:
       - db
       - cache
