@@ -13,9 +13,9 @@
     },
 
     "autoload": {
-        "exclude-from-classmap": [ "/vendor/" ],
+        "exclude-from-classmap": [ "vendor/", "tests/" ],
         "psr-4": {
-            "TwinePM\\": "/"
+            "TwinePM\\": "./"
         }
     }
 }
