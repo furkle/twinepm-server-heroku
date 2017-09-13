@@ -7,14 +7,9 @@ RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
 
-COPY src/ ./src/
-
-COPY \
-    composer.json \
-    index.php \
-    ./
+COPY web/ ./web
 
 RUN \
     apt-get update && \
     apt-get install -y python3 && \
-    /etc/twinepm-server-heroku/src/scripts/installWebDependencies
+    /etc/twinepm-server-heroku/web/scripts/installWebDependencies
