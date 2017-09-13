@@ -6,87 +6,106 @@ import shutil
 import subprocess
 from urllib import request 
 
+# Get the directory in which the file is executing.
 dirname = os.path.dirname(os.path.realpath(__file__))
-compose_path = os.path.join(dirname, '../docker-compose.yml')
-compose_override_path = os.path.join(dirname,
-                                     '../docker-compose.override.yml')
 
+# Create the default CLI help message.
 parser = argparse.ArgumentParser(description='Install dependencies for ' +
                                  'TwinePM\'s PHP-FPM container.')
 
 args = parser.parse_args()
 
+# Install necessary system packages.
 cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
        'libhiredis-dev', 'libxml2-dev']
 proc = subprocess.Popen(cmd, stdout=None)
 proc.communicate()
 
+# Check whether Composer is already installed.
 cmd = ['composer', '-v']
 cwd = '/etc/twinepm-server-heroku/'
 try:
     proc = subprocess.Popen(cmd, cwd=cwd)
     proc.communicate()
 except:
+    # Install system packages necessary for Composer's installation.
     cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
            'unzip', 'zip']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
+# Get the composer installer. HTTPS is currently not working, unsure why.
 url = 'http://getcomposer.org/installer'
 file_name = '/tmp/composer-setup.php'
 with request.urlopen(url) as response, open(file_name, 'wb') as out_file:
     shutil.copyfileobj(response, out_file)
 
-cmd = ['php', '/tmp/composer-setup.php', '--install-dir=/usr/local/bin',
+# Run the composer setup file.
+cmd = ['php', file_name, '--install-dir=/usr/local/bin',
        '--filename=composer']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
+# Delete the composer setup file.
 os.remove('/tmp/composer-setup.php')
 
-cmd = ['composer', 'install', '--no-scripts', '--no-plugins']
-proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd))
+# Install all PHP library dependencies.
+cmd = 'su www-data composer install --no-scripts --no-plugins'
+proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
 proc.communicate()
 
-tmp_redis_path = '/tmp/redis/'
-phpiredis_path = '{}phpiredis/'.format(tmp_redis_path)
-
-try:
-    os.makedirs(phpiredis_path)
-except OSError as e:
-    if e.errno != errno.EEXIST:
-        raise
-
+# Clone the phpiredis directory into the temporary directory.
 cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
-proc = subprocess.Popen(cmd, cwd=tmp_redis_path)
+proc = subprocess.Popen(cmd, cwd='/tmp/')
 proc.communicate()
 
+phpiredis_path = '/tmp/phpiredis/'
+
+# phpize phpiredis.
 cmd = ['phpize']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
+# Configure phpiredis.
 cmd = ['./configure', '--enable-phpiredis']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
+# Ready phpiredis for installation.
 cmd = ['make']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
+# Install phpiredis.
 cmd = ['make', 'install']
 proc = subprocess.Popen(cmd, cwd=phpiredis_path)
 proc.communicate()
 
+# Create an extension file for phpiredis.
 with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIR']), 'w') as f:
     f.write('extension=phpiredis.so')
 
+# Reload the php-fpm daemon.
 cmd = ['kill', '-USR2', '1']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
+# Verify that phpiredis is installed. TODO: add guard/more obvious error
 cmd = ['php', '--ri', 'phpiredis']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
+# Delete the temporary phpiredis directory.
+shutil.rmtree(phpiredis_path)
+
+# Copy the logging configuration to the php-fpm config directory, making sure
+# it's loaded last.
 shutil.copyfile('/etc/twinepm-server-heroku/logic/log.conf',
                 '/usr/local/etc/php-fpm.d/zz-log.conf')
+
+# Make the directory for the logs.
+try:
+    os.makedirs('{}logs'.format(cwd))
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise

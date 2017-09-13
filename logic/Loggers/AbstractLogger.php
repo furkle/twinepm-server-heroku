@@ -11,7 +11,7 @@ abstract class AbstractLogger implements ILogger {
     const TYPE = "not_provided";
     const LEVEL = Logger::ERROR;
     const ID_LENGTH = 6;
-    const FILEPATH = __DIR__ . "/../../../logs/log.txt";    
+    const FILEPATH = __DIR__ . "/../../logs/log.txt";
 
     protected $client;
     protected $handlers = [];
