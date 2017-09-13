@@ -21,18 +21,6 @@ cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-'''nproc = subprocess.check_output('nproc')
-cmd = ['docker-php-ext-install', 'mbstring', 'dom']
-try:
-    proc = subprocess.Popen(cmd)
-    proc.communicate()
-except:
-    cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
-           'php-mbstring', 'php-dom']
-    proc = subprocess.Popen(cmd)
-    proc.communicate()'''
-
-
 cmd = ['composer', '-v']
 cwd = '/etc/twinepm-server-heroku/'
 try:
@@ -40,7 +28,7 @@ try:
     proc.communicate()
 except:
     cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
-           'php', 'unzip', 'zip']
+           'unzip', 'zip']
     proc = subprocess.Popen(cmd)
     proc.communicate()
 
