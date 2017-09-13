@@ -1,7 +1,9 @@
 #! /usr/bin/env python3
 
 import argparse
+import grp
 import os
+import pwd
 import shutil
 import subprocess
 from urllib import request 
@@ -50,6 +52,21 @@ proc.communicate()
 os.remove('/tmp/composer-setup.php')
 
 # Install all PHP library dependencies.
+vendor_path = '{}logic/vendor/'.format(cwd)
+try:
+    os.makedirs(vendor_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+uid = pwd.getpwnam('www-data').pw_uid
+gid = grp.getgrnam('www-data').gr_gid
+os.chown(vendor_path, uid, gid)
+
+cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
+proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
+proc.communicate()
+
 cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
 proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
 proc.communicate()
