@@ -50,7 +50,7 @@ proc.communicate()
 os.remove('/tmp/composer-setup.php')
 
 # Install all PHP library dependencies.
-cmd = 'su www-data composer install --no-scripts --no-plugins'
+cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
 proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
 proc.communicate()
 
