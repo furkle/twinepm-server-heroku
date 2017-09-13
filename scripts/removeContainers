@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 cmd = ['docker-compose', '-f', compose_path, '-f', compose_override_path]
 if args.removeall:
-    cmd.append('down')
+    cmd.append('down', '--remove-orphans')
 else:
     cmd.append('rm')
 
