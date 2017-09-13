@@ -10,7 +10,9 @@ parser = argparse.ArgumentParser(description='Rebuild containerized ' +
                                  'versions of TwinePM services.')
 
 parser.add_argument('--removeall', '-r', action='store_true',
-                    default=None, help='remove ')
+                    default=None, help='remove images, volumes, and ' +
+                                       'networks as well as the ' +
+                                       'containers')
 
 parser.add_argument('--fromcache', '-f', '-c', action='store_true',
                     default=None,
