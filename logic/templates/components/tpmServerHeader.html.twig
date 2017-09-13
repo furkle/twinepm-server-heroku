@@ -2,23 +2,23 @@
     <a class="headerLink" href="/">Home</a>
 
     {% if loggedInUser %}
-        <a class="headerLink" href="options">Options</a>
-        <a class="headerLink" href="unauthorize">Unauthorize</a>
+        <a class="headerLink" href="/options">Options</a>
+        <a class="headerLink" href="/unauthorize">Unauthorize</a>
     {% endif %}
 
-    <a class="headerLink" href="clients">Clients</a>
+    <a class="headerLink" href="/clients">Clients</a>
 
-    <a class="headerLink" href="documentation">{{-
+    <a class="headerLink" href="/documentation">{{-
         "Documentation"
     -}}</a>
 
     {% if loggedInUser %}
-        <a class="headerLink" href="logout">Logout</a>
+        <a class="headerLink" href="/logout">Logout</a>
     {% else %}
-        <a class="headerLink" href="createAccount">{{-
+        <a class="headerLink" href="/createAccount">{{-
             "Create Account"
         -}}</a>
-        <a class="headerLink" href="login">Login</a>
+        <a class="headerLink" href="/login">Login</a>
     {% endif %}
     
 </header>
