@@ -121,8 +121,11 @@ shutil.copyfile('/etc/twinepm-server-heroku/logic/log.conf',
                 '/usr/local/etc/php-fpm.d/zz-log.conf')
 
 # Make the directory for the logs.
+logs_path = '{}logs'.format(cwd)
 try:
-    os.makedirs('{}logs'.format(cwd))
+    os.makedirs(logs_path)
 except OSError as e:
     if e.errno != errno.EEXIST:
         raise
+
+os.chown(logs_path, uid, gid)
