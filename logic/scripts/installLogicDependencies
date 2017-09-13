@@ -45,7 +45,7 @@ proc.communicate()
 os.remove('/tmp/composer-setup.php')
 
 cmd = ['composer', 'install', '--no-scripts', '--no-plugins']
-proc = subprocess.Popen(cmd, cwd=cwd)
+proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd))
 proc.communicate()
 
 tmp_redis_path = '/tmp/redis/'
