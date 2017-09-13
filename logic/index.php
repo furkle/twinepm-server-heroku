@@ -122,7 +122,7 @@ $app = new App([
 
 $container = $app->getContainer();
 $container[Twig::class] = function ($container) {
-    $view = new Twig(__DIR__ . "/src/templates", [
+    $view = new Twig(__DIR__ . "/templates/", [
         'cache' => false,
     ]);
     
