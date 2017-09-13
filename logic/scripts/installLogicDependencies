@@ -16,9 +16,9 @@ parser = argparse.ArgumentParser(description='Install dependencies for ' +
 
 args = parser.parse_args()
 
-cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
+cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
        'libhiredis-dev', 'libxml2-dev']
-proc = subprocess.Popen(cmd)
+proc = subprocess.Popen(cmd, stdout=None)
 proc.communicate()
 
 cmd = ['composer', '-v']
