@@ -5,8 +5,7 @@
         "predis/predis": "^1.1",
         "slim/twig-view": "^2.2",
         "psr/container": "^1.0",
-        "monolog/monolog": "^1.23",
-        "phing/phing": "^2.16"
+        "monolog/monolog": "^1.23"
     },
 
     "require-dev": {
@@ -14,8 +13,9 @@
     },
 
     "autoload": {
+        "exclude-from-classmap": [ "/vendor/" ],
         "psr-4": {
-            "TwinePM\\": "src/"
+            "TwinePM\\": "/"
         }
     }
 }
