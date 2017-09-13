@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 # Install necessary system packages.
 cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
-       'libhiredis-dev', 'libxml2-dev']
+       'libhiredis-dev', 'libxml2-dev', 'sudo']
 proc = subprocess.Popen(cmd, stdout=None)
 proc.communicate()
 
