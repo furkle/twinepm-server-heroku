@@ -25,7 +25,9 @@ services:
       dockerfile: db/Dockerfile
     networks:
       - backend
-    environment: *mode
+    environment:
+      <<: *mode
+      POSTGRES_USER: root
 
   cache:
     build: 
