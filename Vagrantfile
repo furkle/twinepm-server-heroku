@@ -5,7 +5,7 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
@@ -40,16 +40,8 @@ Vagrant.configure("2") do |config|
   defaultRepoOwner = ENV['TWINEPM_DEFAULT_REPO_OWNER'] || repoOwnerFallback
   repoOwner = ENV['TWINEPM_REPO_OWNER'] || defaultRepoOwner
 
-  dbUrlFallback = 'postgres:5432'
-  defaultDbUrl = ENV['TWINEPM_DEFAULT_DATABASE_URL'] || dbUrlFallback
-  dbUrl = ENV['DATABASE_URL'] || defaultDbUrl
-
-  redisUrlFallback = 'cache:6379'
-  defaultRedisUrl = ENV['TWINEPM_DEFAULT_REDIS_URL'] || redisUrlFallback
-  redisUrl = ENV['REDIS_URL'] || defaultRedisUrl
-
   shellStr =
-    'cd /etc && ' +
+    'cd /etc/ && ' +
     "TWINEPM_BRANCH=#{branch} && " +
     'export TWINEPM_BRANCH && ' +
     "echo \"\nTWINEPM_BRANCH=$TWINEPM_BRANCH\nexport TWINEPM_BRANCH\n\" >> /home/ubuntu/.bashrc && " +
@@ -64,6 +56,8 @@ Vagrant.configure("2") do |config|
     "echo \"TWINEPM_REPO_NAME=$TWINEPM_REPO_NAME\nexport TWINEPM_REPO_NAME\n\" >> /home/ubuntu/.bashrc && " +
     'git clone -b $TWINEPM_BRANCH https://$TWINEPM_REPO_SITE/$TWINEPM_REPO_OWNER/$TWINEPM_REPO_NAME.git && ' +
     'cd $TWINEPM_REPO_NAME && ' +
+    'pwd && ' +
+    'ls -al && ' +
     'scripts/installHostDependencies && ' +
     'scripts/buildContainers --run && ' +
     'echo "Done provisioning VM."'
