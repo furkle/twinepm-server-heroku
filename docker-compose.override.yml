@@ -18,6 +18,8 @@ services:
       - db
       - cache
     environment: *mode
+    env_file:
+      - logic/.env
 
   db:
     build:
