@@ -27,7 +27,7 @@ cmd = ['docker-php-ext-configure', 'pgsql', '-with-pgsql=/usr/local/pgsql']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['docker-php-ext-install', 'pdo', 'pdo_pgsql', 'pgsql']
+cmd = ['docker-php-ext-install', 'pdo_pgsql', 'pgsql']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
