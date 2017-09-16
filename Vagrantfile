@@ -40,6 +40,14 @@ Vagrant.configure("2") do |config|
   defaultRepoOwner = ENV['TWINEPM_DEFAULT_REPO_OWNER'] || repoOwnerFallback
   repoOwner = ENV['TWINEPM_REPO_OWNER'] || defaultRepoOwner
 
+  dbUrlFallback = 'postgres:5432'
+  defaultDbUrl = ENV['TWINEPM_DEFAULT_DATABASE_URL'] || dbUrlFallback
+  dbUrl = ENV['DATABASE_URL'] || defaultDbUrl
+
+  redisUrlFallback = 'cache:6379'
+  defaultRedisUrl = ENV['TWINEPM_DEFAULT_REDIS_URL'] || redisUrlFallback
+  redisUrl = ENV['REDIS_URL'] || defaultRedisUrl
+
   shellStr =
     'cd /etc && ' +
     "TWINEPM_BRANCH=#{branch} && " +

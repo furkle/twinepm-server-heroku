@@ -39,7 +39,6 @@
                     }
                 }
 
-
                 setTimeout(function() {
                     if (statusLine.textContent === str) {
                         statusLine.textContent = '';
