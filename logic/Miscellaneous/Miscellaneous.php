@@ -1,8 +1,9 @@
 <?php
 namespace TwinePM\Miscellaneous;
 
-use \TwinePM\Loggers;
-use \TwinePM\Getters;
+use \TwinePM\Loggers\ReapUnclaimedReservationsLogger;
+use \TwinePM\Getters\DatabaseGetter;
+use \TwinePM\Getters\ReservationsDefaultsGetter;
 class Miscellaneous {
     public static function makeDsn(
         string $driver,
@@ -32,14 +33,14 @@ class Miscellaneous {
     public static function reapUnclaimedReservations(
         PDO $database = null): void
     {
-        $db = $database ?? Getters\DatabaseGetter::get();
+        $db = $database ?? DatabaseGetter::get();
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $db->prepare(
             "SELECT id " .
             "FROM email_validation " .
             "WHERE time_reserved < :lifetime");
 
-        $defaults = Getters\ReservationsDefaultsGetter::get();
+        $defaults = ReservationsDefaultsGetter::get();
         $sqlParams = [ ":lifetime" => $defaults["lifetime"], ];
         try {
             $stmt->execute($sqlParams);
@@ -55,7 +56,7 @@ class Miscellaneous {
                 "data" => $data,
             ];
 
-            Loggers\ReapUnclaimedReservationsLogger::log($source);
+            ReapUnclaimedReservationsLogger::log($source);
         }
 
         if ($stmt->rowCount() === 0) {
@@ -109,7 +110,7 @@ class Miscellaneous {
                 "data" => $data,
             ];
 
-            Loggers\ReapUnclaimedReservationsLogger::log($source);
+            ReapUnclaimedReservationsLogger::log($source);
         }
 
         if ($stmt->rowCount() === 0) {
@@ -124,7 +125,7 @@ class Miscellaneous {
                 "data" => $data,
             ];
 
-            Loggers\ReapUnclaimedReservationsLogger::log($message);
+            ReapUnclaimedReservationsLogger::log($message);
         }
     }
 
