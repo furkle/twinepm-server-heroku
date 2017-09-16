@@ -117,7 +117,7 @@ CREATE TABLE credentials (
     name character varying(500),
     hash character varying(255) NOT NULL,
     validated boolean DEFAULT false NOT NULL,
-    active boolean DEFAULT true NOT NULL,
+    active boolean DEFAULT true NOT NULL
 );
 
 
