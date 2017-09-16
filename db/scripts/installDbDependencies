@@ -1,0 +1,18 @@
+#! /usr/bin/env python3
+
+import subprocess
+
+# Get the directory in which the file is executing.
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+# Create root postgres user. Can create databases, cannot create roles, is
+# not a superuser.
+cmd = ['createuser', '--superuser', '-d', '-R', '-S', 'root']
+proc = subprocess.Popen(cmd)
+cmd.communicate()
+
+# Load the database dump into the database.
+with open('{}/../twinepm_db_dump'.format(dirname), 'r') as infile:
+    cmd = 'psql twinepm'
+    proc = subprocess.Popen(cmd, stdin=infile)
+    proc.communicate()
