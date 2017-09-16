@@ -20,7 +20,7 @@ services:
     environment:
       <<: *mode
       env_file:
-        - logic/.env
+        - 'logic/.env'
 
 networks:
   frontend:
