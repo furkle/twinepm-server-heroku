@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import os
 import subprocess
 
 # Get the directory in which the file is executing.
@@ -13,7 +14,7 @@ cmd.communicate()
 # not a superuser.
 cmd = 'sudo -u postgres ' + \
     'createuser --createdb --no-createrole --no-superuser root'
-proc = subprocess.Popen(cmd)
+proc = subprocess.Popen(cmd, shell=True)
 cmd.communicate()
 
 # Load the database dump into the database.
