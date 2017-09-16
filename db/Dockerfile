@@ -8,5 +8,5 @@ COPY db/ ./db/
 
 RUN \
     apt-get update && \
-    apt-get install -y python3 && \
+    apt-get install -y --no-install-recommends python3 && \
     db/scripts/installDbDependencies

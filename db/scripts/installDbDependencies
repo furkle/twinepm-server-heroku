@@ -5,9 +5,14 @@ import subprocess
 # Get the directory in which the file is executing.
 dirname = os.path.dirname(os.path.realpath(__file__))
 
+cmd = ['apt-get', 'install', '-y', '--no-install-recommends', 'sudo']
+proc = subprocess.Popen(cmd)
+cmd.communicate()
+
 # Create root postgres user. Can create databases, cannot create roles, is
 # not a superuser.
-cmd = ['createuser', '--superuser', '-d', '-R', '-S', 'root']
+cmd = 'sudo -u postgres ' + \
+    'createuser --createdb --no-createrole --no-superuser root'
 proc = subprocess.Popen(cmd)
 cmd.communicate()
 
