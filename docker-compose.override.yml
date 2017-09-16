@@ -8,7 +8,7 @@ services:
     depends_on:
       - logic
     environment: &mode
-      MODE: development
+      TWINEPM_MODE: development
 
   logic:
     build:
@@ -27,6 +27,7 @@ services:
       - backend
     environment:
       <<: *mode
+      POSTGRES_DB: twinepm
       POSTGRES_USER: root
 
   cache:

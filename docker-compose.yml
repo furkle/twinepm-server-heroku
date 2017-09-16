@@ -10,7 +10,7 @@ services:
     networks:
       - frontend
     environment: &mode
-      MODE: production
+      TWINEPM_MODE: production
 
   logic:
     image: twinepm/logic:latest
