@@ -23,7 +23,7 @@ cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['docker-php-ext-install', 'pdo-pgsql']
+cmd = ['docker-php-ext-install', 'pdo_pgsql']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
