@@ -17,9 +17,9 @@ services:
     networks:
       - frontend
       - backend
-    environment:
-      <<: *mode
-      env_file: logic/.env
+    environment: *mode
+    env_file:
+      - logic/.env
 
 networks:
   frontend:
