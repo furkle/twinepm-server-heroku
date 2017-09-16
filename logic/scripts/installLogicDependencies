@@ -19,11 +19,15 @@ args = parser.parse_args()
 
 # Install necessary system packages.
 cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
-       'libhiredis-dev', 'libxml2-dev', 'postgresql-dev', 'sudo']
+       'libhiredis-dev', 'libpq-dev', 'libxml2-dev', 'sudo']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
-cmd = ['docker-php-ext-install', 'pdo_pgsql']
+cmd = ['docker-php-ext-configure', 'pgsql', '-with-pgsql=/usr/local/pgsql']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['docker-php-ext-install', 'pdo', 'pdo_pgsql', 'pgsql']
 proc = subprocess.Popen(cmd)
 proc.communicate()
 
