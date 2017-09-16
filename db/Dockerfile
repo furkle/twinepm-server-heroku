@@ -4,6 +4,8 @@ RUN mkdir /etc/twinepm-server-heroku/
 
 WORKDIR /etc/twinepm-server-heroku/
 
-COPY db/twinepm_db.sql /docker-entrypoint-initdb.d/
+COPY db/00_twinepm_schema.sql /docker-entrypoint-initdb.d/
+
+COPY db/10_twinepm_contents.sql /docker-entrypoint-initdb.d/
 
 COPY db/ ./db/

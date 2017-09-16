@@ -116,7 +116,8 @@ CREATE TABLE credentials (
     id bigint NOT NULL,
     name character varying(500),
     hash character varying(255) NOT NULL,
-    validated boolean DEFAULT false NOT NULL
+    validated boolean DEFAULT false NOT NULL,
+    active boolean DEFAULT true NOT NULL,
 );
 
 
@@ -486,4 +487,3 @@ ALTER TABLE ONLY versions
 --
 -- PostgreSQL database dump complete
 --
-
