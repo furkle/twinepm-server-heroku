@@ -4,7 +4,7 @@
 
 INSERT INTO credentials (id, hash) VALUES (
     0,
-    "$2y$10$jIHgcQ3be3GXj98QC2Y4p.ErOh/EbiefZwmxo2Z1uixHBD884V3Ze");
+    '$2y$10$jIHgcQ3be3GXj98QC2Y4p.ErOh/EbiefZwmxo2Z1uixHBD884V3Ze');
 
 
 ---
@@ -19,12 +19,12 @@ INSERT INTO accounts (id) VALUES (0);
 ---
 
 INSERT INTO credentials (name, hash) VALUES (
-    "secretaryBot",
-    "$2y$10$jIHgcQ3be3GXj98QC2Y4p.ErOh/EbiefZwmxo2Z1uixHBD884V3Ze");
+    'secretaryBot',
+    '$2y$10$jIHgcQ3be3GXj98QC2Y4p.ErOh/EbiefZwmxo2Z1uixHBD884V3Ze');
 
 
 ---
 --- Add secretaryBot account.
 ---
 
-INSERT INTO accounts (id, name) VALUES (1, "secretaryBot")
+INSERT INTO accounts (id, name) VALUES (1, 'secretaryBot');
