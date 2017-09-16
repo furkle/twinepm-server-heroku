@@ -8,14 +8,14 @@ dirname = os.path.dirname(os.path.realpath(__file__))
 
 cmd = ['apt-get', 'install', '-y', '--no-install-recommends', 'sudo']
 proc = subprocess.Popen(cmd)
-cmd.communicate()
+proc.communicate()
 
 # Create root postgres user. Can create databases, cannot create roles, is
 # not a superuser.
 cmd = 'sudo -u postgres ' + \
     'createuser --createdb --no-createrole --no-superuser root'
 proc = subprocess.Popen(cmd, shell=True)
-cmd.communicate()
+proc.communicate()
 
 # Load the database dump into the database.
 with open('{}/../twinepm_db_dump'.format(dirname), 'r') as infile:
