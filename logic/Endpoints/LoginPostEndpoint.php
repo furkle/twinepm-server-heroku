@@ -94,6 +94,7 @@ class LoginPostEndpoint extends AbstractEndpoint {
         }
 
         $success = new Responses\Response();
+        $success->userId = $credential->getId();
         return $success;
     }
 }

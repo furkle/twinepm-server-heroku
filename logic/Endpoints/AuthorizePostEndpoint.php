@@ -54,6 +54,8 @@ class AuthorizePostEndpoint extends AbstractEndpoint {
             ];
 
             Persisters\LoginSessionPersister::persist($value);
+
+            $userId = $loginResponse->userId;
         }
 
         $authorizationSessionStr = isset($cookies["authorizationSession"]) ?
