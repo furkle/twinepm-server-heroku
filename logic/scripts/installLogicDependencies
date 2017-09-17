@@ -117,7 +117,7 @@ with open('{}/logic/OAuth2/encryptionKey'.format(work_dir), 'wb') as f:
 
 # Create tpmClient entry in logic/OAuth2/clients.
 cmd = ['php', '-r', 'echo base64_encode(random_bytes(128));']
-server_url = os.environ.get('SERVER_URL') or 'localhost:8000'
+server_url = os.environ.get('SERVER_URL') or 'http://localhost:8000'
 tpmclient_encryption_key = subprocess.check_output(cmd).decode()
 entry = {
     'name': 'Twine Package Manager Client (FI)',
