@@ -18,7 +18,7 @@ class ClientRepository implements ClientRepositoryInterface {
                     $identifier = $entry;
                     $dotPos = strrpos($entry, ".");
                     if ($dotPos !== false) {
-                        $identifier = substr($entry, $dotPos);
+                        $identifier = substr($entry, 0, $dotPos);
                     }
 
                     $this->clients[$identifier] = $clientObject;
