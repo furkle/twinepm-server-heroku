@@ -38,7 +38,7 @@ class LoginPostEndpoint extends AbstractEndpoint {
             $source["id"] = $filterResponse->filtered;
         } else if (isset($params["nameOrId"])) {
             $filterResponse = IdFilter::filter($params["nameOrId"]);
-            if ($validationResponse->isError()) {
+            if ($filterResponse->isError()) {
                 $validationResponse = NameValidator::validate(
                     $params["nameOrId"]);
 
