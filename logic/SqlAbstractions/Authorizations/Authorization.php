@@ -32,7 +32,7 @@ class Authorization extends AbstractSqlAbstraction implements IAuthorization {
         $globalAuthorizationId = isset($source["globalAuthorizationId"]) ?
             $source["globalAuthorizationId"] : null;
         if (!$globalAuthorizationId) {
-            $errorCode = E"AuthorizationGetNoArgument";
+            $errorCode = "AuthorizationGetNoArgument";
             $error = new Responses\ErrorResponse($errorCode);
             return $error;
         }
