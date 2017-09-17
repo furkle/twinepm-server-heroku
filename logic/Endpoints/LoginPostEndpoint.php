@@ -6,7 +6,7 @@ use \TwinePM\Errors\ErrorInfo;
 use \TwinePM\Getters;
 use \TwinePM\Filters\IdFilter;
 use \TwinePM\Persisters\LoginSessionPersister;
-use \TwinePM\Validators;
+use \TwinePM\Validators\NameValidator;
 use \TwinePM\SqlAbstractions\Credentials\Credential;
 use \Psr\Http\Message\ServerRequestInterface as IRequest;
 use \Psr\Container\ContainerInterface as IContainer;
@@ -21,7 +21,7 @@ class LoginPostEndpoint extends AbstractEndpoint {
         $source = [];
         if (isset($params["name"])) {
             $name = $params["name"];
-            $validationResponse = Validators\NameValidator::validate($name);
+            $validationResponse = NameValidator::validate($name);
             if ($validationResponse->isError()) {
                 return static::convertServerErrorToClientError(
                     $validationResponse);
@@ -36,6 +36,22 @@ class LoginPostEndpoint extends AbstractEndpoint {
             }
 
             $source["id"] = $filterResponse->filtered;
+        } else if (isset($params["nameOrId"])) {
+            $filterResponse = IdFilter::filter($params["nameOrId"]);
+            if ($validationResponse->isError()) {
+                $validationResponse = NameValidator::validate(
+                    $params["nameOrId"]);
+
+                if ($validationResponse->isError()) {
+                    $errorCode = "LoginPostEndpointNameOrIdInvalid";
+                    $error = new Responses\ErrorResponse($errorCode);
+                    return static::convertServerErrorToClientError($error);
+                }
+
+                $source["name"] = $params["nameOrId"];
+            } else {
+                $source["id"] = $filterResponse->filtered;
+            }
         } else {
             $errorCode = "LoginPostEndpointNoArguments";
             $error = new Responses\ErrorResponse($errorCode);
