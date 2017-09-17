@@ -2,6 +2,7 @@
 
 import argparse
 import grp
+import errno
 import os
 import pwd
 import shutil
@@ -67,13 +68,6 @@ except OSError as e:
     if e.errno != errno.EEXIST:
         raise
 
-cache_path_one = '/var/www/.composer/cache/repo/https---packagist.org/'
-try:
-    os.makedirs(cache_path_one)
-except OSError as e:
-    if e.errno != errno.EEXIST:
-        raise
-
 uid = pwd.getpwnam('www-data').pw_uid
 gid = grp.getgrnam('www-data').gr_gid
 os.chown(vendor_path, uid, gid)
@@ -85,15 +79,10 @@ except OSError as e:
     if e.errno != errno.EEXIST:
         raise
 
+cache_path_one = '/var/www/.composer/cache/repo/https---packagist.org/'
 os.chown(cache_path_one, uid, gid)
 
 cache_path_two = '/var/www/.composer/cache/files/'
-try:
-    os.makedirs(cache_path_two)
-except OSError as e:
-    if e.errno != errno.EEXIST:
-        raise
-
 os.chown(cache_path_two, uid, gid)
 
 
