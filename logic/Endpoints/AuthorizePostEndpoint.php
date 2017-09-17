@@ -46,10 +46,10 @@ class AuthorizePostEndpoint extends AbstractEndpoint {
             }
 
             $value = [
-                "sessionId" => SessionIdGetter::get(),
+                "sessionId" => Getters\SessionIdGetter::get(),
                 "userId" => $loginResponse->id,
                 "userName" => $loginResponse->name,
-                "salt" => SaltGetter::get(),
+                "salt" => Getters\SaltGetter::get(),
                 "redis" => $redis,
             ];
 
