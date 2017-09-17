@@ -92,7 +92,7 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 # Create encryption key for OAuth2 server.
-cmd = ['php', '-r', 'echo', 'base64_encode(random_bytes(32)), PHP_EOL;']
+cmd = ['php', '-r', 'echo base64_encode(random_bytes(32)), PHP_EOL;']
 encryption_key = subprocess.check_output(cmd)
 with open('{}/logic/OAuth2/'.format(dirname)) as f:
     f.write(encryption_key)
