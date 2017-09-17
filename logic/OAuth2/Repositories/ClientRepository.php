@@ -14,12 +14,8 @@ class ClientRepository implements ClientRepositoryInterface {
                 $contents = file_get_contents($clientDir . $entry);
                 $yesAssoc = true;
                 $clientObject = json_decode($contents, $yesAssoc);
-                if (gettype($clientObject) === "array" and
-                    isset($clientObject["identifier"]))
-                {
-                    $identifier = $clientObject["identifier"];
-                    unset($clientObject["identifier"]);
-                    $this->clients[$identifier] = $clientObject;
+                if (gettype($clientObject) === "array") {
+                    $this->clients[$entry] = $clientObject;
                 }
             }
         }
@@ -40,17 +36,16 @@ class ClientRepository implements ClientRepositoryInterface {
         $clientSecret = null,
         $mustValidateSecret = true)
     {
-        $cid = $clientIdentifier;
         $clients = $this->clients;
 
         /* Check if client is registered. */
-        if (!isset($this->clients[$cid])) {
+        if (!isset($this->clients[$clientIdentifier])) {
             return;
         }
 
-        $client = $clients[$cid];
+        $client = $clients[$clientIdentifier];
         if ($mustValidateSecret and $client["isConfidential"]) {
-            $realClientSecret = $clients[$cid]["secret"];
+            $realClientSecret = $clients[$clientIdentifier]["secret"];
             if ($clientSecret !== $realClientSecret) {
                 return;
             }

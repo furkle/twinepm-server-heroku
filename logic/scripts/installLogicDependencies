@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 
 import argparse
-import grp
 import errno
+import grp
+import json
 import os
 import pwd
 import shutil
@@ -109,10 +110,27 @@ proc = subprocess.Popen(cmd)
 proc.communicate()
 
 # Create encryption key for OAuth2 server.
-cmd = ['php', '-r', 'echo base64_encode(random_bytes(32)), PHP_EOL;']
-encryption_key = subprocess.check_output(cmd)
+cmd = ['php', '-r', 'echo base64_encode(random_bytes(32));']
+server_encryption_key = subprocess.check_output(cmd)
 with open('{}/logic/OAuth2/encryptionKey'.format(work_dir), 'wb') as f:
-    f.write(encryption_key)
+    f.write(server_encryption_key)
+
+# Create tpmClient entry in logic/OAuth2/clients.
+cmd = ['php', '-r', 'echo base64_encode(random_bytes(128));']
+tpmclient_encryption_key = subprocess.check_output(cmd)
+entry = {
+    'name': 'Twine Package Manager Client (FI)',
+    'description': 'A full service TwinePM client by Furkle Industries.',
+    'domain': os.environ['SERVER_URL'],
+    'redirectPath': 'client',
+    'isConfidential': False,
+    'secret': tpmclient_encryption_key,
+}
+
+# Dump the JSON with pretty-printing.
+dump = json.dumps(entry, indent=4)
+with open('{}/logic/OAuth2/clients/tpmClient.json', 'w') as f:
+    f.write(dump)
 
 # Clone the phpiredis directory into the temporary directory.
 cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
