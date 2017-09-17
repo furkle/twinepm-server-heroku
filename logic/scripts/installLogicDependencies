@@ -130,7 +130,7 @@ entry = {
 
 # Dump the JSON with pretty-printing.
 dump = json.dumps(entry, indent=4)
-with open('{}/logic/OAuth2/clients/tpmClient.json', 'w') as f:
+with open('{}/logic/OAuth2/clients/tpmClient.json'.format(work_dir), 'w') as f:
     f.write(dump)
 
 # Clone the phpiredis directory into the temporary directory.
