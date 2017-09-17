@@ -115,7 +115,7 @@ proc.communicate()
 # Create encryption key for OAuth2 server.
 cmd = ['php', '-r', 'echo base64_encode(random_bytes(32)), PHP_EOL;']
 encryption_key = subprocess.check_output(cmd)
-with open('{}/logic/OAuth2/'.format(dirname)) as f:
+with open('{}/logic/OAuth2/'.format(work_dir)) as f:
     f.write(encryption_key)
 
 # Clone the phpiredis directory into the temporary directory.
