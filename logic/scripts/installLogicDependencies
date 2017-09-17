@@ -117,13 +117,14 @@ with open('{}/logic/OAuth2/encryptionKey'.format(work_dir), 'wb') as f:
 
 # Create tpmClient entry in logic/OAuth2/clients.
 cmd = ['php', '-r', 'echo base64_encode(random_bytes(128));']
+server_url = os.environ.get('SERVER_URL') or 'localhost:8000'
 tpmclient_encryption_key = subprocess.check_output(cmd).decode()
 entry = {
     'name': 'Twine Package Manager Client (FI)',
     'description': 'A full service TwinePM client by Furkle Industries.',
     # TODO: Get Docker env file variables to register for python. 
-    'domain': os.environ.get('SERVER_URL') or 'localhost:8000',
-    'redirectPath': 'client',
+    'domain': '{}/client/'.format(server_url),
+    'redirectPath': 'authorize/',
     'isConfidential': False,
     'secret': tpmclient_encryption_key,
 }
