@@ -129,9 +129,16 @@ entry = {
     'secret': tpmclient_encryption_key,
 }
 
+clients_path = '{}/logic/OAuth2/clients/'.format(work_dir)
+try:
+    os.makedirs(clients_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
 # Dump the JSON with pretty-printing.
 dump = json.dumps(entry, indent=4)
-with open('{}/logic/OAuth2/clients/tpmClient.json'.format(work_dir), 'w') as f:
+with open('{}/tpmClient.json'.format(clients_path), 'w') as f:
     f.write(dump)
 
 # Clone the phpiredis directory into the temporary directory.
