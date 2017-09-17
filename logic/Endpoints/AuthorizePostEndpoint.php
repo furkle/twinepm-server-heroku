@@ -38,7 +38,7 @@ class AuthorizePostEndpoint extends AbstractEndpoint {
             $userId = $filterResponse->filtered;
         } else {
             $args = $request->getParsedBody();
-            $loginResponse = Endpoints\LoginEndpoint::execute(
+            $loginResponse = LoginEndpoint::execute(
                 $request,
                 $container);
 
