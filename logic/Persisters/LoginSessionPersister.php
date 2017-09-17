@@ -81,7 +81,7 @@ class LoginSessionPersister implements IPersister {
         $scheme_lh = "http://" . $lh;
         $result = null;
         if (substr($domain, 0, strlen($lh)) === $lh or
-            substr($domain, 0, strlen($scheme_lh)) === $lh)
+            substr($domain, 0, strlen($scheme_lh)) === $scheme_lh)
         {
             $result = setcookie(
                 $key,
