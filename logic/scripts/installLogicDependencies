@@ -96,10 +96,6 @@ cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
 proc = subprocess.Popen(cmd, cwd='{}logic'.format(work_dir), shell=True)
 proc.communicate()
 
-cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
-proc = subprocess.Popen(cmd, cwd='{}logic'.format(work_dir), shell=True)
-proc.communicate()
-
 # Add private key for OAuth2 server.
 priv_path = '{}/logic/OAuth2/private.key'.format(work_dir)
 cmd = ['openssl', 'genrsa', '-out', priv_path, '2048']
