@@ -49,8 +49,11 @@ class AuthorizationSessionPersister implements IPersister {
         $path = "/authorize";
         $domain = Getters\ServerDomainNameGetter::get();
         $lh = "localhost";
+        $scheme_lh = "http://" . $lh;
         $result = null;
-        if (substr($domain, 0, strlen($lh)) === $lh) {
+        if (substr($domain, 0, strlen($lh)) === $lh or
+            substr($domain, 0, strlen($scheme_lh)) === $scheme_lh)
+        {
             $result = setcookie(
                 $key,
                 $value,
