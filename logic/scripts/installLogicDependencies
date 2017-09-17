@@ -121,7 +121,8 @@ tpmclient_encryption_key = subprocess.check_output(cmd)
 entry = {
     'name': 'Twine Package Manager Client (FI)',
     'description': 'A full service TwinePM client by Furkle Industries.',
-    'domain': os.environ['SERVER_URL'],
+    # TODO: Get Docker env file variables to register for python. 
+    'domain': os.environ.get('SERVER_URL') or 'localhost:8000',
     'redirectPath': 'client',
     'isConfidential': False,
     'secret': tpmclient_encryption_key,

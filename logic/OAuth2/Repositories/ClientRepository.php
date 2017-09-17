@@ -15,7 +15,13 @@ class ClientRepository implements ClientRepositoryInterface {
                 $yesAssoc = true;
                 $clientObject = json_decode($contents, $yesAssoc);
                 if (gettype($clientObject) === "array") {
-                    $this->clients[$entry] = $clientObject;
+                    $identifier = $entry;
+                    $dotPos = strrpos($entry, ".");
+                    if ($dotPos !== false) {
+                        $identifier = substr($entry, $dotPos);
+                    }
+
+                    $this->clients[$identifier] = $clientObject;
                 }
             }
         }
