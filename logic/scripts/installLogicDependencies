@@ -35,7 +35,7 @@ proc.communicate()
 
 # Check whether Composer is already installed.
 cmd = ['composer', '-v']
-work_dir = '{}/../'.format(dirname)
+work_dir = '{}/../../'.format(dirname)
 try:
     proc = subprocess.Popen(cmd, cwd=work_dir)
     proc.communicate()
