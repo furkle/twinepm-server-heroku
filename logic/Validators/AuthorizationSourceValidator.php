@@ -69,7 +69,7 @@ class AuthorizationSourceValidator implements IValidator {
             $errorCode = "AuthorizationSourceValidatorIpMissing";
             $error = new Responses\ErrorResponse($errorCode);
             return $error;
-        } else if (!$value["ip"] or gettype($ip) !== "string") {
+        } else if (!$value["ip"] or gettype($value["ip"]) !== "string") {
             $errorCode = "AuthorizationSourceValidatorIpInvalid";
             $error = new Responses\ErrorResponse($errorCode);
             return $error;

@@ -33,7 +33,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
             "client" => $accessTokenEntity->getClient()->getIdentifier(),
             "oAuthToken" => (string)$jwt,
             "scopes" => $scopes,
-            "ip" => $_SERVER["REMOTE_ADDR"], 
+            "ip" => $_SERVER["REMOTE_ADDR"],
         ];
 
         $authorization = new Authorization($source, $this->database);
