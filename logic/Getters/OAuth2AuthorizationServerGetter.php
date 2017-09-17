@@ -9,17 +9,14 @@ use \TwinePM\Responses;
 use \DateInterval;
 class OAuth2AuthorizationServerGetter implements IGetter {
     public static function get(array $context = null): AuthorizationServer {
-        $pathOne = __DIR__ . "/../OAuth2/private.key";
-        $pathTwo = "file://" . __DIR__ . "/../OAuth2/privatePassphrase.txt";
-        $privateKey = new CryptKey($pathOne, $pathTwo);
+        $privateKey = new CryptKey(__DIR__ . "/../OAuth2/private.key");
 
         $clientRepository = new Repositories\ClientRepository();
         $scopeRepository = new Repositories\ScopeRepository();
         $accessTokenRepository = new Repositories\AccessTokenRepository(
             $privateKey);
 
-        $pathThree = __DIR__ . "/../OAuth2/encryptionKey.txt"; 
-        $encryptionKey = file_get_contents($pathThree);
+        $encryptionKey = file_get_contents(__DIR__ . "/../OAuth2/encryptionKey");
         $server = new AuthorizationServer(
             $clientRepository,
             $accessTokenRepository,

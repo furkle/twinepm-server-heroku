@@ -1,6 +1,6 @@
 logs/*
+logic/OAuth2/encryptionKey
 logic/OAuth2/private.key
-logic/OAuth2/privatePassphrase.txt
 logic/OAuth2/public.key
 logic/OAuth2/clients/*
 ubuntu-xenial-16.04-cloudimg-console.log

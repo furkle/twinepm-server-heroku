@@ -33,9 +33,9 @@ proc.communicate()
 
 # Check whether Composer is already installed.
 cmd = ['composer', '-v']
-cwd = '/etc/twinepm-server-heroku/'
+work_dir = '{}/../../'
 try:
-    proc = subprocess.Popen(cmd, cwd=cwd)
+    proc = subprocess.Popen(cmd, cwd=work_dir)
     proc.communicate()
 except:
     # Install system packages necessary for Composer's installation.
@@ -60,7 +60,7 @@ proc.communicate()
 os.remove('/tmp/composer-setup.php')
 
 # Install all PHP library dependencies.
-vendor_path = '{}logic/vendor/'.format(cwd)
+vendor_path = '{}logic/vendor/'.format(work_dir)
 try:
     os.makedirs(vendor_path)
 except OSError as e:
@@ -72,12 +72,30 @@ gid = grp.getgrnam('www-data').gr_gid
 os.chown(vendor_path, uid, gid)
 
 cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
-proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
+proc = subprocess.Popen(cmd, cwd='{}logic'.format(work_dir), shell=True)
 proc.communicate()
 
 cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
-proc = subprocess.Popen(cmd, cwd='{}logic'.format(cwd), shell=True)
+proc = subprocess.Popen(cmd, cwd='{}logic'.format(work_dir), shell=True)
 proc.communicate()
+
+# Add private key for OAuth2 server.
+priv_path = '{}/logic/OAuth2/private.key'.format(work_dir)
+cmd = ['openssl', 'genrsa', '-out', priv_path, '2048']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Add public key for OAuth2 server.
+pub_path = '{}/logic/OAuth2/public.key'.format(work_dir)
+cmd = ['openssl', 'rsa', '-in', priv_path, '-pubout', '-out', pub_path]
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Create encryption key for OAuth2 server.
+cmd = ['php', '-r', 'echo', 'base64_encode(random_bytes(32)), PHP_EOL;']
+encryption_key = subprocess.check_output(cmd)
+with open('{}/logic/OAuth2/'.format(dirname)) as f:
+    f.write(encryption_key)
 
 # Clone the phpiredis directory into the temporary directory.
 cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
@@ -129,7 +147,7 @@ shutil.copyfile('/etc/twinepm-server-heroku/logic/log.conf',
                 '/usr/local/etc/php-fpm.d/zz-log.conf')
 
 # Make the directory for the logs.
-logs_path = '{}logs'.format(cwd)
+logs_path = '{}/logs'.format(work_dir)
 try:
     os.makedirs(logs_path)
 except OSError as e:
