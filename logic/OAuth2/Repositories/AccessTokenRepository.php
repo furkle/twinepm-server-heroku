@@ -31,7 +31,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
         $source = [
             "userId" => $accessTokenEntity->getUserIdentifier(),
             "client" => $accessTokenEntity->getClient()->getIdentifier(),
-            "oAuthToken" => (string)$jwt,
+            "oAuthToken" => $jwtStr,
             "scopes" => $scopes,
             "ip" => $_SERVER["REMOTE_ADDR"],
         ];

@@ -79,7 +79,9 @@ class AuthorizationSourceValidator implements IValidator {
             $errorCode = "AuthorizationSourceValidatorOAuthTokenMissing";
             $error = new Responses\ErrorResponse($errorCode);
             return $error;
-        } else if (gettype($oAuthToken) !== "string" or !$oAuthToken) {
+        } else if (gettype($value["oAuthToken"]) !== "string" or
+            !$value["oAuthToken"])
+        {
             $errorCode = "AuthorizationSourceValidatorOAuthTokenInvalid";
             $error = new Responses\ErrorResponse($errorCode);
             return $error;
