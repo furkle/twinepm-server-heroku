@@ -92,7 +92,6 @@ except OSError as e:
 
 os.chown(cache_path_two, uid, gid)
 
-
 cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
 proc = subprocess.Popen(cmd, cwd='{}logic'.format(work_dir), shell=True)
 proc.communicate()
