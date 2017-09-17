@@ -73,7 +73,6 @@ class LoginPostEndpoint extends AbstractEndpoint {
         ];
 
         $persistResponse = LoginSessionPersister::persist($session, $context);
-
         if ($persistResponse->isError()) {
             return static::convertServerErrorToClientError($persistResponse);
         }

@@ -25,7 +25,7 @@ class LoggedInUserGetter implements IGetter {
             $sessionId = isset($loginSession["loginSessionId"]) ?
                 $loginSession["loginSessionId"] : null;
             if ($sessionId) {
-                $serverSession = $redis->hgetall($sessionId);
+                $serverSession = $redis->HGETALL($sessionId);
                 if (isset($serverSession["salt"]) and
                     isset($loginSession["salt"]) and
                     $serverSession["salt"] === $loginSession["salt"])
