@@ -1,117 +1,93 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Errors\ErrorInfo;
-use \TwinePM\SqlAbstractions\Accounts\Account;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \PDO;
+use Psr\Http\Message\ResponseInterface;
+use Slim\ContainerInterface;
+use TwinePM\Exception\NoModificationPerformedException;
 class AccountUpdateEndpoint extends AbstractEndpoint {
-    public static function execute(
-        IRequest $source,
-        IContainer $container): Responses\IResponse
-    {
-        $token = $request->getHeader("Authorization")[0];
-
-        $db = $container->get(PDO::class);
-        $accountResponse = Account::getFromToken($token, $db);
-        if ($accountResponse->isError()) {
-            return static::convertServerErrorToClientError($accountResponse);
-        }
-
-        $account = $accountResponse->account;
+    function __invoke(ContainerInterface $container): ResponseInterface {
+        $request = $container->get("request");
+        $source = $request->getParsedBody();
+        $token = $container->get("authorizationToken");
+        $getFromToken = $container->get("getFromToken");
+        $sqlAbstractionType = "account";
+        $account = $getFromToken($sqlAbstractionType, $token);
 
         $foundField = false;
         $changedName = false;
-        if (array_key_exists("name", $source)) {
+        if (array_key_exists("name", $source) and
+            $source["name"] !== $account->getName())
+        {
+            $changedName = true;
             $foundField = true;
-            $name = $source["name"];
-            if ($name !== $account->getName()) {
-                $changedName = true;
-                $setResponse = $account->setName($name);
-                if ($setResponse->isError()) {
-                    $error = static::convertServerErrorToClientError(
-                        $setResponse);
-                }
-            }
+            $account->setName($source["name"]);
         }
 
-        if (array_key_exists("nameVisible", $source)) {
+        if (array_key_exists("nameVisible", $source) and
+            $source["nameVisible"] !== $account->getNameVisible())
+        {
             $foundField = true;
-            $setResponse = $account->setNameVisible($source["nameVisible"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setNameVisible($source["nameVisible"]);
         }
 
-        if (array_key_exists("description", $source)) {
+        if (array_key_exists("description", $source) and
+            $source["description"] !== $account->getDescription())
+        {
             $foundField = true;
-            $setResponse = $account->setDescription($source["description"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setDescription($source["description"]);
         }
 
-        if (array_key_exists("timeCreatedVisible", $source)) {
+        $acctTimeCreatedVisible = $account->getTimeCreatedVisible();
+        if (array_key_exists("timeCreatedVisible", $source) and
+            $source["timeCreatedVisible"] !== $acctTimeCreatedVisible)
+        {
             $foundField = true;
-            $setResponse = $account->setTimeCreatedVisible(
-                $source["timeCreatedVisible"]);
-
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setTimeCreatedVisible($source["timeCreatedVisible"]);
         }
 
-        if (array_key_exists("email", $source)) {
+        if (array_key_exists("email", $source) and
+            $source["email"] !== $account->getEmail())
+        {
             $foundField = true;
-            $setResponse = $account->setEmail($source["email"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setEmail($source["email"]);
         }
 
-        if (array_key_exists("emailVisible", $source)) {
+        if (array_key_exists("emailVisible", $source) and
+            $source["emailVisible"] !== $account->getEmailVisible())
+        {
             $foundField = true;
-            $setResponse = $account->setEmailVisible($source["description"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setEmailVisible($source["description"]);
         }
 
-        if (array_key_exists("dateStyle", $source)) {
+        if (array_key_exists("dateStyle", $source) and
+            $source["dateStyle"] !== $account->getDateStyle())
+        {
             $foundField = true;
-            $setResponse = $account->setDateStyle($source["dateStyle"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setDateStyle($source["dateStyle"]);
         }
 
-        if (array_key_exists("timeStyle", $source)) {
+        if (array_key_exists("timeStyle", $source) and
+            $source["timeStyle"] !== $account->getTimeStyle())
+        {
             $foundField = true;
-            $setResponse = $account->setTimeStyle($source["timeStyle"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setTimeStyle($source["timeStyle"]);
         }
 
-        if (array_key_exists("homepage", $source)) {
+        if (array_key_exists("homepage", $source) and
+            $source["homepage"] !== $account->getHomepage())
+        {
             $foundField = true;
-            $setResponse = $account->setHomepage($source["homepage"]);
-            if ($setResponse->isError()) {
-                return static::convertServerErrorToClientError($setResponse);
-            }
+            $account->setHomepage($source["homepage"]);
         }
 
         if (!$foundField) {
-            $errorCode = "AccountUpdateEndpointNoUpdatedFields";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+            throw new NoModificationPerformedException();
         }
 
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        /* Perform raw query to prevent needing to look up the whole
+         * credential. */
+        $db = $container->get("databaseClientWithExceptions");
         $db->beginTransaction();
-
         if ($changedName) {
             $stmt = $db->prepare(
                 "UPDATE credentials " .
@@ -123,26 +99,18 @@ class AccountUpdateEndpoint extends AbstractEndpoint {
                 ":id" => $account->getId(),
             ];
 
-            try {
-                $stmt->execute($sqlParams);
-            } catch (Exception $e) {
-                $db->rollBack();
-                $errorCode = "AccountUpdateNameChangeQueryFailed";
-                $errorData = [ "exception" => (string)$e, ];
-                $error = new Responses\ErrorResponse($errorCode, $errorData);
-                return $error;
-            }
+            $stmt->execute($sqlParams);
         }
 
-        $serializeResponse = $account->serializeToDatabase();
-        if ($serializeResponse->isError()) {
-            $db->rollBack();
-            return static::convertServerErrorToClientError($serializeResponse);
-        }
-
+        $account->serializeToDatabase();
         $db->commit();
 
-        $response = new Responses\Response();
+        $body = $container->get("responseBody");
+        $successArray = $container->get("successArray");
+        $successArray["account"] = $account;
+        $successStr = json_encode($successArray);
+        $body->write($successStr);
+        $response = $container->get("response")->withBody($body);
         return $response;
     }
 }

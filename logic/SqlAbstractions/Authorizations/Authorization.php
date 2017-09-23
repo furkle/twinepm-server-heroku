@@ -13,8 +13,8 @@ use \TwinePM\OAuth2\Repositories\ClientRepository;
 use \TwinePM\OAuth2\Entities\ClientEntity;
 use \Lcobucci\JWT\Parser;
 use \Lcobucci\JWT\Parsing;
-use \PDO;
-use \Exception;
+use PDO;
+use Exception;
 class Authorization extends AbstractSqlAbstraction implements IAuthorization {
     private $id;
     private $name;
@@ -25,60 +25,58 @@ class Authorization extends AbstractSqlAbstraction implements IAuthorization {
     private $errorInfo;
     private $errorData;
 
-    public static function get(
-        array $source,
-        PDO $database = null): Responses\IResponse
+    public static function getFromPrimaryKey(
+        $value,
+        PDO $database): Authorization
     {
-        $globalAuthorizationId = isset($source["globalAuthorizationId"]) ?
-            $source["globalAuthorizationId"] : null;
-        if (!$globalAuthorizationId) {
-            $errorCode = "AuthorizationGetNoArgument";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+        if (gettype($value) !== "integer" or $value <= 0) {
+            $errorCode = "GlobalAuthorizationIdInvalid";
+            throw new UserRequestFieldInvalidException($errorCode);
         }
 
-        $db = $database ?? Getters\DatabaseGetter::get();
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $errmodeKey = $db::ATTR_ERRMODE;
+        $errmodeValue = $db::ERRMODE_EXCEPTION;
+        $database->setAttribute($errmodeKey, $errmodeValue);
 
-        $stmt = $db->prepare(
+        $stmt = $database->prepare(
             "SELECT global_authorization_id, user_id, client, scopes, ip, " .
                 "oauth_token, time_created " .
             "FROM authorizations " .
             "WHERE global_authorization_id = :globalAuthorizationId");
         
-        $sqlParams = [ ":globalAuthorizationId" => $globalAuthorizationId, ];
+        $sqlParams = [ ":globalAuthorizationId" => $value, ];
         try {
             $stmt->execute($sqlParams);
         } catch (Exception $e) {
-            $errorCode = "AuthorizationGetQueryFailed";
-            $errorData = [ "exception" => (string)$e, ];
-            $error = new Responses\ErrorResponse($errorCode, $errorData);
-            return $error;
+            $errorCode = "AuthorizationGetFromPrimaryKeyQueryFailed";
+            throw new PersistenceFailedException($errorCode);
         }
 
-        $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+        $fetch = $stmt->fetch($db::FETCH_ASSOC);
         if (!$fetch) {
-            $errorCode = "AuthorizationGetQueryNoResults";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+            $errorCode = "AuthorizationGetFromPrimaryKeyQueryNoResults";
+            throw new NoResultsException($errorCode);
         }
 
         $source = static::convertFetchToSource($fetch);
-        $authorization = new Authorization($source, $db);
-
-        $success = new Responses\Response();
-        $success->authorization = $authorization;
-        return $success;
+        return new static($source);
     }
 
     public static function getFromToken(
         string $token,
-        PDO $database = null): Responses\IResponse
+        PDO $database,
+        callable $validator): Authorization
     {
-        $db = $database ?? Getters\DatabaseGetter::get();
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (!$validator($token)) {
+            $errorCode = "TokenInvalid";
+            throw new UserRequestFieldInvalidException($errorCode);
+        }
 
-        $stmt = $db->prepare(
+        $errmodeKey = $database::ATTR_ERRMODE;
+        $errmodeValue = $database::ERRMODE_EXCEPTION;
+        $database->setAttribute($errmodeKey, $errmodeValue);
+
+        $stmt = $database->prepare(
             "SELECT global_authorization_id, user_id, client, scopes, ip, " .
                 "oauth_token, time_created " .
             "FROM credentials " .
@@ -88,78 +86,59 @@ class Authorization extends AbstractSqlAbstraction implements IAuthorization {
         try {
             $stmt->execute($sqlParams);
         } catch (Exception $e) {
-            $errorCode = "AuthorizationGetFromTokenQueryFailed";
-            $errorData = [ "exception" => (string)$e, ];
-            $error = new Responses\ErrorResponse($errorCode, $errorData);
-            return $error;
+            $errorCode = "DatabaseQueryFailed";
+            throw new PersistenceFailedException($errorCode);
         }
 
-        if (!$stmt->rowCount()) {
+        $fetch = $stmt->fetch($database::FETCH_ASSOC);
+        if (!$fetch) {
             $errorCode = "AuthorizationGetFromTokenNoResult";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+            throw new NoResultsException($errorCode);
         }
 
-        $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
         $source = static::convertFetchToSource($fetch);
-        $authorization = new Authorization($source, $db);
-        if ($authorization->isError()) {
-            $error = $authorization->getError();
-            return $error;
-        }
-
-        $success = new Responses\Response();
-        $success->authorization = $authorization;
-        return $success;
+        return new static($source);
     }
 
     public static function getFromUserId(
         int $userId,
-        PDO $database = null): Responses\IResponse
+        PDO $database,
+        callable $validator): Authorization
     {
-        $filterResponse = Filters\IdFilter::filter($userId);
-        if ($filterResponse->isError()) {
-            return $filterResponse;
+        if (!$validator($token)) {
+            $errorCode = "TokenInvalid";
+            throw new UserRequestFieldInvalidException($errorCode);
         }
 
-        $userId = $filterResponse->filtered;
+        $errmodeKey = $database::ATTR_ERRMODE;
+        $errmodeValue = $database::ERRMODE_EXCEPTION;
+        $database->setAttribute($errmodeKey, $errmodeValue);
 
-        $db = $database ?? Getters\DatabaseGetter::get();
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $db->prepare(
+        $stmt = $database->prepare(
             "SELECT global_authorization_id, user_id, client, scopes, ip, " .
                 "oauth_token, time_created " .
-            "FROM authorizations " .
-            "WHERE user_id = :userId");
+            "FROM credentials " .
+            "WHERE oauth_token = :oAuthToken");
 
-        $sqlParams = [ ":userId" => $userId, ];
+        $sqlParams = [ ":oAuthToken" => $token, ];
         try {
             $stmt->execute($sqlParams);
         } catch (Exception $e) {
-            $errorCode = "AuthorizationGetFromUserIdQueryFailed";
-            $errorData = [ "exception" => (string)$e, ];
-            $error = new Responses\ErrorResponse($errorCode, $errorData);
-            return $error;
+            $errorCode = "DatabaseQueryFailed";
+            throw new PersistenceFailedException($errorCode);
         }
 
-        $fetchAll = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $authorizations = [];
-        foreach ($fetchAll as $fetch) {
-            $source = static::convertFetchToSource($fetch);
-            $authorization = new Authorization($source, $db);
-            if ($authorization->isError()) {
-                return $authorization->getError();
-            }
-
-            $authorizations[] = $authorization;
+        $fetch = $stmt->fetch($database::FETCH_ASSOC);
+        if (!$fetch) {
+            $errorCode = "AuthorizationGetFromTokenNoResult";
+            throw new NoResultsException($errorCode);
         }
 
-        $success = new Responses\Response();
-        $success->authorizations = $authorizations;
-        return $success;
+        $source = static::convertFetchToSource($fetch);
+        return new static($source);
     }
 
-    public static function convertFetchToSource(array $fetch): array {
+    static function convertFetchToSource(array $fetch): array {
         $yesAssoc = true;
         $source = [
             "globalAuthorizationId" => $fetch["global_authorization_id"],
@@ -174,23 +153,18 @@ class Authorization extends AbstractSqlAbstraction implements IAuthorization {
         return $source;
     }
 
-    public function __construct(array $source, PDO $database = null) {
-        $validationResponse =
-            Validators\AuthorizationSourceValidator::validate(
-                $source);
-
-        if ($validationResponse->isError()) {
-            $this->errorCode = isset($validationResponse->errorCode) ?
-                $validationResponse->errorCode :
-                "NoCodeProvided";
-            $this->errorData = isset($validationResponse->errorData) ?
-                $validationResponse->errorData : null;
-            return;
+    function __construct(
+        array $source,
+        callable $validate)
+    {
+        if (!$validate($source)) {
+            $errorCode = "AuthorizationSourceInvalid";
+            throw new ArgumentInvalidException($errorCode);
         }
 
-        $this->globalAuthorizationId =
-            isset($source["globalAuthorizationId"]) ?
-                $source["globalAuthorizationId"] : null;
+        $gai = isset($source["globalAuthorizationId"]) ?
+            $source["globalAuthorizationId"] : null
+        $this->setGlobalAuthorizationId($gai);
         $this->userId = $source["userId"];
         $this->client = $source["client"];
         $this->scopes = $source["scopes"];
@@ -198,9 +172,6 @@ class Authorization extends AbstractSqlAbstraction implements IAuthorization {
         $this->oAuthToken = $source["oAuthToken"];
         $this->timeCreated = isset($source["timeCreated"]) ?
             $source["timeCreated"] : null;
-
-        $db = $database ?? Getters\DatabaseGetter::get();
-        $this->database = $db;
     }
 
     /* Public get, private set. */

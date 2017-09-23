@@ -1,100 +1,65 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Errors\ErrorInfo;
-use \TwinePM\Getters;
-use \TwinePM\Filters\IdFilter;
-use \TwinePM\Persisters\LoginSessionPersister;
-use \TwinePM\Validators\NameValidator;
-use \TwinePM\SqlAbstractions\Credentials\Credential;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \Predis\Client as RedisClient;
-use \PDO;
+use Exception;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Container\ContainerInterface;
+use TwinePM\Exceptions\UserRequestFieldInvalidException;
 class LoginPostEndpoint extends AbstractEndpoint {
-    public static function execute(
-        IRequest $request,
-        IContainer $container): Responses\IResponse
-    {
+    function __invoke(ContainerInterface $container): ResponseInterface {
         $params = $request->getParsedBody();
         $source = [];
-        if (isset($params["name"])) {
-            $name = $params["name"];
-            $validationResponse = NameValidator::validate($name);
-            if ($validationResponse->isError()) {
-                return static::convertServerErrorToClientError(
-                    $validationResponse);
-            }
-
-            $source["name"] = $name;
-        } else if (isset($params["id"])) {
-            $filterResponse = IdFilter::filter($params["id"]);
-            if ($filterResponse->isError()) {
-                return static::convertServerErrorToClientError(
-                    $filterResponse);
-            }
-
-            $source["id"] = $filterResponse->filtered;
-        } else if (isset($params["nameOrId"])) {
-            $filterResponse = IdFilter::filter($params["nameOrId"]);
-            if ($filterResponse->isError()) {
-                $validationResponse = NameValidator::validate(
-                    $params["nameOrId"]);
-
-                if ($validationResponse->isError()) {
-                    $errorCode = "LoginPostEndpointNameOrIdInvalid";
-                    $error = new Responses\ErrorResponse($errorCode);
-                    return static::convertServerErrorToClientError($error);
+        if (array_key_exists("name", $params)) {
+            /* Throws exception if invalid. */
+            $container->get("validateName")($params["name"]);
+            $source["name"] = $params["name"];
+        } else if (array_key_exists("id", $params)) {
+            /* Throws exception if invalid. */
+            $source["id"] = $container->get("filterId")($params["id"]);
+        } else if (array_key_exists("nameOrId", $params)) {
+            try {
+                $filtered = $container->get("filterId")($params["nameOrId"]);
+                $source["id"] = $filtered;
+            } catch (Exception $e) {
+                try {
+                    $validateName = $container->get("validateName");
+                    /* Throws exception if invalid. */
+                    $source["name"] = $validateName($params["nameOrId"]);
+                } catch (Exception $e) {
+                    $errorCode = "NameOrIdInvalid";
+                    throw new RequestFieldInvalidException($errorCode);
                 }
-
-                $source["name"] = $params["nameOrId"];
-            } else {
-                $source["id"] = $filterResponse->filtered;
             }
         } else {
-            $errorCode = "LoginPostEndpointNoArguments";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+            $errorCode = "LoginPostEndpointNameAndIdInvalid";
+            throw new RequestFieldInvalidException($errorCode);
         }
 
         $password = isset($params["password"]) ? $params["password"] : null;
-        if (!array_key_exists("password", $params)) {
-            $errorCode = "LoginPostEndpointPasswordMissing";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+        if (!$password) {
+            $errorCode = "LoginPostEndpointInvalidPassword";
+            throw new RequestFieldInvalidException($errorCode);
         }
 
-        $db = $container->get(PDO::class);
-        $credentialResponse = Credential::get($source, $db);
-        if ($credentialResponse->isError()) {
-            return static::convertServerErrorToClientError(
-                $credentialResponse);
-        }
-
-        $credential = $credentialResponse->credential;
+        $getFromSource = $container->get("getFromSource");
+        $sqlAbstractionType = "credential";
+        $credential = $getFromSource($sqlAbstractionType, $source);
         if (!password_verify($password, $credential->getHash())) {
             $errorCode = "LoginPostEndpointCredentialsInvalid";
-            $error = new Responses\ErrorResponse($errorCode);
-            return $error;
+            throw new PermissionDeniedException($errorCode);
         }
 
-        $redis = $container->get(RedisClient::class);
-        $context = [ "redis" => $redis, ];
-        $session = [
-            "sessionId" => Getters\SessionIdGetter::get(),
-            "userId" => $credential->getId(),
-            "userName" => $credential->getName(),
-            "salt" => Getters\SaltGetter::get(),
-        ];
+        $userId = $credential->getId();
 
-        $persistResponse = LoginSessionPersister::persist($session, $context);
-        if ($persistResponse->isError()) {
-            return static::convertServerErrorToClientError($persistResponse);
-        }
+        $container->get("persistLoginSession")($userId, $userName);
 
-        $success = new Responses\Response();
-        $success->userId = $credential->getId();
-        return $success;
+        $body = $container->get("responseBody");
+        $successArray = $container->get("successArray");
+        $successArray["userId"] = $userId;
+        $successStr = json_encode($successArray);
+        $body->write($successStr);
+        $response = $container->get("response")->withBody($body);
+        $response->userId = $userId;
+        return $response;
     }
 }

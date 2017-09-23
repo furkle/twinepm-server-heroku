@@ -20,13 +20,12 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
     public function persistNewAccessToken(
         AccessTokenEntityInterface $accessTokenEntity)
     {
-        $ate = $accessTokenEntity;
-        $jwt = $ate->convertToJWT($this->cryptKey);
+        $jwt = $accessTokenEntity->convertToJWT($this->cryptKey);
         $jwtStr = (string)$jwt;
 
         $scopes = array_map(function ($scopeEntity) {
             return $scopeEntity->getIdentifier();
-        }, $ate->getScopes());
+        }, $accessTokenEntity->getScopes());
 
         $source = [
             "userId" => $accessTokenEntity->getUserIdentifier(),
@@ -72,4 +71,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface {
         $accessToken->setUserIdentifier($userIdentifier);
         return $accessToken;
     }
+
+    public function 
 }

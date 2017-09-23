@@ -1,31 +1,23 @@
 <?php
 namespace TwinePM\SqlAbstractions;
 
-use \TwinePM\Responses;
-use \PDO;
+use PDO;
 interface ISqlAbstraction {
-    public static function get(
-        array $source,
-        PDO $database = null): Responses\IResponse;
+    static function getFromPrimaryKey($primaryKey, PDO $database);
 
-    public static function getFromToken(
-        string $token,
-        PDO $database = null): Responses\IResponse;
+    static function getFromToken(string $token, PDO $database);
 
-    public static function convertFetchToSource(array $fetch): array;
+    static function getFromUserId(int $userId, PDO $database);
 
-    public function __construct(array $source, PDO $database = null);
-    public function __get(string $propName);
+    static function convertFetchToSource(array $fetch): array;
 
-    public function toArray(): array;
+    function __construct(array $source);
+    function __get(string $propName);
 
-    public function isInDatabase(): bool;
-    public function serializeToDatabase(): Responses\IResponse;
-    public function updateFromDatabase(): Responses\IResponse;
-    public function deleteFromDatabase(): Responses\IResponse;
-    public function getDatabase(): PDO;
+    function toArray(): array;
 
-    public function isError(): bool;
-    public function getError(): ?Responses\ErrorResponse;
+    function isInDatabase(PDO $database): bool;
+    function serializeToDatabase(PDO $database): void;
+    function updateFromDatabase(PDO $database): void;
+    function deleteFromDatabase(PDO $database): void;
 }
-?>

@@ -15,16 +15,16 @@ services:
       context: .
       dockerfile: logic/Dockerfile
     depends_on:
-      - db
+      - database
       - cache
     environment: *mode
     env_file:
       - logic/.env
 
-  db:
+  database:
     build:
       context: .
-      dockerfile: db/Dockerfile
+      dockerfile: database/Dockerfile
     networks:
       - backend
     environment:

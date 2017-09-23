@@ -1,34 +1,41 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Errors\ErrorInfo;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Container;
 abstract class AbstractEndpoint implements IEndpoint {
-    const LOOKUP = [];
+    function getClientErrorCode(?string $serverErrorCode): string {
+        return $serverErrorCode ?? "NoCodeProvided";
+    }
 
-    public static function convertServerErrorToClientError(
-        Responses\IResponse $serverError): Responses\ErrorResponse
+    function getClientStatus(int $status) {
+        if ($status > 100 and $status < 599)
+            return $status;
+        } else {
+            return 500;
+        }
+    }
+
+    function convertServerErrorToClientError(
+        ResponseInterface $serverError): ResponseInterface
     {
-        $fallback = ErrorInfo::get("NoCodeProvided")["name"];
-        $serverErrorCode = isset($serverError->errorCode) ?
-            $serverError->errorCode : $fallback;
-        $clientErrorCode = isset(static::LOOKUP[$serverErrorCode]) ?
-            static::LOOKUP[$serverErrorCode] : $serverErrorCode;
+        $headerName = "X-TwinePM-Error-Code";
+        $serverErrorCode = $serverError->getHeader($headerName);
+        $clientErrorCode = $this->getClientErrorCode($serverErrorCode);
 
-        $errorData = isset($serverError->errorData) ?
-            $serverError->errorData : null;
-
-        $clientError = new Responses\ErrorResponse(
-            $clientErrorCode,
-            $errorData);
+        return $serverError
+            ->withStatus($this->getClientStatus())
+            ->withHeader($headerName, $clientErrorCode);
 
         return $clientError;
     }
 
-    public static function getOptionsObject(): array {
-        return [
-            "warning" => "The OPTIONS object is not configured for this " .
-                "endpoint yet. Please bother the maintainer about it.",
-        ];
+    abstract function __invoke(Container $container): ResponseInterface;
+
+    abstract function getOptionsObject(): array;
+
+    function getOptionsJson(): string {
+        return json_encode($this->getOptionsObject());
     }
 }

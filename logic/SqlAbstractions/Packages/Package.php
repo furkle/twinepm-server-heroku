@@ -28,7 +28,7 @@ class Package extends AbstractSqlAbstraction implements IPackage {
 
     public static function get(
         array $source,
-        PDO $database = null): Responses\IResponse
+        PDO $database = null): Package
     {
         $db = $database ?? Getters\TwinepmDatabaseGetter::get();
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -42,62 +42,50 @@ class Package extends AbstractSqlAbstraction implements IPackage {
             "FROM packages " .
             "ORDER BY version ";
         $id = isset($source["id"]) ? $source["id"] : null;
-        $name = isset($source["name"]) ? $source["name"] : null;
-        if (isset($source["id"])) {
-            $validationResponse = Filters\IdFilter::filter($source["id"]);
-            if ($filterResponse->isError()) {
-                return $filterResponse;
+        if (array_key_exists("name", $params)) {
+            /* Throws exception if invalid. */
+            $validateName($params["name"]);
+        } else if (array_key_exists("id", $params)) {
+            /* Throws exception if invalid. */
+            $filterId($params["id"]);
+        } else if (array_key_exists("nameOrId", $params)) {
+            try {
+                /* Throws exception if invalid. */
+                $filtered = $filterId($params["nameOrId"]);
+            } catch (Exception $e) {
+                try {
+                    /* Throws exception if invalid. */
+                    $validateName($params["nameOrId"]);
+                } catch (Exception $e) {
+                    $errorCode = "NameOrIdInvalid";
+                    throw new RequestFieldInvalidException($errorCode);
+                }
             }
-
-            $stmt .= "WHERE id = :package_id";
-            $sqlParams[":package_id"] = $filterResponse->filtered;
-        } else if (isset($source["name"])) {
-            $validationResponse = Validators\NameValidator::validate(
-                $source["name"]);
-
-            if ($validationResponse->isError()) {
-                return $validationResponse;
-            }
-
-            $stmt .= "WHERE name = :package_name";
-            $name = $source["name"];
-            $sqlParams[":package_name"] = $name;
         } else {
-            $errorCode = "PackageGetNoValidArguments";
-            $response = new Responses\ErrorResponse($errorCode);
-            return $response;
+            $errorCode = "LoginPostEndpointNameAndIdInvalid";
+            throw new RequestFieldInvalidException($errorCode);
         }
 
         $stmt = $db->prepare($queryString);
         try {
             $stmt->execute($sqlParams);
         } catch (Exception $e) {
-            $data = [ "exception" => (string)$e, ];
-
             $errorCode = "PackageGetQueryFailed";
-            $response = new Responses\ErrorResponse($errorCode, $data);
-            return $response;
+            throw new PersistenceFailedException($errorCode);
         }
 
         $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
         $src = static::convertFetchToSource($fetch);
-        $package = new Package($src, $db);
-        if ($package->isError()) {
-            $error = $package->getError();
-            return $error;
-        }
-
-        $success = new Responses\Response();
-        $success->package = $package;
-        return $success;
+        return new self($src, $db);
     }
 
     public static function getFromToken(
         string $token,
-        PDO $database = null): Responses\IResponse
+        PDO $database): array
     {
-        $db = $database ?? Getters\TwinepmDatabaseGetter::get();
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $errmodeKey = $database::ATTR_ERRMODE;
+        $errmodeValue = $database::ERRMODE_EXCEPTION;
+        $db->setAttribute($errmodeKey, $errmodeValue);
 
         $stmt = $db->prepare(
             "SELECT P.id, P.name, P.author_id, P.owner_id, P.description, " .
@@ -119,7 +107,7 @@ class Package extends AbstractSqlAbstraction implements IPackage {
         }
 
         $packages = [];
-        $fetchAll = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $fetchAll = $stmt->fetchAll($database::FETCH_ASSOC);
         foreach ($fetchAll as $fetch) {
             $source = Package::convertFetchToSource($fetch);
             $package = new Package($source, $db);

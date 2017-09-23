@@ -1,17 +1,12 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Packages\Package;
-use \TwinePM\Filters\IdFilter;
-use \TwinePM\Validators;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \PDO;
-class PackageDeleteEndpoint extends AbstractEndpoint {
-    function __invoke(ContainerInterface $container): ResponseInterface {
-        $params = $request->getParsedBody();
-        $source = [];
+use Psr\Http\Message\ResponseInterface;
+use Slim\ContainerInterface;
+class PackageGetEndpoint extends AbstractEndpoint {
+    function execute(ContainerInterface $container): ResponseInterface {
+        $request = $container->get("request");
+        $params = $request->getQueryParams();
         if (array_key_exists("name", $params)) {
             /* Throws exception if invalid. */
             $container->get("validateName")($params["name"]);
@@ -38,30 +33,28 @@ class PackageDeleteEndpoint extends AbstractEndpoint {
             throw new RequestFieldInvalidException($errorCode);
         }
 
-        $sqlAbstractionType = "package";
-        $getFromSource = $container->get("getAbstractionFromSource");
-        $package = $getFromSource($sqlAbstractionType, $source);
-        $packageId = $package->get($package);
+        $dataLevel = null;
+        if (array_key_exists("packageDataLevel", $params)) {
+            $yesStrict = true;
+            if (!in_array($dataLevel, Package::DATA_LEVELS, $yesStrict)) {
+                $errorCode = "DataLevelInvalid";
+                throw new UserRequestFieldInvalidException($errorCode);
+            }
 
-        $sqlAbstractionType = "credential";
-        $token = $request->getHeader("Authorization")[0];
-        $getFromToken = $container->get("getAbstractionFromToken");
-        $credential = $getFromToken($sqlAbstractionType, $token);
-
-        if ($package->getOwnerId() !== $credential->getId()) {
-            $errorCode = "PackagePermissionError";
-            throw new PermissionDeniedException($errorCode);
+            $source["dataLevel"] = $params["packageDataLevel"];
+        } else {
+            $dataLevel = Package::DEFAULTS["packageDataLevel"];
         }
 
-        $package->deleteFromDatabase();
+        $sqlAbstractionType = "package";
+        $package = $getFromSource($sqlAbstractionType, $source);
 
         $body = $container->get("responseBody");
         $successArray = $container->get("successArray");
-        $successArray["packageId"] = $packageId;
+        $successArray["package"] = $package->toArray();
         $successStr = json_encode($successArray);
         $body->write($successStr);
         $response = $container->get("response")->withBody($body);
-        $response->packageId = $packageId;
         return $response;
     }
 }

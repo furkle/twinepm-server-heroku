@@ -1,34 +1,22 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Errors\ErrorInfo;
-use \TwinePM\Packages\Package;
-use \TwinePM\Getters\LoggedInUserGetter;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \PDO;
+use Psr\Http\Message\ResponseInterface;
+use Slim\ContainerInterface;
 class PackageCreationEndpoint extends AbstractEndpoint {
-    public static function execute(
-        IRequest $request,
-        IContainer $container): Responses\IResponse
-    {
-        $db = $container->get(PDO::class);
-
+    function __invoke(ContainerInterface $container): ResponseInterface {
         $source = $request->getParsedBody();
-        $package = new Package($source, $db);
-        if ($package->isError()) {
-            $error = $package->getError();
-            return static::convertServerErrorToClientError($error);
-        }
+        $package = $container->get("packageBuilder")($source);
+        $package->serializeToDatabase();
+        $packageId = $package->getId();
 
-        $serializeResponse = $package->serializeToDatabase();
-        if ($serializeResponse->isError()) {
-            return static::convertServerErrorToClientError($serializeResponse);
-        }
-
-        $success = new Responses\Response($status);
-        $success->id = $serializeResponse->id;
-        return $success;
+        $body = $container->get("responseBody");
+        $successArray = $container->get("successArray");
+        $successArray["packageId"] = $packageId;
+        $successStr = json_encode($successArray);
+        $body->write($successStr);
+        $response = $container->get("response")->withBody($body);
+        $response->packageId = $packageId;
+        return $response;
     }
 }

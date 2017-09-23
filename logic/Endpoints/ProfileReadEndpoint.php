@@ -1,16 +1,12 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Packages\Package;
-use \TwinePM\Filters\IdFilter;
-use \TwinePM\Validators;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \PDO;
-class PackageDeleteEndpoint extends AbstractEndpoint {
-    function __invoke(ContainerInterface $container): ResponseInterface {
-        $params = $request->getParsedBody();
+use Psr\Http\Message\ResponseInterface;
+use Slim\ContainerInterface;
+class ProfileReadEndpoint extends AbstractEndpoint {
+    function __invoke(ContainerInterface $container): ResponseInterface
+    {
+        $params = $request->getQueryParams();
         $source = [];
         if (array_key_exists("name", $params)) {
             /* Throws exception if invalid. */
@@ -38,30 +34,16 @@ class PackageDeleteEndpoint extends AbstractEndpoint {
             throw new RequestFieldInvalidException($errorCode);
         }
 
-        $sqlAbstractionType = "package";
-        $getFromSource = $container->get("getAbstractionFromSource");
-        $package = $getFromSource($sqlAbstractionType, $source);
-        $packageId = $package->get($package);
-
-        $sqlAbstractionType = "credential";
-        $token = $request->getHeader("Authorization")[0];
-        $getFromToken = $container->get("getAbstractionFromToken");
-        $credential = $getFromToken($sqlAbstractionType, $token);
-
-        if ($package->getOwnerId() !== $credential->getId()) {
-            $errorCode = "PackagePermissionError";
-            throw new PermissionDeniedException($errorCode);
-        }
-
-        $package->deleteFromDatabase();
+        $profile = $container->get("getAbstractionFromSource")($source);
+        $profileId = $profile->getId();
 
         $body = $container->get("responseBody");
         $successArray = $container->get("successArray");
-        $successArray["packageId"] = $packageId;
+        $successArray["profile"] = $profile->toArray();
         $successStr = json_encode($successArray);
         $body->write($successStr);
         $response = $container->get("response")->withBody($body);
-        $response->packageId = $packageId;
+        $response->packageId = $profileId;
         return $response;
     }
 }

@@ -5,120 +5,30 @@ namespace TwinePM;
 
 require_once __DIR__ . "/vendor/autoload.php";
 
-use \TwinePM\Getters;
-use \TwinePM\Endpoints;
-use \TwinePM\Responses;
-use \TwinePM\Loggers\AccessLogger;
-use \TwinePM\Loggers\LoggerRouter;
-use \TwinePM\Transformers\TpmResponseToPsrResponseTransformer;
-use \TwinePM\OAuth2\Repositories\AccessTokenRepository;
-use \TwinePM\OAuth2\Repositories\AuthCodeRepository;
-use \TwinePM\OAuth2\Repositories\ClientRepository;
-use \TwinePM\OAuth2\Repositories\ScopeRepository;
-use \TwinePM\OAuth2\Entities\UserEntity;
-use \TwinePM\OAuth2\Entities\ClientEntity;
-use \League\OAuth2\Server\Grant\ImplicitGrant;
-use \Slim\App;
-use \Slim\Views\Twig;
-use \Slim\Views\TwigExtension;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Predis\Client as RedisClient;
-use \League\OAuth2\Server\AuthorizationServer;
-use \League\OAuth2\Server\RequestTypes\AuthorizationRequest;
-use \League\OAuth2\Server\Exception\OAuthServerException;
-use \Monolog\Logger;
-use \Monolog\Handler\StreamHandler;
-use \PDO;
-use \Exception;
-use \Closure;
-$app = new App([
-    "settings" => [
-        "displayErrorDetails" => true,
-    ],
+use TwinePM\Getters\TwinePmContainerGetter;
+use TwinePM\Endpoints;
+use TwinePM\Responses;
+use TwinePM\OAuth2\Entities\UserEntity;
+use TwinePM\OAuth2\Entities\ClientEntity;
+use League\OAuth2\Server\Grant\ImplicitGrant;
+use Slim\App;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Exception;
+use Closure;
 
-    PDO::class => function(): PDO {
-        return Getters\DatabaseGetter::get();
-    },
+$settings = "settings" => [
+    "displayErrorDetails" => true,
+];
 
-    AuthorizationServer::class => function(): AuthorizationServer {
-        return Getters\OAuth2AuthorizationServerGetter::get();
-    },
-
-    RedisClient::class => function(): RedisClient {
-        return Getters\RedisServerGetter::get();
-    },
-
-    "processTpmResponse" => function(): Closure {
-        return function(
-            Responses\IResponse $tpmResponse,
-            Response $psrResponse): Response
-        {
-            $src = $tpmResponse;
-            $ctx = [ "psrResponse" => $psrResponse, ];
-            $transformResponse =
-                TpmResponseToPsrResponseTransformer::transform($src, $ctx);
-
-            if ($transformResponse->isError()) {
-                $src = $transformResponse;
-                $transformErrorResponse =
-                    TpmResponseToPsrResponseTransformer::transform($src, $ctx);
-                if ($transformErrorResponse->isError()) {
-                    $arr = [ "error" => "Response transformer error."];
-                    $status = 500;
-                    return $res->withJson($arr, $status);
-                }
-
-                $res = $transformErrorResponse->transformed;
-                return $res;
-            }
-
-            $res = $transformResponse->transformed;
-            return $res;
-        };
-    },
-
-    "processTemplateVars" => function(): Closure {
-        return function(Responses\IResponse $tpmResponse): array {
-            $templateVars = isset($tpmResponse->templateVars) ?
-                $tpmResponse->templateVars : [];
-            if ($tpmResponse->isError()) {
-                $error = $tpmResponse->getError()->toArray();
-                $status = $error->status;
-                $reasons = Responses\Response::REASON_PHRASES;
-                $error["reason"] = $reasons[$status] ?? "Invalid status.";
-                $splitError = explode("_", $error["errorCode"]);
-                $error["phrase"] = array_reduce($splitError, function($a, $b) {
-                    return $a . " " . strtoupper($b[0]) . substr($b, 1);
-                });
-
-                $templateVars["error"] = $error;
-            }
-
-            return $templateVars;
-        };
-    },
-
-    "processRestResponse" => function(): Closure {
-        return function(
-            Response $response,
-            string $methods,
-            array $client = null): Response
-        {
-            $res = $response->withHeader(
-                "Access-Control-Allow-Methods",
-                $methods);
-
-            $origin = "*";
-            if (isset($client["domain"])) {
-                $origin = $client["domain"];
-            }
-
-            $res = $res->withHeader("Access-Control-Allow-Origin", $origin);
-            return $res;
-        };
-    },
-]);
+$app = new App(TwinePmContainerGetter($settings));
 
 $container = $app->getContainer();
 $container[Twig::class] = function ($container) {
@@ -133,7 +43,8 @@ $container[Twig::class] = function ($container) {
         $container["request"]->getUri()->getBasePath());
 
     $basePath = rtrim($untrimmed, "/");
-    $view->addExtension(new TwigExtension($container->get("router"), $basePath));
+    $extension = new TwigExtension($container->get("router"), $basePath);
+    $view->addExtension($extension);
 
     return $view;
 };

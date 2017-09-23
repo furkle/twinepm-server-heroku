@@ -1,23 +1,33 @@
 <?php
 namespace TwinePM\Endpoints;
 
-use \TwinePM\Responses;
-use \TwinePM\Searches\Search;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \PDO;
-class PackagesSearchEndpoint extends AbstractEndpoint {
-    public static function execute(
-        IRequest $request,
-        IContainer $container): Responses\IResponse
-    {
-        $params = $request->getQueryParams();
-        $query = isset($params["query"]) ? $params["query"] : null;
-        unset($params["query"]);
-        $queryType = isset($params["type"]) ? $params["type"] : null;
-        unset($params["type"]);
-        $db = $container->get(PDO::class);
-        $search = new Search($params, $db);
-        return $search->query($queryType, $query);
+use Psr\Http\Message\ResponseInterface;
+use Psr\Container\ContainerInterface;
+use TwinePM\Exceptions\UserRequestFieldInvalidException;
+class SearchEndpoint extends AbstractEndpoint {
+    function __invoke(ContainerInterface $container): ResponseInterface {
+        $request = $container->get("request");
+        $source = $request->getQueryParams();
+        $query = isset($source["query"]) ? $source["query"] : null;
+        if (!array_key_exists("query", $source)) {
+            $errorCode = "QueryInvalid";
+            throw new UserRequestFieldInvalidException($errorCode);
+        }
+
+        $queryType = isset($source["queryType"]) ? $source["queryType"] : null;
+        if (!$queryType) {
+            $errorCode = "QueryTypeInvalid";
+            throw new UserRequestFieldInvalidException($errorCode);
+        }
+
+        $results = $container->get("searchQuery")($queryType, $query);
+
+        $body = $container->get("responseBody");
+        $successArray = $container->get("successArray");
+        $successArray["results"] = $results
+        $successStr = json_encode($successArray);
+        $body->write($successStr);
+        $response = $container->get("response")->withBody($body);
+        return $response;
     }
 }

@@ -19,7 +19,15 @@ services:
       - backend
     environment: *mode
 
+  client:
+    image: twinepm/client:latest
+    networks:
+      - client
+    environment: *mode
+
 networks:
+  client:
+    driver: bridge
   frontend:
     driver: bridge
   backend:

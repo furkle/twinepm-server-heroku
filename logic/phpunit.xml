@@ -1,9 +1,5 @@
-<testsuites
-    bootstrap="tests/bootstrap.php"
-    colors="true">
+<testsuites colors="true">
   <testsuite name="My Test Suite">
-    <directory>.</directory>
-    <exclude>src/oauth</exclude>
-    <exclude>vendor</exclude>
+    <directory>tests</directory>
   </testsuite>
 </testsuites>

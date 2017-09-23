@@ -1,35 +1,33 @@
 <?php
 namespace TwinePM\Persisters;
 
-use TwinePM\Exceptions\InvalidArgumentException;
-use TwinePM\Exceptions\NoResultExistsException;
-use TwinePM\Exceptions\PersistenceFailedException;
-class LoginSessionPersister {
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Predis\Client;
+class AuthorizationRequestPersister {
     function persist(
         string $requestId,
-        int $userId,
         string $salt,
         string $domain,
         AuthorizationRequest $authRequest,
         Client $cache,
-        PDO $database,
         callable $encrypt,
         callable $generateHmac): void
     {
-        $db = $database;
-        $db->setAttribute($db::ATTR_ERRMODE, $db::ERRMODE_EXCEPTION);
-        $queryStr = "SELECT name FROM credentials WHERE id = :id";
-        $stmt = $db->prepare($queryStr);
-        $sqlParams = [ ":id" => $userId, ];
-        $stmt->execute($sqlParams);
-
-        $fetch = $stmt->fetch($db::FETCH_ASSOC);
-        if (!$fetch) {
-            $errorCode = "IdNotInCredentials";
-            throw new NoResultExistsException($errorCode);
+        if (!$requestId) {
+            $errorCode = "RequestIdInvalid";
+            throw new InvalidArgumentException($errorCode);
         }
 
-        $key = "loginSession";
+        if (!$salt) {
+            $errorCode = "SaltInvalid";
+            throw new InvalidArgumentException($errorCode);
+        }
+
+        if (!$domain) {
+            $errorCode = "DomainInvalid";
+            throw new InvalidArgumentException($errorCode);
+        }
+
         $cookie = [
             "requestId" => $requestId,
             "salt" => $salt,
@@ -40,23 +38,22 @@ class LoginSessionPersister {
         $encryptedCookie = $encrypt(json_encode($cookie));
         $cookieHmac = $generateHmac($encryptedCookie);
 
-        $userName = $fetch["name"];
-        $key = $requestId;
+        $sar = serialize($authRequest);
+
         $cacheSession = [
-            "userId" => $userId,
-            "userName" => $userName,
+            "serializedAuthenticationRequest" => $sar,
             "salt" => $salt,
             "cookieHmac" => $cookieHmac,
         ];
 
         array_multisort($cacheSession);
 
-        $cache->HMSET($requestId, $cacheSession);
+        $redis->HMSET($requestId, $cacheSession);
 
-        /* Cookies last 30 days. */
-        $expire = time() + 60 * 60 * 24 * 30;
-        $path = "/authorize";
-
+        $key = "authorizationRequest";
+        /* Allow cookie to persist for one hour. */
+        $expire = time() + 60 * 60;
+        $path = "/authorization";
         $lh = "localhost";
         $scheme_lh = "http://" . $lh;
         $result = null;
@@ -65,14 +62,14 @@ class LoginSessionPersister {
         {
             $result = setcookie(
                 $key,
-                $cookieSession,
+                $value,
                 $expire);
         } else {
             $secure = true;
             $httpOnly = true;
             $result = setcookie(
                 $key,
-                $cookieSession,
+                $value,
                 $expire,
                 $path,
                 $domain,
@@ -81,24 +78,32 @@ class LoginSessionPersister {
         }
 
         if (!$result) {
-            $errorCode = "LoginSessionPersistence";
+            $errorCode = "AuthorizationSessionPersistence";
             throw new PersistenceFailedException($errorCode);
         }
     }
 
     function unpersist(
         string $requestId,
-        string $salt,
         string $domain,
-        AuthorizationRequest $authRequest,
         Client $cache): void
     {
-        $cache->DEL($requestId);
+        if (!$requestId) {
+            $errorCode = "RequestIdInvalid";
+            throw new InvalidArgumentException($errorCode);
+        }
+
+        if (!$domain) {
+            $errorCode = "DomainInvalid";
+            throw new InvalidArgumentException($errorCode);
+        }
+
+        $cache->DEL($key);
 
         $key = "authorizationSession";
         $value = "";
         $expire = -1;
-        $path = "/authorize";
+        $path = "/authorization";
         $lh = "localhost";
         $result = null;
         if (substr($domain, 0, strlen($lh)) === $lh) {
@@ -120,7 +125,7 @@ class LoginSessionPersister {
         }
 
         if (!$result) {
-            $errorCode = "LoginSessionPersistence";
+            $errorCode = "AuthorizationSessionPersistence";
             throw new UnpersistenceFailedException($errorCode);
         }
     }

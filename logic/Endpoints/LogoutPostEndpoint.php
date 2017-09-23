@@ -4,30 +4,20 @@ namespace TwinePM\Endpoints;
 use \TwinePM\Responses;
 use \TwinePM\Getters\LoggedInUserGetter;
 use \TwinePM\Persisters\LoginSessionPersister;
-use \Psr\Http\Message\ServerRequestInterface as IRequest;
-use \Psr\Container\ContainerInterface as IContainer;
-use \Predis\Client as RedisClient;
+use Psr\Http\Message\ResponseInterface;
+use Slim\ContainerInterface;
 class LogoutPostEndpoint extends AbstractEndpoint {
-    public static function execute(
-        IRequest $request,
-        IContainer $container): Responses\IResponse
-    {
-        $cookies = $request->getCookieParams();
-        $redis = $container->get(RedisClient::class);
-        $context = [
-            "request" => $request,
-            "redis" => $redis,
-        ];
+    function __invoke(ContainerInterface $container): ResponseInterface {
+        $loggedInUser = $container->get("loggedInUser");
+        $container->get("unpersistLoginSession")($loggedInUser);
 
-        $user = LoggedInUserGetter::get($context);
-        
-        $ctx = [ "redis" => $redis, ];
-        $unpersistResponse = LoginSessionPersister::unpersist($user, $ctx);
-        if ($unpersistResponse->isError()) {
-            return static::convertServerErrorToClientError($unpersistResponse);
-        }
-
-        $success = new Responses\Response();
-        return $success;
+        $body = $container->get("responseBody");
+        $successArray = $container->get("successArray");
+        $successArray["userId"] = $userId;
+        $successStr = json_encode($successArray);
+        $body->write($successStr);
+        $response = $container->get("response")->withBody($body);
+        $response->userId = $userId;
+        return $response;
     }
 }
