@@ -53,7 +53,7 @@ services:
       dockerfile: client/Dockerfile
     environment: *mode
     networks:
-      - backend_persistence
+      - frontend
 
 networks:
   backend_web:
