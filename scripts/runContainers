@@ -6,16 +6,13 @@ import os
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 compose_path = os.path.join(dirname, '../docker-compose.yml')
-compose_override_path = os.path.join(dirname,
-                                     '../docker-compose.override.yml')
 
 parser = argparse.ArgumentParser(description='Remove containerized ' +
                                  'versions of TwinePM services.')
 
 args = parser.parse_args()
 
-cmd = ['docker-compose', '-f', compose_path, '-f', compose_override_path,
-       'up', '-d']
+cmd = ['docker-compose', '-f', compose_path, 'up', '-d']
 
 proc = subprocess.Popen(cmd)
 proc.communicate()
