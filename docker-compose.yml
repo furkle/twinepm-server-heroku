@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: web/Dockerfile
+    ports:
+      - '443:80'
     depends_on:
       - logic
     environment: &mode
@@ -47,3 +49,11 @@ services:
     networks:
       - client
     environment: *mode
+
+networks:
+  client:
+    driver: bridge
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
