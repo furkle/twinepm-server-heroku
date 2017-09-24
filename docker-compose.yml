@@ -5,12 +5,14 @@ services:
     build:
       context: .
       dockerfile: web/Dockerfile
-    ports:
-      - '443:80'
     depends_on:
       - logic
     environment: &mode
       TWINEPM_MODE: development
+    networks:
+      - backend
+    ports:
+      - '443:80'
 
   logic:
     build:
@@ -22,37 +24,37 @@ services:
     environment: *mode
     env_file:
       - logic/.env
+    networks:
+      - backend
 
   database:
     build:
       context: .
       dockerfile: database/Dockerfile
-    networks:
-      - backend
     environment:
       <<: *mode
       POSTGRES_DB: twinepm
       POSTGRES_USER: root
+    networks:
+      - backend
 
   cache:
     build: 
       context: .
       dockerfile: cache/Dockerfile
+    environment: *mode
     networks:
       - backend
-    environment: *mode
 
   client:
     build:
       context: .
       dockerfile: client/Dockerfile
-    networks:
-      - client
     environment: *mode
+    networks:
+      - frontend
 
 networks:
-  client:
-    driver: bridge
   frontend:
     driver: bridge
   backend:
