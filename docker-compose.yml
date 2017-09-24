@@ -10,7 +10,7 @@ services:
     environment: &mode
       TWINEPM_MODE: development
     networks:
-      - backend
+      - backend_web
     ports:
       - '443:80'
 
@@ -25,7 +25,8 @@ services:
     env_file:
       - logic/.env
     networks:
-      - backend
+      - backend_web
+      - backend_persistence
 
   database:
     build:
@@ -36,7 +37,7 @@ services:
       POSTGRES_DB: twinepm
       POSTGRES_USER: root
     networks:
-      - backend
+      - backend_persistence
 
   cache:
     build: 
@@ -44,7 +45,7 @@ services:
       dockerfile: cache/Dockerfile
     environment: *mode
     networks:
-      - backend
+      - backend_persistence
 
   client:
     build:
@@ -52,10 +53,12 @@ services:
       dockerfile: client/Dockerfile
     environment: *mode
     networks:
-      - frontend
+      - backend_persistence
 
 networks:
-  frontend:
+  backend_web:
     driver: bridge
-  backend:
+  backend_persistence:
+    driver: bridge
+  frontend:
     driver: bridge
