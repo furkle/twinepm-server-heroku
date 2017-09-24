@@ -39,3 +39,11 @@ services:
     networks:
       - backend
     environment: *mode
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    networks:
+      - client
+    environment: *mode
