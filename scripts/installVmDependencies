@@ -1,0 +1,19 @@
+#! /usr/bin/env python3
+
+import argparse
+import subprocess
+
+parser = argparse.ArgumentParser(description='Install dependencies ' +
+    'for running the TwinePM virtual machine.')
+
+parser.parse_args()
+
+cmd = ['apt-get', 'update']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['apt-get', 'install', '-y', 'vagrant', 'virtualbox']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+print('VM dependencies installed.')

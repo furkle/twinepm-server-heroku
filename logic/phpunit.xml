@@ -1,0 +1,5 @@
+<testsuites colors="true">
+  <testsuite name="My Test Suite">
+    <directory>tests</directory>
+  </testsuite>
+</testsuites>

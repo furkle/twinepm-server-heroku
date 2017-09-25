@@ -1,0 +1,27 @@
+<header id="header">
+    <a class="headerLink" href="/">Home</a>
+
+    {% if loggedInUser %}
+        <a class="headerLink" href="/options">Options</a>
+        <a class="headerLink" href="/unauthorize">Unauthorize</a>
+    {% endif %}
+
+    <a class="headerLink" href="/clients">Clients</a>
+
+    <a class="headerLink" href="/documentation">{{-
+        "Documentation"
+    -}}</a>
+
+    {% if loggedInUser %}
+        <a class="headerLink" href="/logout">Logout</a>
+    {% else %}
+        <a class="headerLink" href="/createAccount">{{-
+            "Create Account"
+        -}}</a>
+        <a class="headerLink" href="/login">Login</a>
+    {% endif %}
+    
+</header>
+{% if headline %}
+    <h1>{{ headline }}</h1>
+{% endif %}

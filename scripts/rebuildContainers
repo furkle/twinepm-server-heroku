@@ -1,0 +1,46 @@
+#! /usr/bin/env python3
+
+import argparse
+import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+parser = argparse.ArgumentParser(description='Rebuild containerized ' +
+                                 'versions of TwinePM services.')
+
+parser.add_argument('--removeall', '-r', action='store_true',
+                    default=None, help='remove images, volumes, and ' +
+                                       'networks as well as the ' +
+                                       'containers')
+
+parser.add_argument('--fromcache', '-f', '-c', action='store_true',
+                    default=None,
+                    help='do not replace the images; rather, build ' +
+                        'from the cache if possible')
+
+parser.add_argument('--up', '-u', '--run', action='store_true',
+                    default=None, help='bring the containers online')
+
+args = parser.parse_args()
+
+cmd = [os.path.join(dirname, 'removeContainers')]
+if args.removeall:
+    cmd.append('--removeall')
+
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = [os.path.join(dirname, 'buildContainers')]
+if args.fromcache:
+    cmd.append('--fromcache')
+
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+if args.up:
+    cmd = [os.path.join(dirname, 'runContainers')]
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+
+print('Container images rebuilt.')

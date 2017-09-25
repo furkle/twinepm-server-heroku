@@ -1,0 +1,29 @@
+#! /usr/bin/env python3
+
+import argparse
+import subprocess
+import os
+
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+parser = argparse.ArgumentParser(description='Destroy the current TwinePM ' +
+                                 'virtual machine.')
+
+parser.add_argument('--dev', '-d', action='store_true', default=None,
+                    help='use a current development build')
+
+args = parser.parse_args()
+
+# Default to master to prevent newbie issues with in-progress code.
+build_arg = 'master'
+if args.dev:
+    build_arg = 'dev'
+
+cmd = ['vagrant', 'up']
+env = os.environ.copy()
+env['VAGRANT_CWD'] = dirname
+env['TWINEPM_BRANCH'] = build_arg
+proc = subprocess.Popen(cmd, env=env)
+proc.communicate()
+
+print('Started virtual machine.')

@@ -1,0 +1,200 @@
+#! /usr/bin/env python3
+
+import argparse
+import errno
+import grp
+import json
+import os
+import pwd
+import shutil
+import subprocess
+from urllib import request 
+
+# Get the directory in which the file is executing.
+dirname = os.path.dirname(os.path.realpath(__file__))
+
+# Create the default CLI help message.
+parser = argparse.ArgumentParser(description='Install dependencies for ' +
+                                 'TwinePM\'s PHP-FPM container.')
+
+args = parser.parse_args()
+
+# Install necessary system packages.
+cmd = ['apt-get', 'install', '--no-install-recommends', '-y',
+       'libhiredis-dev', 'libpq-dev', 'libxml2-dev', 'sudo']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['docker-php-ext-configure', 'pgsql', '-with-pgsql=/usr/local/pgsql']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+cmd = ['docker-php-ext-install', 'pdo_pgsql', 'pgsql']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Check whether Composer is already installed.
+cmd = ['composer', '-v']
+work_dir = '{}/../../'.format(dirname)
+try:
+    proc = subprocess.Popen(cmd, cwd=work_dir)
+    proc.communicate()
+except:
+    # Install system packages necessary for Composer's installation.
+    cmd = ['apt-get', 'install', '--no-install-recommends', '-y', 'git',
+           'unzip', 'zip']
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+
+# Get the composer installer. HTTPS is currently not working, unsure why.
+url = 'http://getcomposer.org/installer'
+file_name = '/tmp/composer-setup.php'
+with request.urlopen(url) as response, open(file_name, 'wb') as out_file:
+    shutil.copyfileobj(response, out_file)
+
+# Run the composer setup file.
+cmd = ['php', file_name, '--install-dir=/usr/local/bin',
+       '--filename=composer']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Delete the composer setup file.
+os.remove('/tmp/composer-setup.php')
+
+# Install all PHP library dependencies.
+vendor_path = '{}logic/vendor/'.format(work_dir)
+try:
+    os.makedirs(vendor_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+uid = pwd.getpwnam('www-data').pw_uid
+gid = grp.getgrnam('www-data').gr_gid
+os.chown(vendor_path, uid, gid)
+
+cache_path_one = '/var/www/.composer/cache/repo/https---packagist.org/'
+try:
+    os.makedirs(cache_path_one)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+cache_path_one = '/var/www/.composer/cache/repo/https---packagist.org/'
+os.chown(cache_path_one, uid, gid)
+
+cache_path_two = '/var/www/.composer/cache/files/'
+try:
+    os.makedirs(cache_path_two)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+os.chown(cache_path_two, uid, gid)
+
+cmd = 'sudo -u www-data composer install --no-scripts --no-plugins'
+proc = subprocess.Popen(cmd, cwd='{}/logic'.format(work_dir), shell=True)
+proc.communicate()
+
+# Add private key for OAuth2 server.
+priv_path = '{}/logic/OAuth2/private.key'.format(work_dir)
+cmd = ['openssl', 'genrsa', '-out', priv_path, '2048']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Add public key for OAuth2 server.
+pub_path = '{}/logic/OAuth2/public.key'.format(work_dir)
+cmd = ['openssl', 'rsa', '-in', priv_path, '-pubout', '-out', pub_path]
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Create encryption key for OAuth2 server.
+cmd = ['php', '-r', 'echo base64_encode(random_bytes(32));']
+server_encryption_key = subprocess.check_output(cmd)
+with open('{}/logic/OAuth2/encryptionKey'.format(work_dir), 'wb') as f:
+    f.write(server_encryption_key)
+
+# Create tpmClient entry in logic/OAuth2/clients.
+cmd = ['php', '-r', 'echo base64_encode(random_bytes(128));']
+server_url = os.environ.get('SERVER_URL') or 'http://localhost:8000'
+tpmclient_encryption_key = subprocess.check_output(cmd).decode()
+entry = {
+    'name': 'Twine Package Manager Client (FI)',
+    'description': 'A full service TwinePM client by Furkle Industries.',
+    # TODO: Get Docker env file variables to register for python. 
+    'domain': '{}/tpmClient'.format(server_url),
+    'redirectPath': 'authorize/',
+    'isConfidential': False,
+    'secret': tpmclient_encryption_key,
+}
+
+clients_path = '{}/logic/OAuth2/clients/'.format(work_dir)
+try:
+    os.makedirs(clients_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+# Dump the JSON with pretty-printing.
+dump = json.dumps(entry, indent=4)
+with open('{}/tpmClient.json'.format(clients_path), 'w') as f:
+    f.write(dump)
+
+# Clone the phpiredis directory into the temporary directory.
+cmd = ['git', 'clone', 'https://github.com/nrk/phpiredis']
+proc = subprocess.Popen(cmd, cwd='/tmp/')
+proc.communicate()
+
+phpiredis_path = '/tmp/phpiredis/'
+
+# phpize phpiredis.
+cmd = ['phpize']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+# Configure phpiredis.
+cmd = ['./configure', '--enable-phpiredis']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+# Ready phpiredis for installation.
+cmd = ['make']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+# Install phpiredis.
+cmd = ['make', 'install']
+proc = subprocess.Popen(cmd, cwd=phpiredis_path)
+proc.communicate()
+
+# Create an extension file for phpiredis.
+with open('{}/phpiredis.ini'.format(os.environ['PHP_INI_DIR']), 'w') as f:
+    f.write('extension=phpiredis.so')
+
+# Reload the php-fpm daemon.
+cmd = ['kill', '-USR2', '1']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Verify that phpiredis is installed. TODO: add guard/more obvious error
+cmd = ['php', '--ri', 'phpiredis']
+proc = subprocess.Popen(cmd)
+proc.communicate()
+
+# Delete the temporary phpiredis directory.
+shutil.rmtree(phpiredis_path)
+
+# Copy the logging configuration to the php-fpm config directory, making sure
+# it's loaded last.
+shutil.copyfile('/etc/twinepm-server-heroku/logic/log.conf',
+                '/usr/local/etc/php-fpm.d/zz-log.conf')
+
+# Make the directory for the logs.
+logs_path = '{}/logs'.format(work_dir)
+try:
+    os.makedirs(logs_path)
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
+
+os.chown(logs_path, uid, gid)

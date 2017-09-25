@@ -1,0 +1,10 @@
+<form method="POST" action="/authorize">
+    {% if loggedInUser %}
+        {% include "components/loggedInUserComponent.html.twig" %}
+    {% else %}
+        {% set includeLoginButton = false %}
+        {% include "components/loginComponent.html.twig" %}
+    {% endif %}
+
+    <input type="submit" value="Authorize">
+</form>
